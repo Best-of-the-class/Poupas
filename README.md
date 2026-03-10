@@ -1,17 +1,34 @@
-# pomo
+# 🍎 Poupas
 
-A new Flutter project.
+O Poupas é um aplicativo mobile de gamificação para educação financeira voltado para o público infanto-juvenil. 
 
-## Getting Started
+<br>
 
-This project is a starting point for a Flutter application.
+## Instalação
 
-A few resources to get you started if this is your first Flutter project:
+Clone o projeto
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```bash
+  git clone https://github.com/Best-of-the-class/Poupas.git
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Entre no diretório do projeto
+
+```bash
+  cd Poupas
+```
+
+Instale as dependências
+
+```bash
+
+  flutter pub get
+```
+
+Execute a aplicação
+
+```bash
+  flutter run
+```
+
+<br>
