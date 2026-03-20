@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../../services/auth_service.dart';
 
 import '../widgets/wide_button.dart';
 import '../widgets/input.dart';
@@ -13,7 +14,8 @@ import '../bloc/navigation_bloc.dart';
 import '../bloc/validator_bloc.dart';
 
 class SignInPagePassword extends StatefulWidget {
-  const SignInPagePassword({super.key});
+  final String email;
+  const SignInPagePassword({super.key, required this.email});
 
   @override
   State<SignInPagePassword> createState() => _SignInPagePasswordState();
@@ -22,6 +24,8 @@ class SignInPagePassword extends StatefulWidget {
 class _SignInPagePasswordState extends State<SignInPagePassword> {
   bool _obscurePassword = true;
   String _password = '';
+
+  final _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +96,40 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                     builder: (context) => SizedBox(
                       width: double.infinity,
                       child: WideButton(
-                        text: 'Crie uma senha',
-                        onPress: () {
-                          context.read<NavigationBloc>().requestNavigation(
-                            'home',
-                            _password,
-                            'password',
+                        text: 'Entrar',
+                        onPress: () async {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Verificando credenciais...'),
+                            ),
                           );
+
+                          bool sucesso = await _authService.login(
+                            widget.email,
+                            _password,
+                          );
+
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                          if (sucesso) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('✅ Login aprovado!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            if (!context.mounted) return;
+                            
+                            context.goNamed('home');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('❌ Email ou senha incorretos.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),

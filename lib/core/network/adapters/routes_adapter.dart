@@ -20,7 +20,7 @@ class RoutesAdapter {
       GoRoute(
         name: signInPassword,
         path: '/signInPassword',
-        builder: (context, state) => const SignInPagePassword(),
+        builder: (context, state) => SignInPagePassword(email: state.extra as String),
       ),
       // pode matar essa home quando a inicial tiver feita 
       GoRoute(
