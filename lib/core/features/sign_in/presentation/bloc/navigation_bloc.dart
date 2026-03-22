@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'validator_bloc.dart';
 
 abstract class NavigationEvent {}
+
 class NavigateToNextStep extends NavigationEvent {
   final String routeName;
   final dynamic arguments;
@@ -10,7 +11,9 @@ class NavigateToNextStep extends NavigationEvent {
 }
 
 abstract class NavigationState {}
+
 class NavigationInitial extends NavigationState {}
+
 class NavigationSideEffect extends NavigationState {
   final String routeName;
   final dynamic arguments;
@@ -23,29 +26,34 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   String? _pendingRoute;
 
   NavigationBloc({required this.validatorBloc}) : super(NavigationInitial()) {
-    
-    _validatorSubscription = validatorBloc.stream.listen((validatorState) {
-      if (validatorState is ValidationSuccess && _pendingRoute != null) {
-        add(NavigateToNextStep(
-          routeName: _pendingRoute!, 
-          arguments: validatorState.data
-        ));
+    _validatorSubscription = validatorBloc.stream.listen((vState) {
+      if (vState is ValidationSuccess && _pendingRoute != null) {
+        add(
+          NavigateToNextStep(routeName: _pendingRoute!, arguments: vState.data),
+        );
         _pendingRoute = null;
       }
     });
 
     on<NavigateToNextStep>((event, emit) {
-      emit(NavigationSideEffect(
-        routeName: event.routeName,
-        arguments: event.arguments,
-      ));
+      emit(
+        NavigationSideEffect(
+          routeName: event.routeName,
+          arguments: event.arguments,
+        ),
+      );
       emit(NavigationInitial());
     });
   }
 
-  void requestNavigation(String route, String data, String type) {
+  void requestStepOne(String route, String name, String email) {
     _pendingRoute = route;
-    validatorBloc.add(ValidateStep(data, type));
+    validatorBloc.add(ValidateStepOne(name: name, email: email));
+  }
+
+  void requestStepTwo(String route, String password) {
+    _pendingRoute = route;
+    validatorBloc.add(ValidateStepTwo(password: password));
   }
 
   @override

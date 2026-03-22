@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import './core/network/adapters/routes_adapter.dart';
+import 'core/providers/global_bloc_providers.dart';
+import 'core/network/adapters/routes_adapter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const GlobalBlocProviders(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
