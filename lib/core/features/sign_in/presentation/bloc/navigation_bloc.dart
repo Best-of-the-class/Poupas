@@ -59,7 +59,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
     on<EmitNavigationError>((event, emit) {
       emit(NavigationErrorEffect(event.message));
+
       emit(NavigationInitial());
+
+      validatorBloc.add(ClearValidationError());
     });
   }
 
