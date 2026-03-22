@@ -11,8 +11,11 @@ class ValidateStepOne extends ValidatorEvent {
 
 class ValidateStepTwo extends ValidatorEvent {
   final String password;
-  ValidateStepTwo({required this.password});
+  final String confirmPassword;
+  ValidateStepTwo({required this.password, required this.confirmPassword});
 }
+
+class ClearValidationError extends ValidatorEvent {}
 
 abstract class ValidatorState {}
 
@@ -34,10 +37,16 @@ class ValidatorBloc extends Bloc<ValidatorEvent, ValidatorState> {
 
   ValidatorBloc() : super(ValidatorInitial()) {
     on<ValidateStepOne>((event, emit) {
-      if (event.name.trim().length < 3) {
+      if (event.name.trim().isEmpty && event.name.trim().isEmpty) {
+        emit(ValidationFailure('Preencha todos os campos'));
+      } else if (event.name.trim().isEmpty) {
+        emit(ValidationFailure('Preencha com o nome'));
+      } else if (event.name.trim().length < 6) {
         emit(
-          ValidationFailure('Nome muito curto, deve ter no mínimo 3 letras'),
+          ValidationFailure('Nome muito curto, deve ter no mínimo 6 letras'),
         );
+      } else if (event.email.trim().isEmpty) {
+        emit(ValidationFailure('Preencha com o email'));
       } else if (!event.email.contains('@')) {
         emit(ValidationFailure('E-mail inválido'));
       } else {
@@ -52,12 +61,25 @@ class ValidatorBloc extends Bloc<ValidatorEvent, ValidatorState> {
     });
 
     on<ValidateStepTwo>((event, emit) {
-      if (event.password.length < 8) {
+      final regex = RegExp(
+        r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
+      );
+      if (event.password.trim().isEmpty) {
+        emit(ValidationFailure('Preencha com a senha'));
+      } else if (event.password.length < 6) {
         emit(
           ValidationFailure(
-            'A senha muito curta, deve ter no mínimo 8 caracteres',
+            'A senha muito curta, deve ter no mínimo 6 caracteres',
           ),
         );
+      } else if (!regex.hasMatch(event.password)) {
+        emit(
+          ValidationFailure(
+            'A senha deve conter letras, números e caracteres especiais',
+          ),
+        );
+      } else if (event.password != event.confirmPassword) {
+        emit(ValidationFailure('As senhas não coincidem'));
       } else {
         final finalData = RegistrationData(
           name: _tempName,
@@ -66,6 +88,10 @@ class ValidatorBloc extends Bloc<ValidatorEvent, ValidatorState> {
         );
         emit(ValidationSuccess(finalData));
       }
+    });
+
+    on<ClearValidationError>((event, emit) {
+      emit(ValidatorInitial());
     });
   }
 }

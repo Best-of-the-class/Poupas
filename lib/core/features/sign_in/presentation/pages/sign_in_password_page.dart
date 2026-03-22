@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 import '../widgets/wide_button.dart';
@@ -8,6 +7,7 @@ import '../widgets/input.dart';
 import '../widgets/heading_text.dart';
 import '../widgets/navigate_top_corner.dart';
 import '../widgets/background.dart';
+import '../widgets/pop_up.dart';
 
 import '../bloc/navigation_bloc.dart';
 
@@ -21,20 +21,47 @@ class SignInPagePassword extends StatefulWidget {
 class _SignInPagePasswordState extends State<SignInPagePassword> {
   bool _obscurePassword = true;
   String _password = '';
+  String _confirmPassword = '';
+
+  void _showErrorPopup(BuildContext context, String message) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (context, anim1, anim2) {
+        return Center(
+          child: PopUp(
+            title: 'Ops!',
+            subtitle: message,
+            buttons: [
+              WideButton(
+                text: 'Tentar novamente',
+                onPress: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Background(
-      position: ImagePosition.bottom,
-      imageSize: 393,
-      imagePath:
-          'lib/core/features/sign_in/presentation/assets/images/poup_bottom.png',
-      child: BlocListener<NavigationBloc, NavigationState>(
-        listener: (context, state) {
-          if (state is NavigationSideEffect) {
-            context.pushNamed(state.routeName, extra: state.arguments);
-          }
-        },
+    return BlocListener<NavigationBloc, NavigationState>(
+      listener: (context, state) {
+        if (state is NavigationSideEffect) {
+          context.pushNamed(state.routeName, extra: state.arguments);
+        }
+        if (state is NavigationErrorEffect) {
+          _showErrorPopup(context, state.message);
+        }
+      },
+      child: Background(
+        position: ImagePosition.bottom,
+        imageSize: 393,
+        imagePath:
+            'lib/core/features/sign_in/presentation/assets/images/poup_bottom.png',
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SingleChildScrollView(
@@ -47,9 +74,9 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                 const HeadingText(
                   title: 'Crie uma conta',
                   subtitle:
-                      'Insira seu email e senha abaixo para se cadastrar em Poupas',
+                      'Crie uma senha segura. Ela deve ter no mínimo 6 dígitos, tendo letras, números e um caractere especial.',
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 8),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -78,19 +105,33 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Builder(
-                  builder: (context) => SizedBox(
-                    width: double.infinity,
-                    child: WideButton(
-                      text: 'Crie uma senha',
-                      onPress: () {
-                        context.read<NavigationBloc>().requestStepTwo(
-                          'home',
-                          _password,
-                        );
-                      },
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Confirme sua senha',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
                     ),
                   ),
+                ),
+                const SizedBox(height: 8),
+                Input(
+                  hint: 'Repita sua senha',
+                  obscureText: _obscurePassword,
+                  onChanged: (value) => _confirmPassword = value,
+                ),
+                const SizedBox(height: 32),
+                WideButton(
+                  text: 'Crie uma senha',
+                  onPress: () {
+                    context.read<NavigationBloc>().requestStepTwo(
+                      'home',
+                      _password,
+                      _confirmPassword,
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 Row(
@@ -101,7 +142,7 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'ou continue com',
+                        '•',
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                     ),
@@ -110,23 +151,7 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: WideButton(
-                    text: 'Google',
-                    backgroundColor: Colors.transparent,
-                    textColor: Colors.black87,
-                    borderColor: const Color(0xFFE32626),
-                    icon: const FaIcon(
-                      FontAwesomeIcons.google,
-                      color: Color(0xFFE32626),
-                      size: 20,
-                    ),
-                    onPress: () {},
-                  ),
-                ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 14),
                 RichText(
                   textAlign: TextAlign.center,
                   text: const TextSpan(
@@ -158,7 +183,7 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 14),
               ],
             ),
           ),

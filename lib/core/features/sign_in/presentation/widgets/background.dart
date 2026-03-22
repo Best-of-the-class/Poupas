@@ -14,7 +14,7 @@ class Background extends StatelessWidget {
     required this.child,
     this.imagePath,
     this.position = ImagePosition.top,
-    this.imageSize = 200.0,
+    this.imageSize = 226.0,
     this.color = const Color(0xFFFDF5E6),
   });
 
@@ -29,18 +29,28 @@ class Background extends StatelessWidget {
         children: [
           if (imagePath != null)
             Positioned(
-              top: position == ImagePosition.bottom ? null : _calculateTop(size.height),
+              top: position == ImagePosition.bottom
+                  ? null
+                  : _calculateTop(size.height),
               bottom: position == ImagePosition.bottom ? 0 : null,
               left: 0,
               right: 0,
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: keyboardIsOpen ? 0.2 : 1.0,
-                child: Image.asset(
-                  imagePath!,
-                  width: imageSize,
-                  height: imageSize,
-                  fit: BoxFit.cover,
+                child: Align(
+                  alignment: _getAlignment(),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: position == ImagePosition.bottom ? 50 : 0,
+                    ),
+                    child: Image.asset(
+                      imagePath!,
+                      width: imageSize,
+                      height: imageSize,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -54,6 +64,17 @@ class Background extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Alignment _getAlignment() {
+    switch (position) {
+      case ImagePosition.top:
+        return Alignment.topCenter;
+      case ImagePosition.center:
+        return Alignment.center;
+      case ImagePosition.bottom:
+        return Alignment.bottomCenter;
+    }
   }
 
   double? _calculateTop(double windowSize) {

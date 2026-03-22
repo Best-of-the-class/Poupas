@@ -10,6 +10,11 @@ class NavigateToNextStep extends NavigationEvent {
   NavigateToNextStep({required this.routeName, this.arguments});
 }
 
+class EmitNavigationError extends NavigationEvent {
+  final String message;
+  EmitNavigationError(this.message);
+}
+
 abstract class NavigationState {}
 
 class NavigationInitial extends NavigationState {}
@@ -18,6 +23,11 @@ class NavigationSideEffect extends NavigationState {
   final String routeName;
   final dynamic arguments;
   NavigationSideEffect({required this.routeName, this.arguments});
+}
+
+class NavigationErrorEffect extends NavigationState {
+  final String message;
+  NavigationErrorEffect(this.message);
 }
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
@@ -32,6 +42,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           NavigateToNextStep(routeName: _pendingRoute!, arguments: vState.data),
         );
         _pendingRoute = null;
+      } else if (vState is ValidationFailure) {
+        add(EmitNavigationError(vState.message));
       }
     });
 
@@ -44,6 +56,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       );
       emit(NavigationInitial());
     });
+
+    on<EmitNavigationError>((event, emit) {
+      emit(NavigationErrorEffect(event.message));
+      emit(NavigationInitial());
+    });
   }
 
   void requestStepOne(String route, String name, String email) {
@@ -51,9 +68,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     validatorBloc.add(ValidateStepOne(name: name, email: email));
   }
 
-  void requestStepTwo(String route, String password) {
+  void requestStepTwo(String route, String password, String confirmPassword) {
     _pendingRoute = route;
-    validatorBloc.add(ValidateStepTwo(password: password));
+    validatorBloc.add(
+      ValidateStepTwo(password: password, confirmPassword: confirmPassword),
+    );
   }
 
   @override
