@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomo/core/features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_page.dart';
 
@@ -7,6 +8,7 @@ class RoutesAdapter {
   static const String signIn = 'sign-in';
   static const String signInPassword = 'sign-in-password';
   static const String home = 'home';
+  static const String load = 'load';
 
   static final GoRouter router = GoRouter(
     initialLocation: '/signIn', 
@@ -28,6 +30,11 @@ class RoutesAdapter {
         path: '/home',
         builder: (context, state) => const Scaffold(body: Center(child: Text('Home uepa!!!'))),
       ),
+      GoRoute(
+        name: load,
+        path: '/loading',
+        builder: (context, state) => const LoadingPage(),
+      ), 
     ],
   );
 }
