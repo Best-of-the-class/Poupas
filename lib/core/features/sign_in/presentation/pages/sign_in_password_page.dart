@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../../services/auth_service.dart';
 
 import '../widgets/wide_button.dart';
 import '../widgets/input.dart';
@@ -9,7 +8,6 @@ import '../widgets/heading_text.dart';
 import '../widgets/navigate_top_corner.dart';
 import '../widgets/background.dart';
 import '../widgets/pop_up.dart';
-
 import '../bloc/navigation_bloc.dart';
 
 class SignInPagePassword extends StatefulWidget {
@@ -25,8 +23,12 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
   String _password = '';
   String _confirmPassword = '';
 
-  void _showErrorPopup(BuildContext context, String message) {
-    showGeneralDialog(
+  Future<void> _showErrorPopup(BuildContext context, String message) async {
+    final bloc = context.read<NavigationBloc>();
+    if (bloc.isDialogOpen) return;
+    bloc.isDialogOpen = true;
+
+    await showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -46,18 +48,29 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
         );
       },
     );
-  }
 
-  final _authService = AuthService();
+    bloc.isDialogOpen = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
+      listenWhen: (previous, current) {
+        if (current is NavigationErrorEffect &&
+            previous is NavigationErrorEffect) {
+          return current.id != previous.id;
+        }
+        if (current is NavigationSideEffect &&
+            previous is NavigationSideEffect) {
+          return current.id != previous.id;
+        }
+        return current is NavigationErrorEffect ||
+            current is NavigationSideEffect;
+      },
       listener: (context, state) {
         if (state is NavigationSideEffect) {
           context.pushNamed(state.routeName, extra: state.arguments);
-        }
-        if (state is NavigationErrorEffect) {
+        } else if (state is NavigationErrorEffect) {
           _showErrorPopup(context, state.message);
         }
       },

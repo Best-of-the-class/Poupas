@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../../services/auth_service.dart';
 import 'validator_bloc.dart';
 
@@ -24,33 +23,38 @@ class NavigationInitial extends NavigationState {}
 class NavigationSideEffect extends NavigationState {
   final String routeName;
   final dynamic arguments;
-  NavigationSideEffect({required this.routeName, this.arguments});
+  final int id;
+
+  NavigationSideEffect({required this.routeName, this.arguments})
+    : id = DateTime.now().microsecondsSinceEpoch;
 }
 
 class NavigationErrorEffect extends NavigationState {
   final String message;
-  NavigationErrorEffect(this.message);
+  final int id;
+
+  NavigationErrorEffect(this.message)
+    : id = DateTime.now().microsecondsSinceEpoch;
 }
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final ValidatorBloc validatorBloc;
   late StreamSubscription _validatorSubscription;
   String? _pendingRoute;
-
   final AuthService _authService = AuthService();
+
+  bool isDialogOpen = false;
 
   NavigationBloc({required this.validatorBloc}) : super(NavigationInitial()) {
     _validatorSubscription = validatorBloc.stream.listen((vState) async {
       if (vState is ValidationSuccess && _pendingRoute != null) {
         if (_pendingRoute == 'home') {
           final data = vState.data;
-
           bool sucesso = await _authService.cadastrar(
             data.name,
             data.email,
             data.password!,
           );
-
           if (!sucesso) {
             add(
               EmitNavigationError(
@@ -61,17 +65,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             return;
           }
         }
-
-        add(
-          NavigateToNextStep(
-            routeName: _pendingRoute!,
-            arguments: vState
-                .data
-                .email,
-          ),
-        );
+        final route = _pendingRoute!;
         _pendingRoute = null;
+        add(NavigateToNextStep(routeName: route, arguments: vState.data.email));
       } else if (vState is ValidationFailure) {
+        _pendingRoute = null;
         add(EmitNavigationError(vState.message));
       }
     });
@@ -83,12 +81,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           arguments: event.arguments,
         ),
       );
-      emit(NavigationInitial());
     });
 
     on<EmitNavigationError>((event, emit) {
       emit(NavigationErrorEffect(event.message));
-      emit(NavigationInitial());
       validatorBloc.add(ClearValidationError());
     });
   }
