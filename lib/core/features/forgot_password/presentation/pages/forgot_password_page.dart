@@ -83,7 +83,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
-                      const NavigateTopCorner(route: 'home'),
+                      const NavigateTopCorner(route: 'login'),
                       const SizedBox(height: 40),
                       const HeadingText(
                         title: 'ALTERAR SENHA',

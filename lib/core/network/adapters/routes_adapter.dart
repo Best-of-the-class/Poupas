@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:pomo/core/features/sign_in/presentation/pages/loading_page.dart';
 import 'package:pomo/core/features/home/presentation/pages/home_page.dart';
 import 'package:pomo/core/features/user_profile/presentation/pages/profile_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/sign_in/presentation/bloc/login_bloc.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_page.dart';
+import '../../features/sign_in/presentation/pages/login_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_code_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_reset_page.dart';
@@ -17,7 +20,7 @@ class RoutesAdapter {
   static const String welcome = 'welcome';
   static const String signIn = 'sign-in';
   static const String signInPassword = 'sign-in-password';
-  static const String loginFake = 'login';
+  static const String login = 'login';
   static const String home = 'home';
   static const String load = 'load';
   static const String forgotPassword = 'forgot_password';
@@ -45,9 +48,12 @@ class RoutesAdapter {
         builder: (context, state) => const SignInPage(),
       ),
       GoRoute(
-        name: loginFake,
+        name: login,
         path: '/login',
-        builder: (context, state) => const SignInPage(),
+        builder: (context, state) => BlocProvider(
+          create: (_) => LoginBloc(),
+          child: const LoginPage(),
+        ),
       ),
       GoRoute(
         name: signInPassword,
