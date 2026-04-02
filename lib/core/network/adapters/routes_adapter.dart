@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomo/core/features/sign_in/presentation/pages/loading_page.dart';
+import 'package:pomo/core/features/home/presentation/pages/home_page.dart';
+import 'package:pomo/core/features/user_profile/presentation/pages/profile_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_page.dart';
@@ -18,9 +20,10 @@ class RoutesAdapter {
   static const String resetPasswordVerification = 'reset_password_verification';
   static const String resetPasswordNewPassword = 'reset_password_new_password';
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
+  static const String profile = 'profile';
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/forgot-password',
+    initialLocation: '/home',
     routes: [
       GoRoute(
         name: signIn,
@@ -63,13 +66,17 @@ class RoutesAdapter {
       GoRoute(
         name: home,
         path: '/home',
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Home uepa!!!'))),
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         name: load,
         path: '/loading',
         builder: (context, state) => const LoadingPage(),
+      ),
+      GoRoute(
+        name: profile,
+        path: '/profile',
+        builder: (context, state) => const ProfilePage(),
       ),
     ],
   );

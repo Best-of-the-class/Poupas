@@ -68,6 +68,8 @@ flutter:
     - lib/core/features/sign_in/presentation/assets/images/poup_bottom.png
     - lib/core/features/sign_in/presentation/assets/images/poup_caterpillar.png
     - lib/core/features/forgot_password/presentation/assets/images/poup_check.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_1.png
+    - lib/core/assets/images/folha-icon-active-menu.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
