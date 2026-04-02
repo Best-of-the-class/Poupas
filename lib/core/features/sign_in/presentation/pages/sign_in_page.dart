@@ -84,7 +84,7 @@ class _SignInPageState extends State<SignInPage> {
               children: [
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: NavigateTopCorner(route: 'home'),
+                  child: NavigateTopCorner(route: 'welcome'),
                 ),
                 const HeadingText(
                   title: 'Crie uma conta',

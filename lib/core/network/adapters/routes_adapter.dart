@@ -9,8 +9,10 @@ import '../../features/forgot_password/presentation/pages/forgot_password_page.d
 import '../../features/forgot_password/presentation/pages/forgot_password_code_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_reset_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_confirmation.dart';
+import '../../features/entry/presentation/pages/welcome_page.dart';
 
 class RoutesAdapter {
+  static const String welcome = 'welcome';
   static const String signIn = 'sign-in';
   static const String signInPassword = 'sign-in-password';
   static const String loginFake = 'login';
@@ -23,8 +25,13 @@ class RoutesAdapter {
   static const String profile = 'profile';
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/welcome',
     routes: [
+      GoRoute(
+        name: welcome,
+        path: '/welcome',
+        builder: (context, state) => const WelcomePage(),
+      ),
       GoRoute(
         name: signIn,
         path: '/signIn',
