@@ -79,5 +79,5 @@ class RoutesAdapter {
         builder: (context, state) => const ProfilePage(),
       ),
     ],
-  );
+  ); 
 }
