@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/gestures.dart';
 
 import '../widgets/background.dart';
 import '../widgets/wide_button.dart';
@@ -8,24 +9,23 @@ import '../widgets/input.dart';
 import '../widgets/heading_text.dart';
 import '../widgets/navigate_top_corner.dart';
 import '../widgets/pop_up.dart';
-import '../bloc/navigation_bloc.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+// IMPORTANTE
+import '../bloc/login_bloc.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _LoginPageState extends State<LoginPage> {
   String _userEmail = '';
-  String _userName = '';
+  bool _obscurePassword = true;
+  String _password = '';
 
   Future<void> _showErrorPopup(BuildContext context, String message) async {
-    final bloc = context.read<NavigationBloc>();
-    if (bloc.isDialogOpen) return;
-    bloc.isDialogOpen = true;
-
     await showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -46,29 +46,15 @@ class _SignInPageState extends State<SignInPage> {
         );
       },
     );
-
-    bloc.isDialogOpen = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NavigationBloc, NavigationState>(
-      listenWhen: (previous, current) {
-        if (current is NavigationErrorEffect &&
-            previous is NavigationErrorEffect) {
-          return current.id != previous.id;
-        }
-        if (current is NavigationSideEffect &&
-            previous is NavigationSideEffect) {
-          return current.id != previous.id;
-        }
-        return current is NavigationErrorEffect ||
-            current is NavigationSideEffect;
-      },
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is NavigationSideEffect) {
-          context.pushNamed(state.routeName, extra: state.arguments);
-        } else if (state is NavigationErrorEffect) {
+        if (state is LoginSuccess) {
+          context.go('/home');
+        } else if (state is LoginError) {
           _showErrorPopup(context, state.message);
         }
       },
@@ -83,34 +69,19 @@ class _SignInPageState extends State<SignInPage> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
+
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: NavigateTopCorner(route: 'welcome'),
                 ),
+
                 const HeadingText(
-                  title: 'Crie uma conta',
-                  subtitle:
-                      'Insira seu nome e email abaixo para se cadastrar em Poupas',
+                  title: 'Login',
+                  subtitle: 'Faça login utilizando seu email e senha',
                 ),
+
+                // EMAIL
                 const SizedBox(height: 40),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Nome Completo',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Input(
-                  hint: 'Insira seu nome aqui',
-                  keyboardType: TextInputType.name,
-                  onChanged: (value) => _userName = value,
-                ),
-                const SizedBox(height: 16),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -122,23 +93,91 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 8),
                 Input(
                   hint: 'nome@email.com',
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) => _userEmail = value,
                 ),
-                const SizedBox(height: 32),
-                WideButton(
-                  text: 'Continuar',
-                  onPress: () {
-                    context.read<NavigationBloc>().requestStepOne(
-                      'sign-in-password',
-                      _userName,
-                      _userEmail,
+
+                // SENHA
+                const SizedBox(height: 16),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Senha',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+                Input(
+                  hint: 'Sua senha',
+                  obscureText: _obscurePassword,
+                  onChanged: (value) => _password = value,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: const Color(0xFFE32626),
+                    ),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                    children: [
+                      const TextSpan(
+                        text: 'Esqueceu sua senha? ',
+                      ),
+                      TextSpan(
+                        text: 'Recuperar senha',
+                        style: const TextStyle(
+                          color: Color(0xFFE32626),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            context.go('/forgot-password');
+                          },
+                      ),
+                    ],
+                  ),
+                ),
+
+                // BOTÃO COM LOADING
+                const SizedBox(height: 20),
+                BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
+                    final isLoading = state is LoginLoading;
+
+                    return WideButton(
+                      text: isLoading ? 'Carregando...' : 'Entrar',
+                      onPress: () {
+                        if (isLoading) return;
+
+                        context.read<LoginBloc>().add(
+                          LoginSubmitted(_userEmail, _password),
+                        );
+                      },
                     );
                   },
                 ),
+
+                // DIVIDER
                 const SizedBox(height: 24),
                 Row(
                   children: [
@@ -149,7 +188,8 @@ class _SignInPageState extends State<SignInPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         '•',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        style:
+                            TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                     ),
                     const Expanded(
@@ -157,6 +197,8 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ],
                 ),
+
+                // TERMOS
                 const SizedBox(height: 14),
                 RichText(
                   textAlign: TextAlign.center,
@@ -169,7 +211,7 @@ class _SignInPageState extends State<SignInPage> {
                     children: [
                       TextSpan(
                         text:
-                            'Ao clicar em continuar, você concorda com nossos ',
+                            'Ao clicar em entrar, você concorda com nossos ',
                       ),
                       TextSpan(
                         text: 'Termos de Serviço',
@@ -189,6 +231,7 @@ class _SignInPageState extends State<SignInPage> {
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 14),
               ],
             ),
