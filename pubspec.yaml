@@ -71,6 +71,8 @@ flutter:
     - lib/core/features/user_profile/presentation/assets/images/avatar_1.png
     - lib/core/assets/images/folha-icon-active-menu.png
     - lib/core/features/entry/presentation/assets/image/Poup.png
+    - lib/core/features/entry/presentation/assets/image/oculos.png
+    - lib/core/features/entry/presentation/assets/image/oi.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

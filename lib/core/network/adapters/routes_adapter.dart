@@ -10,8 +10,10 @@ import '../../features/forgot_password/presentation/pages/forgot_password_code_p
 import '../../features/forgot_password/presentation/pages/forgot_password_reset_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_confirmation.dart';
 import '../../features/entry/presentation/pages/welcome_page.dart';
+import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 
 class RoutesAdapter {
+  static const String loadingWelcome = 'loadingWelcome';
   static const String welcome = 'welcome';
   static const String signIn = 'sign-in';
   static const String signInPassword = 'sign-in-password';
@@ -25,8 +27,13 @@ class RoutesAdapter {
   static const String profile = 'profile';
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/welcome',
+    initialLocation: '/loadingWelcome',
     routes: [
+      GoRoute(
+        name: loadingWelcome,
+        path: '/loadingWelcome',
+        builder: (context, state) => const LoadingWelcomePage(),
+      ),
       GoRoute(
         name: welcome,
         path: '/welcome',
