@@ -27,4 +27,25 @@ class ApiInterceptor {
       client.close(); 
     }
   }
+
+  // metodos put e delete adicionados pelo back *Amanda
+  Future<http.Response> delete(String endpoint, Map<String, dynamic> body) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final ioc = HttpClient();
+    ioc.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    final http.Client client = IOClient(ioc);
+
+    try {
+      return await client.delete(
+        url,
+        headers: {
+          "Content-Type": "application/json", 
+          "Accept": "application/json"
+        },
+        body: jsonEncode(body),
+      );
+    } finally {
+      client.close(); 
+    }
+  }
 }

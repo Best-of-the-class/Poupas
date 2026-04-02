@@ -1,5 +1,6 @@
 import '../../../sign_in/presentation/bloc/validator_bloc.dart';
 import '../../domain/entities/user_reset_password.dart';
+import '../../../../../services/auth_service.dart';
 
 class ResetValidation extends ValidatorEvent {}
 
@@ -28,31 +29,43 @@ class PasswordResetValidatorBloc extends ValidatorBloc {
       emit(ValidatorInitial());
     });
 
-    on<ValidateEmailStep>((event, emit) {
+    on<ValidateEmailStep>((event, emit) async {
       if (event.email.trim().isEmpty) {
         emit(ValidationFailure('Preencha com o email'));
       } else if (!event.email.contains('@')) {
         emit(ValidationFailure('E-mail inválido'));
       } else {
-        _tempEmail = event.email;
-        emit(ValidationSuccess(ResetPasswordData(email: _tempEmail)));
+        final authService = AuthService();
+        final ok = await authService.solicitarResetSenha(event.email);
+        if (ok) {
+          _tempEmail = event.email;
+          emit(ValidationSuccess(ResetPasswordData(email: _tempEmail)));
+        } else {
+          emit(ValidationFailure('Não foi possível enviar o código. Verifique o e-mail e tente novamente.'));
+        }
       }
     });
 
-    on<ValidateCodeStep>((event, emit) {
+    on<ValidateCodeStep>((event, emit) async {
       if (event.code.trim().length < 4) {
         emit(ValidationFailure('Código inválido'));
       } else {
-        _tempCode = event.code;
-        emit(
-          ValidationSuccess(
-            ResetPasswordData(email: _tempEmail, code: _tempCode),
-          ),
-        );
+        final authService = AuthService();
+        final ok = await authService.verificarCodigo(_tempEmail, event.code);
+        if (ok) {
+          _tempCode = event.code;
+          emit(
+            ValidationSuccess(
+              ResetPasswordData(email: _tempEmail, code: _tempCode),
+            ),
+          );
+        } else {
+          emit(ValidationFailure('Código incorreto ou expirado. Solicite um novo.'));
+        }
       }
     });
 
-    on<ValidatePasswordStep>((event, emit) {
+    on<ValidatePasswordStep>((event, emit) async {
       final regex = RegExp(
         r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$',
       );
@@ -68,15 +81,25 @@ class PasswordResetValidatorBloc extends ValidatorBloc {
       } else if (event.password != event.confirmPassword) {
         emit(ValidationFailure('As senhas não coincidem'));
       } else {
-        emit(
-          ValidationSuccess(
-            ResetPasswordData(
-              email: _tempEmail,
-              code: _tempCode,
-              password: event.password,
-            ),
-          ),
+        final authService = AuthService();
+        final ok = await authService.redefinirSenha(
+          _tempEmail,
+          _tempCode,
+          event.password,
         );
+        if (ok) {
+          emit(
+            ValidationSuccess(
+              ResetPasswordData(
+                email: _tempEmail,
+                code: _tempCode,
+                password: event.password,
+              ),
+            ),
+          );
+        } else {
+          emit(ValidationFailure('Não foi possível redefinir a senha. Tente novamente.'));
+        }
       }
     });
   }
