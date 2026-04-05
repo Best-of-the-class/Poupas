@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../sign_in/presentation/widgets/background.dart';
-import '../../../sign_in/presentation/widgets/wide_button.dart';
+import '../../../sign_in/presentati../../../../widgets/background.dart';
+import '../../../sign_in/presentati../../../../widgets/wide_button.dart';
 import 'package:go_router/go_router.dart';
 
 class WelcomePage extends StatelessWidget {

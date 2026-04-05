@@ -1,5 +1,5 @@
 import '../../../sign_in/presentation/bloc/validator_bloc.dart';
-import '../../domain/entities/user_reset_password.dart';
+import '../entities/user_reset_password.dart';
 import '../../../../../services/auth_service.dart';
 
 class ResetValidation extends ValidatorEvent {}

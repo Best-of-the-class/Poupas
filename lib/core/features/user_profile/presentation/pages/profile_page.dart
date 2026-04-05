@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/layouts/main_layout.dart';
-import '../widgets/profile_header.dart';
-import '../widgets/stats_section.dart';
-import '../widgets/profile_actions.dart';
+import '../../../../widgets/profile_header.dart';
+import '../../../../widgets/stats_section.dart';
+import '../../../../widgets/profile_actions.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pomo/core/features/forgot_password/presentation/widgets/custom_positioned_image.dart';
-import '../../../sign_in/presentation/widgets/wide_button.dart';
+import 'package:pomo/core/widgets/custom_positioned_image.dart';
+import '../../../sign_in/presentati../../../../widgets/wide_button.dart';
 
 class ForgotPasswordConfirmation extends StatelessWidget {
   const ForgotPasswordConfirmation({super.key});

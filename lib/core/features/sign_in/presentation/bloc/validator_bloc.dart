@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/user_registration.dart';
+import '../entities/user_registration.dart';
 
 abstract class ValidatorEvent {}
 
