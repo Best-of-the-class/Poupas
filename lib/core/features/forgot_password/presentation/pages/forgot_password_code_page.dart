@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../sign_in/presentation/widgets/wide_button.dart';
-import '../../../sign_in/presentation/widgets/heading_text.dart';
-import '../../../sign_in/presentation/widgets/navigate_top_corner.dart';
-import '../../../sign_in/presentation/widgets/pop_up.dart';
-import '../widgets/code_input.dart';
+import '../../../sign_in/presentati../../../../widgets/wide_button.dart';
+import '../../../sign_in/presentati../../../../widgets/heading_text.dart';
+import '../../../sign_in/presentati../../../../widgets/navigate_top_corner.dart';
+import '../../../sign_in/presentati../../../../widgets/pop_up.dart';
+import '../../../../widgets/code_input.dart';
 import '../bloc/navigation_bloc.dart';
 
 class ForgotPasswordCodePage extends StatefulWidget {

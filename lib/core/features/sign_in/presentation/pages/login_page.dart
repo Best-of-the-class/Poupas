@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 
-import '../widgets/background.dart';
-import '../widgets/wide_button.dart';
-import '../widgets/input.dart';
-import '../widgets/heading_text.dart';
-import '../widgets/navigate_top_corner.dart';
-import '../widgets/pop_up.dart';
+import '../../../../widgets/background.dart';
+import '../../../../widgets/wide_button.dart';
+import '../../../../widgets/input.dart';
+import '../../../../widgets/heading_text.dart';
+import '../../../../widgets/navigate_top_corner.dart';
+import '../../../../widgets/pop_up.dart';
 
 // IMPORTANTE
 import '../bloc/login_bloc.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/loading.dart';
+import '../../../../widgets/loading.dart';
 
 class LoadingPage extends StatelessWidget {
   final String text;

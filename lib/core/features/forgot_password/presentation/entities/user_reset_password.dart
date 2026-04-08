@@ -1,4 +1,4 @@
-import '../../../sign_in/domain/entities/user_registration.dart';
+import 'package:pomo/core/features/sign_in/presentation/entities/user_registration.dart';
 
 class ResetPasswordData extends RegistrationData {
   final String code;
