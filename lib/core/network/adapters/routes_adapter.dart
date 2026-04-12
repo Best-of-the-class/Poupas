@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
@@ -17,6 +16,7 @@ import '../../features/forgot_password/presentation/pages/forgot_password_confir
 import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
+import '../../features/admin/presentation/pages/admin_questions_page.dart';
 
 class RoutesAdapter {
   static const String loadingWelcome = 'loadingWelcome';
@@ -32,6 +32,7 @@ class RoutesAdapter {
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
   static const String profile = 'profile';
   static const String adminActivities = 'adminActivities';
+  static const String adminQuestions = 'adminQuestions';
 
   static bool get isDesktopAdmin {
     final result = !kIsWeb && (Platform.isWindows || Platform.isLinux);
@@ -73,7 +74,6 @@ class RoutesAdapter {
           builder: (context, state) =>
               SignInPagePassword(email: state.extra as String),
         ),
-
         GoRoute(
           name: forgotPassword,
           path: '/forgot-password',
@@ -94,7 +94,6 @@ class RoutesAdapter {
           path: '/forgot-password/success',
           builder: (context, state) => const ForgotPasswordConfirmation(),
         ),
-
         GoRoute(
           name: home,
           path: '/home',
@@ -121,6 +120,13 @@ class RoutesAdapter {
             return null;
           },
           builder: (context, state) => const AdminActivities(),
+        ),
+        GoRoute(
+          name: adminQuestions,
+          path: '/admin-questions',
+          redirect: (context, state) =>
+              !isDesktopAdmin ? '/loadingWelcome' : null,
+          builder: (context, state) => const AdminQuestions(),
         ),
       ],
     );
