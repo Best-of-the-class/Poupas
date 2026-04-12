@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'core/providers/bloc_injection.dart';
 import 'core/providers/global_bloc_providers.dart';
 import 'core/network/adapters/routes_adapter.dart';
@@ -19,6 +21,13 @@ class MyApp extends StatelessWidget {
       title: 'Poupas',
       debugShowCheckedModeBanner: false,
       routerConfig: RoutesAdapter.router,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('pt', 'BR'), Locale('en', 'US')],
     );
   }
 }
