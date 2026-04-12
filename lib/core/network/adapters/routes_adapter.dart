@@ -3,6 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../features/sign_in/presentation/pages/loading_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/user_profile/presentation/pages/profile_page.dart';
 import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
@@ -16,6 +20,7 @@ import '../../features/forgot_password/presentation/pages/forgot_password_reset_
 import '../../features/forgot_password/presentation/pages/forgot_password_confirmation.dart';
 import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
+import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_edit_questions_page.dart';
