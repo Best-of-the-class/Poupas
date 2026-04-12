@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../network/adapters/routes_adapter.dart';
 import '../../../../widgets/module.dart';
 import '../../../../widgets/module_group.dart';
 
@@ -98,7 +100,9 @@ class _AdminActivitiesState extends State<AdminActivities> {
                               aulas, // Modificar o for para alternar o que vem do banco
                           actionButtonTitle: "Criar aula nesse módulo",
                           actionButtonIcon: Icons.add,
-                          onActionButtonTap: () {},
+                          onActionButtonTap: () {
+                            context.pushNamed(RoutesAdapter.adminQuestions);
+                          },
                         ),
                       ),
                       if (i < ModuleDifficulty.values.length - 1)
