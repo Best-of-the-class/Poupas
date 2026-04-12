@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
@@ -26,6 +25,7 @@ import '../../features/admin/presentation/pages/admin_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_edit_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_success_page.dart';
 import '../../widgets/module.dart';
+import '../../features/admin/presentation/pages/admin_questions_page.dart';
 
 class RoutesAdapter {
   static const String loadingWelcome = 'loadingWelcome';
@@ -40,7 +40,8 @@ class RoutesAdapter {
   static const String resetPasswordNewPassword = 'reset_password_new_password';
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
   static const String profile = 'profile';
-  static const String adminActivities = 'adminActivities';  static const String editProfile = 'edit-profile';
+  static const String adminActivities = 'adminActivities';  static const String adminQuestions = 'adminQuestions';
+  static const String editProfile = 'edit-profile';
 
   static const String adminQuestions = 'adminQuestions';
   static const String adminEditQuestions = 'adminEditQuestions';
@@ -154,6 +155,13 @@ class RoutesAdapter {
         path: '/edit-profile',
         builder: (context, state) => const EditProfilePage(),
       ),
+        GoRoute(
+          name: adminQuestions,
+          path: '/admin-questions',
+          redirect: (context, state) =>
+              !isDesktopAdmin ? '/loadingWelcome' : null,
+          builder: (context, state) => const AdminQuestions(),
+        ),
     ],
     );
     return _router!;
