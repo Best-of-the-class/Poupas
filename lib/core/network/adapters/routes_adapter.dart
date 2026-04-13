@@ -17,6 +17,9 @@ import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_questions_page.dart';
+import '../../features/admin/presentation/pages/admin_edit_questions_page.dart';
+import '../../features/admin/presentation/pages/admin_success_page.dart';
+import '../../widgets/module.dart';
 
 class RoutesAdapter {
   static const String loadingWelcome = 'loadingWelcome';
@@ -33,6 +36,8 @@ class RoutesAdapter {
   static const String profile = 'profile';
   static const String adminActivities = 'adminActivities';
   static const String adminQuestions = 'adminQuestions';
+  static const String adminEditQuestions = 'adminEditQuestions';
+  static const String adminSuccess = 'adminSuccess';
 
   static bool get isDesktopAdmin {
     final result = !kIsWeb && (Platform.isWindows || Platform.isLinux);
@@ -109,24 +114,33 @@ class RoutesAdapter {
           path: '/profile',
           builder: (context, state) => const ProfilePage(),
         ),
-
         GoRoute(
           name: adminActivities,
           path: '/admin-activities',
-          redirect: (context, state) {
-            if (!isDesktopAdmin) {
-              return '/loadingWelcome';
-            }
-            return null;
-          },
+          redirect: (context, state) =>
+              !isDesktopAdmin ? '/loadingWelcome' : null,
           builder: (context, state) => const AdminActivities(),
         ),
         GoRoute(
           name: adminQuestions,
           path: '/admin-questions',
-          redirect: (context, state) =>
-              !isDesktopAdmin ? '/loadingWelcome' : null,
-          builder: (context, state) => const AdminQuestions(),
+          builder: (context, state) {
+            final difficulty = state.extra as ModuleDifficulty;
+            return AdminQuestions(difficulty: difficulty);
+          },
+        ),
+        GoRoute(
+          name: adminEditQuestions,
+          path: '/admin-edit-questions',
+          builder: (context, state) {
+            final aulaNome = state.extra as String?;
+            return AdminEditQuestions(lessonTitle: aulaNome);
+          },
+        ),
+        GoRoute(
+          name: adminSuccess,
+          path: '/admin-success',
+          builder: (context, state) => const AdminSuccessPage(),
         ),
       ],
     );
