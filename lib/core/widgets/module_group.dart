@@ -4,13 +4,14 @@ import 'module_title.dart';
 import 'lecture.dart';
 import 'custom_icon_button.dart';
 
-class ModuleGroup extends StatelessWidget {
+class ModuleGroup extends StatefulWidget {
   final ModuleDifficulty difficulty;
   final List<String> lessonTitles;
   final String actionButtonTitle;
   final IconData? actionButtonIcon;
   final IconButtonPosition actionButtonIconPosition;
   final VoidCallback onActionButtonTap;
+  final void Function(int index)? onEdit;
 
   const ModuleGroup({
     super.key,
@@ -20,11 +21,29 @@ class ModuleGroup extends StatelessWidget {
     this.actionButtonIcon,
     this.actionButtonIconPosition = IconButtonPosition.left,
     required this.onActionButtonTap,
+    this.onEdit,
   });
 
   @override
+  State<ModuleGroup> createState() => _ModuleGroupState();
+}
+
+class _ModuleGroupState extends State<ModuleGroup> {
+  late List<String> _lessons;
+
+  @override
+  void initState() {
+    super.initState();
+    _lessons = List.from(widget.lessonTitles);
+  }
+
+  void _delete(int index) {
+    setState(() => _lessons.removeAt(index));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Module.fromDifficulty(difficulty);
+    final theme = Module.fromDifficulty(widget.difficulty);
     const borderRadius = BorderRadius.vertical(bottom: Radius.circular(30));
 
     return Container(
@@ -51,15 +70,17 @@ class ModuleGroup extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: lessonTitles.length,
+                itemCount: _lessons.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: Lecture(
-                      title: lessonTitles[index],
+                      title: _lessons[index],
                       iconOne: Icons.edit,
                       iconTwo: Icons.delete,
                       theme: theme,
+                      onIconOne: () => widget.onEdit?.call(index),
+                      onIconTwo: () => _delete(index),
                     ),
                   );
                 },
@@ -70,10 +91,10 @@ class ModuleGroup extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 child: CustomIconButton(
-                  title: actionButtonTitle,
-                  icon: actionButtonIcon,
-                  iconPosition: actionButtonIconPosition,
-                  onTap: onActionButtonTap,
+                  title: widget.actionButtonTitle,
+                  icon: widget.actionButtonIcon,
+                  iconPosition: widget.actionButtonIconPosition,
+                  onTap: widget.onActionButtonTap,
                   theme: theme,
                 ),
               ),

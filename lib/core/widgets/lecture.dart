@@ -6,6 +6,8 @@ class Lecture extends StatelessWidget {
   final IconData iconOne;
   final IconData iconTwo;
   final Module theme;
+  final VoidCallback? onIconOne;
+  final VoidCallback? onIconTwo;
 
   const Lecture({
     super.key,
@@ -13,6 +15,8 @@ class Lecture extends StatelessWidget {
     required this.iconOne,
     required this.iconTwo,
     required this.theme,
+    this.onIconOne,
+    this.onIconTwo,
   });
 
   @override
@@ -42,17 +46,23 @@ class Lecture extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 52,
-            height: double.infinity,
-            color: theme.iconOneBackgroundColor,
-            child: Icon(iconOne, color: Colors.white, size: 24),
+          GestureDetector(
+            onTap: onIconOne,
+            child: Container(
+              width: 52,
+              height: double.infinity,
+              color: theme.iconOneBackgroundColor,
+              child: Icon(iconOne, color: Colors.white, size: 24),
+            ),
           ),
-          Container(
-            width: 52,
-            height: double.infinity,
-            color: theme.iconTwoBackgroundColor,
-            child: Icon(iconTwo, color: Colors.white, size: 24),
+          GestureDetector(
+            onTap: onIconTwo,
+            child: Container(
+              width: 52,
+              height: double.infinity,
+              color: theme.iconTwoBackgroundColor,
+              child: Icon(iconTwo, color: Colors.white, size: 24),
+            ),
           ),
         ],
       ),
