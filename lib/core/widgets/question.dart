@@ -88,19 +88,20 @@ class Question extends StatelessWidget {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: onDelete,
-            child: Container(
-              width: 60,
-              height: double.infinity,
-              color: themeColor,
-              child: const Icon(
-                Icons.delete_outline,
-                color: Colors.white,
-                size: 30,
+          if (onDelete != null)
+            GestureDetector(
+              onTap: onDelete,
+              child: Container(
+                width: 60,
+                height: double.infinity,
+                color: themeColor,
+                child: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

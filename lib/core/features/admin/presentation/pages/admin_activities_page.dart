@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:go_router/go_router.dart';
+import '../bloc/lesson_bloc.dart';
 import '../../../../network/adapters/routes_adapter.dart';
 import '../../../../widgets/module.dart';
 import '../../../../widgets/module_group.dart';
@@ -22,12 +24,12 @@ class _AdminActivitiesState extends State<AdminActivities> {
 
   void _setupWindow() async {
     await windowManager.ensureInitialized();
-    WindowOptions windowOptions = const WindowOptions(
+    const windowOptions = WindowOptions(
       size: Size(1366, 768),
       minimumSize: Size(1366, 768),
       maximumSize: Size(1366, 768),
       center: true,
-      title: "Poupas Admin",
+      title: 'Poupas Admin',
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
@@ -38,13 +40,6 @@ class _AdminActivitiesState extends State<AdminActivities> {
 
   @override
   Widget build(BuildContext context) {
-    // Back vai ter que encaminhar as aulas, nn fazer isso aqui e sim por um módulo para dps importar aqui pls a página é burra
-    final List<String> aulas = [
-      'Juros Composto',
-      'Capital de Giro',
-      'Equivalência de Capitais',
-    ];
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5EEDA),
       body: SafeArea(
@@ -54,9 +49,8 @@ class _AdminActivitiesState extends State<AdminActivities> {
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 24),
               child: Row(
                 children: [
-                  // Modificar aqui se necessário pegar o nome do admin tbm
                   const Text(
-                    "Boa Tarde, Admin!",
+                    'Boa Tarde, Admin!',
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
@@ -65,13 +59,13 @@ class _AdminActivitiesState extends State<AdminActivities> {
                   ),
                   const SizedBox(width: 24),
                   WideButton(
-                    text: "Dicionário",
+                    text: 'Dicionário',
                     backgroundColor: const Color(0xFF4285F4),
                     onPress: () {},
                   ),
                   const Spacer(),
                   WideButton(
-                    text: "Logout",
+                    text: 'Logout',
                     backgroundColor: const Color(0xFFE32626),
                     icon: const Icon(
                       Icons.logout,
@@ -87,33 +81,61 @@ class _AdminActivitiesState extends State<AdminActivities> {
                 ],
               ),
             ),
+
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (
-                      int i = 0;
-                      i < ModuleDifficulty.values.length;
-                      i++
-                    ) ...[
-                      Expanded(
-                        child: ModuleGroup(
-                          difficulty: ModuleDifficulty.values[i],
-                          lessonTitles:
-                              aulas, // Modificar o for para alternar o que vem do banco
-                          actionButtonTitle: "Criar aula nesse módulo",
-                          actionButtonIcon: Icons.add,
-                          onActionButtonTap: () {
-                            context.pushNamed(RoutesAdapter.adminQuestions);
-                          },
-                        ),
-                      ),
-                      if (i < ModuleDifficulty.values.length - 1)
-                        const SizedBox(width: 32),
-                    ],
-                  ],
+                child: BlocBuilder<LessonBloc, LessonState>(
+                  builder: (context, state) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (
+                          int i = 0;
+                          i < ModuleDifficulty.values.length;
+                          i++
+                        ) ...[
+                          Expanded(
+                            child: ModuleGroup(
+                              difficulty: ModuleDifficulty.values[i],
+                              lessonTitles:
+                                  state.lessonsByDifficulty[ModuleDifficulty
+                                      .values[i]] ??
+                                  [],
+                              actionButtonTitle: 'Criar aula nesse módulo',
+                              actionButtonIcon: Icons.add,
+                              onActionButtonTap: () {
+                                context.pushNamed(
+                                  RoutesAdapter.adminQuestions,
+                                  extra: ModuleDifficulty.values[i],
+                                );
+                              },
+                              onEdit: (index) {
+                                final lessonTitle =
+                                    (state.lessonsByDifficulty[ModuleDifficulty
+                                        .values[i]] ??
+                                    [])[index];
+                                context.pushNamed(
+                                  RoutesAdapter.adminEditQuestions,
+                                  extra: lessonTitle,
+                                );
+                              },
+                              onDelete: (index) {
+                                context.read<LessonBloc>().add(
+                                  DeleteLesson(
+                                    ModuleDifficulty.values[i],
+                                    index,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          if (i < ModuleDifficulty.values.length - 1)
+                            const SizedBox(width: 32),
+                        ],
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

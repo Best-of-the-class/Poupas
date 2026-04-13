@@ -6,11 +6,19 @@ class CustomEditor extends StatefulWidget {
   const CustomEditor({super.key, required this.themeColor});
 
   @override
-  State<CustomEditor> createState() => _CustomEditorState();
+  State<CustomEditor> createState() => CustomEditorState();
 }
 
-class _CustomEditorState extends State<CustomEditor> {
+class CustomEditorState extends State<CustomEditor> {
   final QuillController _controller = QuillController.basic();
+
+  QuillController get controller => _controller;
+
+  void setContent(String plainText) {
+    final doc = Document()..insert(0, plainText);
+    _controller.document = doc;
+    _controller.moveCursorToEnd();
+  }
 
   @override
   void dispose() {

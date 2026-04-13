@@ -18,6 +18,8 @@ class GlobalBlocProviders extends StatelessWidget {
         BlocProvider<ForgotPasswordNavigationBloc>.value(
           value: sl<ForgotPasswordNavigationBloc>(),
         ),
+        BlocProvider<AdminQuestionsBloc>.value(value: sl<AdminQuestionsBloc>()),
+        BlocProvider<LessonBloc>.value(value: sl<LessonBloc>()),
       ],
       child: child,
     );

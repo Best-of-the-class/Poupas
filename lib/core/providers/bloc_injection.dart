@@ -3,11 +3,16 @@ import 'package:pomo/core/features/sign_in/presentation/bloc/navigation_bloc.dar
 import 'package:pomo/core/features/sign_in/presentation/bloc/validator_bloc.dart';
 import 'package:pomo/core/features/forgot_password/presentation/bloc/navigation_bloc.dart';
 import 'package:pomo/core/features/forgot_password/presentation/bloc/validator_bloc.dart';
+import 'package:pomo/core/features/admin/presentation/bloc/question_bloc.dart';
+import 'package:pomo/core/features/admin/presentation/bloc/lesson_bloc.dart';
 
+export 'package:get_it/get_it.dart';
 export 'package:pomo/core/features/sign_in/presentation/bloc/navigation_bloc.dart';
 export 'package:pomo/core/features/sign_in/presentation/bloc/validator_bloc.dart';
 export 'package:pomo/core/features/forgot_password/presentation/bloc/navigation_bloc.dart';
 export 'package:pomo/core/features/forgot_password/presentation/bloc/validator_bloc.dart';
+export 'package:pomo/core/features/admin/presentation/bloc/question_bloc.dart';
+export 'package:pomo/core/features/admin/presentation/bloc/lesson_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -23,4 +28,7 @@ Future<void> init() async {
       validatorBloc: sl<PasswordResetValidatorBloc>(),
     ),
   );
+
+  sl.registerLazySingleton(() => AdminQuestionsBloc());
+  sl.registerLazySingleton(() => LessonBloc());
 }
