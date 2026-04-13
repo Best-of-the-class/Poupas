@@ -6,9 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
-import '../../features/sign_in/presentation/pages/loading_page.dart';
-import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/user_profile/presentation/pages/profile_page.dart';
 import '../../features/sign_in/presentation/bloc/login_bloc.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_page.dart';
@@ -20,12 +17,10 @@ import '../../features/forgot_password/presentation/pages/forgot_password_confir
 import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
-import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_edit_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_success_page.dart';
 import '../../widgets/module.dart';
-import '../../features/admin/presentation/pages/admin_questions_page.dart';
 
 class RoutesAdapter {
   static const String loadingWelcome = 'loadingWelcome';
@@ -42,8 +37,6 @@ class RoutesAdapter {
   static const String profile = 'profile';
   static const String adminActivities = 'adminActivities';  static const String adminQuestions = 'adminQuestions';
   static const String editProfile = 'edit-profile';
-
-  static const String adminQuestions = 'adminQuestions';
   static const String adminEditQuestions = 'adminEditQuestions';
   static const String adminSuccess = 'adminSuccess';
 
@@ -56,7 +49,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/admin-activities' : '/edit-profile',
+      initialLocation: isDesktopAdmin ? '/admin-activities' : '/loadingWelcome',
       routes: [
         GoRoute(
           name: loadingWelcome,
@@ -155,14 +148,7 @@ class RoutesAdapter {
         path: '/edit-profile',
         builder: (context, state) => const EditProfilePage(),
       ),
-        GoRoute(
-          name: adminQuestions,
-          path: '/admin-questions',
-          redirect: (context, state) =>
-              !isDesktopAdmin ? '/loadingWelcome' : null,
-          builder: (context, state) => const AdminQuestions(),
-        ),
-    ],
+      ]
     );
     return _router!;
   }
