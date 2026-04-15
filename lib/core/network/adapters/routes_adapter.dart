@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -34,7 +35,8 @@ class RoutesAdapter {
   static const String resetPasswordNewPassword = 'reset_password_new_password';
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
   static const String profile = 'profile';
-  static const String adminActivities = 'adminActivities';
+  static const String adminActivities = 'adminActivities';  static const String editProfile = 'edit-profile';
+
   static const String adminQuestions = 'adminQuestions';
   static const String adminEditQuestions = 'adminEditQuestions';
   static const String adminSuccess = 'adminSuccess';
@@ -48,7 +50,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/admin-activities' : '/loadingWelcome',
+      initialLocation: isDesktopAdmin ? '/admin-activities' : '/edit-profile',
       routes: [
         GoRoute(
           name: loadingWelcome,
@@ -142,7 +144,12 @@ class RoutesAdapter {
           path: '/admin-success',
           builder: (context, state) => const AdminSuccessPage(),
         ),
-      ],
+        GoRoute(
+        name: editProfile,
+        path: '/edit-profile',
+        builder: (context, state) => const EditProfilePage(),
+      ),
+    ],
     );
     return _router!;
   }
