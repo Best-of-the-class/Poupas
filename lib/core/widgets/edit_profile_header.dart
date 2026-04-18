@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class EditProfileHeader extends StatelessWidget {
   final String imagePath;
@@ -21,19 +23,15 @@ class EditProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double avatarRadius = 45;
+    const double avatarRadius = 66.5;
     const double borderWidth = 4;
     const double totalDiameter = (avatarRadius + borderWidth) * 2;
-    const double pencilSize = 32;
+    const double pencilSize = 50;
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(vertical: 28),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8B07A),
-        borderRadius: BorderRadius.circular(20),
-      ),
       child: Center(
         child: SizedBox(
           width: totalDiameter,
@@ -64,9 +62,8 @@ class EditProfileHeader extends StatelessWidget {
                     width: pencilSize,
                     height: pencilSize,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF363636),
+                      color: AppColors.selected,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -76,9 +73,9 @@ class EditProfileHeader extends StatelessWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: 16,
+                      Icons.edit_outlined,
+                      color: AppColors.textDark,
+                      size: 30,
                     ),
                   ),
                 ),

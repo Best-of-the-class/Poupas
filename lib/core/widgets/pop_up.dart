@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'heading_text.dart';
 import 'wide_button.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 class PopUp extends StatelessWidget {
   final String title;
@@ -18,7 +19,7 @@ class PopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFFF8F1E7),
+      backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.0)),
       child:
           Padding(
