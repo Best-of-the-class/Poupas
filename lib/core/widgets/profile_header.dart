@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String name;
@@ -28,7 +30,7 @@ class ProfileHeader extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.red,
+              color: AppColors.primary,
             ),
             child: CircleAvatar(
               radius: 45,
@@ -39,21 +41,15 @@ class ProfileHeader extends StatelessWidget {
           const SizedBox(height: 12),
 
           Text(
-            name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            name.toUpperCase(),
+            style: AppTextStyles.title,
           ),
 
           const SizedBox(height: 4),
 
           Text(
             email,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
+            style: AppTextStyles.body,
           ),
         ],
       ),

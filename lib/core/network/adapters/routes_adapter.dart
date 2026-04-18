@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pomo/core/features/sign_in/presentation/pages/loading_page.dart';
 import 'package:pomo/core/features/home/presentation/pages/home_page.dart';
 import 'package:pomo/core/features/user_profile/presentation/pages/profile_page.dart';
+import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/sign_in/presentation/bloc/login_bloc.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
@@ -28,9 +29,10 @@ class RoutesAdapter {
   static const String resetPasswordNewPassword = 'reset_password_new_password';
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
   static const String profile = 'profile';
+  static const String editProfile = 'edit-profile';
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/loadingWelcome',
+    initialLocation: '/edit-profile',
     routes: [
       GoRoute(
         name: loadingWelcome,
@@ -97,6 +99,11 @@ class RoutesAdapter {
         name: profile,
         path: '/profile',
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        name: editProfile,
+        path: '/edit-profile',
+        builder: (context, state) => const EditProfilePage(),
       ),
     ],
   );

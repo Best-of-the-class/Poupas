@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_theme.dart';
 import 'core/providers/bloc_injection.dart';
 import 'core/providers/global_bloc_providers.dart';
 import 'core/network/adapters/routes_adapter.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Poupas',
       debugShowCheckedModeBanner: false,
       routerConfig: RoutesAdapter.router,
+      theme: AppTheme.lightTheme,
     );
   }
 }

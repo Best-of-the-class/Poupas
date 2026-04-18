@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class ProfileActions extends StatelessWidget {
   const ProfileActions({super.key});
@@ -13,12 +16,14 @@ class ProfileActions extends StatelessWidget {
             icon: Icons.edit,
             label: 'Editar Perfil',
             onTap: () {
+              context.push('/edit-profile');
             },
           ),
           _ActionItem(
             icon: Icons.lock,
             label: 'Alterar Senha',
             onTap: () {
+              context.push('/forgot-password');
             },
           ),
           _ActionItem(
@@ -26,6 +31,7 @@ class ProfileActions extends StatelessWidget {
             label: 'Sair',
             isLogout: true,
             onTap: () {
+              // TODO: logout
             },
           ),
         ],
@@ -49,41 +55,47 @@ class _ActionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    decoration: BoxDecoration(
-      color: isLogout ? const Color(0xFFFFC5C0) : Colors.transparent,
-      border: Border.all(
-        color: isLogout ? const Color(0xFFE52727) : const Color(0xFF363636),
-        width: 1,
-      ),
-      borderRadius: BorderRadius.circular(14),
-    ),
-    child: ListTile(
-      leading: Icon(
-        icon,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
         color: isLogout
-            ? const Color(0xFFE52727)
-            : const Color(0xFF363636),
-      ),
-      title: Text(
-        label,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
+            ? const Color(0xFFFFC5C0)
+            : Colors.transparent,
+        border: Border.all(
           color: isLogout
-              ? const Color(0xFFE52727)
-              : const Color(0xFF363636),
+              ? AppColors.error
+              : AppColors.textDark,
+          width: 1,
         ),
+        borderRadius: BorderRadius.circular(20),
       ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 16,
-        color: isLogout
-            ? const Color(0xFFE52727)
-            : const Color(0xFF363636),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          size: 26,
+          color: isLogout
+              ? AppColors.error
+              : AppColors.textDark,
+        ),
+        title: Text(
+          label,
+          style: AppTextStyles.body.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            color: isLogout
+                ? AppColors.error
+                : AppColors.textDark,
+          ),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: isLogout
+              ? AppColors.error
+              : AppColors.textDark,
+        ),
+        onTap: onTap,
       ),
-      onTap: onTap,
-    ),
-  );
+    );
   }
 }
