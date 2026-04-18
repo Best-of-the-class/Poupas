@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pomo/core/widgets/edit_profile_header.dart';
 import 'package:pomo/core/widgets/pop_up.dart';
 import 'package:pomo/core/widgets/wide_button.dart';
+import 'package:pomo/core/widgets/action_result_page.dart';
+
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
 
@@ -26,11 +29,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _saveChanges() {
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: implementar lógica de salvar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Alterações salvas com sucesso!'),
-          backgroundColor: Color(0xFFA2CA8B),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ActionResultPage(
+            imagePath:
+                'lib/core/assets/images/maca-check.png',
+            descriptionText:
+                'Suas alterações foram salvas com sucesso!',
+            buttonText: 'Voltar para Meu Perfil',
+            onButtonPressed: () {
+              context.go('/profile');
+            },
+          ),
         ),
       );
     }
@@ -71,8 +82,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF363636)),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF363636)),
+          onPressed: () {
+            context.push('/profile');
+          },
         ),
         title: const Text(
           'Editar Perfil',
@@ -102,6 +115,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     children: [
                       _EditField(
                         label: 'Nome',
+                        hint: 'Digite seu nome',
                         controller: _nameController,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -113,6 +127,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(height: 16),
                       _EditField(
                         label: 'Email',
+                        hint: 'Digite seu email',
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
@@ -157,7 +172,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         icon: Icons.lock_outline,
                         label: 'Alterar Senha',
                         onTap: () {
-                          // TODO: navegar para tela de alterar senha
+                          context.push('/forgot-password');
                         },
                       ),
                       _ActionItem(
@@ -182,6 +197,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 class _EditField extends StatelessWidget {
   final String label;
+  final String? hint;
   final IconData? icon;
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -190,6 +206,7 @@ class _EditField extends StatelessWidget {
   const _EditField({
     required this.label,
     required this.controller,
+    this.hint,
     this.icon,
     this.keyboardType = TextInputType.text,
     this.validator,
@@ -215,7 +232,7 @@ class _EditField extends StatelessWidget {
           validator: validator,
           style: AppTextStyles.body,
           decoration: InputDecoration(
-            hintText: label,
+            hintText: hint ?? label,
             prefixIcon: icon != null
                 ? Icon(icon, color: AppColors.textDark)
                 : null,
