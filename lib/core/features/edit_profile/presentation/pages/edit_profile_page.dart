@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/widgets/edit_profile_header.dart';
+import 'package:pomo/core/widgets/pop_up.dart';
+import 'package:pomo/core/widgets/wide_button.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -33,47 +37,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _showDeleteAccountDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Excluir conta',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF363636)),
+    PopUp.show(
+      context,
+      title: "Excluir conta",
+      subtitle:
+          "Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.",
+      buttons: [
+        WideButton(
+          text: "Voltar",
+          onPress: () => Navigator.pop(context),
+          backgroundColor: AppColors.primary,
+          textColor: AppColors.textLight,
+        ),    
+        WideButton(
+          text: "Excluir conta",
+          onPress: () {
+            Navigator.pop(context);
+            // TODO: deletar conta
+          },
+          backgroundColor: Colors.transparent,
+          textColor: AppColors.error,
+          borderColor: AppColors.error,
         ),
-        content: const Text(
-          'Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.',
-          style: TextStyle(color: Colors.black54),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(color: Color(0xFF363636)),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: implementar exclusão de conta
-            },
-            child: const Text(
-              'Excluir',
-              style: TextStyle(color: Color(0xFFE52727), fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF363636)),
@@ -108,7 +103,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       _EditField(
                         label: 'Nome',
                         controller: _nameController,
-                        icon: Icons.person_outline,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Por favor, insira seu nome';
@@ -120,7 +114,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       _EditField(
                         label: 'Email',
                         controller: _emailController,
-                        icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -139,19 +132,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         child: ElevatedButton(
                           onPressed: _saveChanges,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE8B07A),
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
+                          child: Text(
                             'Salvar alterações',
-                            style: TextStyle(
-                              fontSize: 16,
+                            style: AppTextStyles.body.copyWith(
+                              color: AppColors.textLight,
                               fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -188,15 +182,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 class _EditField extends StatelessWidget {
   final String label;
+  final IconData? icon;
   final TextEditingController controller;
-  final IconData icon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
 
   const _EditField({
     required this.label,
     required this.controller,
-    required this.icon,
+    this.icon,
     this.keyboardType = TextInputType.text,
     this.validator,
   });
@@ -219,31 +213,12 @@ class _EditField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(fontSize: 15, color: Color(0xFF363636)),
+          style: AppTextStyles.body,
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, color: const Color(0xFF363636), size: 20),
-            filled: true,
-            fillColor: const Color(0xFFF5F5F5),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFFE0E0E0), width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide:
-                  const BorderSide(color: Color(0xFFE8B07A), width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide:
-                  const BorderSide(color: Color(0xFFE52727), width: 1),
-            ),
+            hintText: label,
+            prefixIcon: icon != null
+                ? Icon(icon, color: AppColors.textDark)
+                : null,
           ),
         ),
       ],
@@ -264,42 +239,47 @@ class _ActionItem extends StatelessWidget {
     this.isDestructive = false,
   });
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isDestructive ? const Color(0xFFFFC5C0) : Colors.transparent,
+        color: isDestructive
+            ? const Color(0xFFFFC5C0)
+            : Colors.transparent,
         border: Border.all(
           color: isDestructive
-              ? const Color(0xFFE52727)
-              : const Color(0xFF363636),
+              ? AppColors.error
+              : AppColors.textDark,
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
         leading: Icon(
           icon,
+          size: 30,
           color: isDestructive
-              ? const Color(0xFFE52727)
-              : const Color(0xFF363636),
+              ? AppColors.error
+              : AppColors.textDark,
         ),
         title: Text(
           label,
-          style: TextStyle(
+          style: AppTextStyles.body.copyWith(
             fontWeight: FontWeight.w500,
+            fontSize: 14,
             color: isDestructive
-                ? const Color(0xFFE52727)
-                : const Color(0xFF363636),
+                ? AppColors.error
+                : AppColors.textDark,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          size: 16,
+          size: 20,
           color: isDestructive
-              ? const Color(0xFFE52727)
-              : const Color(0xFF363636),
+              ? AppColors.error
+              : AppColors.textDark,
         ),
         onTap: onTap,
       ),
