@@ -40,6 +40,7 @@ dependencies:
   http: ^1.6.0
   get_it: ^9.2.1
   flutter_animate: ^4.5.2
+  flutter_dotenv: ^6.0.0
   window_manager: ^0.5.1
   flutter_quill: ^11.5.0
   dotted_border: ^3.1.0
@@ -69,6 +70,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - lib/core/features/sign_in/presentation/assets/images/poup_bottom.png
     - lib/core/features/sign_in/presentation/assets/images/poup_caterpillar.png
     - lib/core/features/forgot_password/presentation/assets/images/poup_check.png

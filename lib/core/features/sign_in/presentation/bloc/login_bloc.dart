@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_validator.dart';
+import '../../../../network/api_interceptor.dart'; 
 
 abstract class LoginEvent {}
 
@@ -29,15 +31,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginSubmitted>(_onLogin);
   }
 
-  final List<Map<String, String>> fakeUsers = [
-    {'email': 'teste@email.com', 'password': '123456'},
-    {'email': 'ana@email.com', 'password': 'abc123'},
-  ];
+  // Instanciando o nosso "Caminhão Blindado"
+  final ApiInterceptor _api = ApiInterceptor(); 
 
   Future<void> _onLogin(
     LoginSubmitted event,
     Emitter<LoginState> emit,
   ) async {
+
     final validationError =
         LoginValidator.validate(event.email, event.password);
 
@@ -48,19 +49,27 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     emit(LoginLoading());
 
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      final response = await _api.post(
+        '/Autenticacao/login', 
+        {
+          'email': event.email,
+          'senha': event.password,
+        }
+      );
 
-    final user = fakeUsers.firstWhere(
-      (u) =>
-          u['email'] == event.email &&
-          u['password'] == event.password,
-      orElse: () => {},
-    );
-
-    if (user.isEmpty) {
-      emit(LoginError('Email ou senha incorretos'));
-    } else {
-      emit(LoginSuccess());
+      if (response.statusCode == 200) {
+        emit(LoginSuccess());
+      } else if (response.statusCode == 401) {
+        final body = jsonDecode(response.body);
+        emit(LoginError(body['mensagem'] ?? 'Email ou senha incorretos'));
+      } else {
+        print('Erro do servidor: ${response.statusCode} - ${response.body}');
+        emit(LoginError('Erro no servidor. Tente novamente mais tarde.'));
+      }
+    } catch (e) {
+      emit(LoginError('Não foi possível conectar ao servidor. Verifique sua conexão.'));
+      print('Erro no login: $e');
     }
   }
 }

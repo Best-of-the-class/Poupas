@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart'; 
 
 class ApiInterceptor {
 
-  final String baseUrl = "https://localhost:7141/api";
+  final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'URL_NAO_ENCONTRADA';
 
   Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('$baseUrl$endpoint');
+    print('Chamando URL: $url');
     
     final ioc = HttpClient();
     ioc.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
