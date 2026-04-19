@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class StatsCard extends StatefulWidget {
   final int value;
@@ -29,15 +31,13 @@ class _StatsCardState extends State<StatsCard>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1), 
+      duration: const Duration(seconds: 1),
     );
 
     _animation = IntTween(
       begin: 0,
       end: widget.value,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -62,11 +62,7 @@ class _StatsCardState extends State<StatsCard>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                widget.icon,
-                color: Colors.white,
-                size: 35,
-              ),
+              Icon(widget.icon, color: AppColors.textLight, size: 35),
               const SizedBox(width: 6),
 
               AnimatedBuilder(
@@ -74,10 +70,9 @@ class _StatsCardState extends State<StatsCard>
                 builder: (context, child) {
                   return Text(
                     _animation.value.toString(),
-                    style: const TextStyle(
+                    style: AppTextStyles.title.copyWith(
                       fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.textLight,
                     ),
                   );
                 },
@@ -90,9 +85,9 @@ class _StatsCardState extends State<StatsCard>
           Text(
             widget.label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: AppTextStyles.body.copyWith(
               fontSize: 14,
-              color: Colors.white,
+              color: AppColors.textLight,
             ),
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'module.dart';
+import '../theme/app_colors.dart';
 
 class CustomIconButton extends StatelessWidget {
   final String title;
@@ -23,17 +24,18 @@ class CustomIconButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.primaryColor,
+        foregroundColor: AppColors.textLight,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         shape: const StadiumBorder(),
         elevation: 0,
-        minimumSize: const Size(0, 48),
+        minimumSize: const Size(double.infinity, 48),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null && iconPosition == IconButtonPosition.left) ...[
-            Icon(icon, color: Colors.white, size: 20),
+            Icon(icon, color: AppColors.textLight, size: 20),
             const SizedBox(width: 8),
           ],
           Flexible(
@@ -42,7 +44,7 @@ class CustomIconButton extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.textLight,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -50,7 +52,7 @@ class CustomIconButton extends StatelessWidget {
           ),
           if (icon != null && iconPosition == IconButtonPosition.right) ...[
             const SizedBox(width: 8),
-            Icon(icon, color: Colors.white, size: 20),
+            Icon(icon, color: AppColors.textLight, size: 20),
           ],
         ],
       ),

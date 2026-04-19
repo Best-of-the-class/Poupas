@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class Input extends StatelessWidget {
   final String hint;
   final bool obscureText;
   final TextInputType keyboardType;
-  final Widget? suffixIcon; 
-  final List<TextInputFormatter>? inputFormatters; 
+  final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
   final Function(String)? onChanged;
 
   const Input({
@@ -26,27 +28,30 @@ class Input extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
-      cursorColor: const Color(0xFFE32626),
-      style: const TextStyle(fontSize: 16),
+      cursorColor: AppColors.primary,
+      style: AppTextStyles.body.copyWith(fontSize: 16),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        
-        suffixIcon: suffixIcon != null 
+        hintStyle: AppTextStyles.body.copyWith(color: AppColors.border),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 20,
+        ),
+
+        suffixIcon: suffixIcon != null
             ? Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: suffixIcon,
-              ) 
+              )
             : null,
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: const BorderSide(color: Color(0xFFE32626), width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
-          borderSide: const BorderSide(color: Color(0xFFE32626), width: 2.0),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2.0),
         ),
       ),
     );

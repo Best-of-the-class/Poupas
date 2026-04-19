@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 import 'stats_card.dart';
 
 class StatsSection extends StatelessWidget {
@@ -15,32 +16,32 @@ class StatsSection extends StatelessWidget {
         mainAxisSpacing: 12,
         childAspectRatio: 1.6,
         physics: const NeverScrollableScrollPhysics(),
-        children: [
+        children: const [
           StatsCard(
             value: 20,
             label: "Lições concluídas",
-            color: Color(0xFFA2CA8B),
+            color: AppColors.perfilLicoes,
             icon: Icons.menu_book_outlined,
           ),
           StatsCard(
             value: 35,
             label: "Exercícios resolvidos",
-            color: Color(0xFF7ECCE1),
+            color: AppColors.perfilExercicios,
             icon: Icons.edit_outlined,
           ),
           StatsCard(
             value: 2584,
             label: "Pontuação (XP)",
-            color: Color(0xFFFBD564),
+            color: AppColors.perfilPontuacao,
             icon: Icons.star_outline,
           ),
           StatsCard(
             value: 14,
             label: "Sequência de dias",
-            color: Color(0xFFFBA29B),
+            color: AppColors.perfilSequencia,
             icon: Icons.local_fire_department_outlined,
           ),
-        ]
+        ],
       ),
     );
   }

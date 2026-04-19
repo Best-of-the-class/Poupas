@@ -45,7 +45,6 @@ class ModuleGroup extends StatelessWidget {
               width: double.infinity,
               color: theme.primaryColor,
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
               child: FittedBox(
@@ -53,7 +52,6 @@ class ModuleGroup extends StatelessWidget {
                 child: ModuleTitle(title: theme.titlePrefix, theme: theme),
               ),
             ),
-
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -73,10 +71,10 @@ class ModuleGroup extends StatelessWidget {
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
               child: SizedBox(
+                width: double.infinity,
                 height: 60,
                 child: CustomIconButton(
                   title: actionButtonTitle,
