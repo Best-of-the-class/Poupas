@@ -18,40 +18,47 @@ class PopUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final dialogWidth = isMobile ? screenWidth * 0.88 : screenWidth * 0.4;
+
     return Dialog(
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.0)),
-      child:
-          Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 8),
-                    HeadingText(
-                      title: title,
-                      subtitle: subtitle,
-                      alignment: CrossAxisAlignment.center,
-                    ),
-                    const SizedBox(height: 32),
-                    Column(
-                      children:
-                          buttons
-                              .expand(
-                                (button) => [
-                                  button,
-                                  const SizedBox(height: 12),
-                                ],
-                              )
-                              .toList()
-                            ..removeLast(),
-                    ),
-                  ],
-                ),
-              )
-              .animate()
-              .fade(duration: 200.ms)
-              .shake(hz: 4, curve: Curves.easeInOutCubic, duration: 400.ms),
+      child: SizedBox(
+        width: dialogWidth,
+        child:
+            Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 8),
+                      HeadingText(
+                        title: title,
+                        subtitle: subtitle,
+                        alignment: CrossAxisAlignment.center,
+                      ),
+                      const SizedBox(height: 32),
+                      Column(
+                        children:
+                            buttons
+                                .expand(
+                                  (button) => [
+                                    button,
+                                    const SizedBox(height: 12),
+                                  ],
+                                )
+                                .toList()
+                              ..removeLast(),
+                      ),
+                    ],
+                  ),
+                )
+                .animate()
+                .fade(duration: 200.ms)
+                .shake(hz: 4, curve: Curves.easeInOutCubic, duration: 400.ms),
+      ),
     );
   }
 

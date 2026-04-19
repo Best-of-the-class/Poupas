@@ -20,36 +20,48 @@ class WideButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56, 
-      child: OutlinedButton(
-        onPressed: onPress,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          shape: const StadiumBorder(), 
-          side: borderColor != null 
-              ? BorderSide(color: borderColor!) 
-              : BorderSide.none,
-          elevation: 0,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              icon!,
-              const SizedBox(width: 12),
-            ],
-            Text(
-              text,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final hasFiniteWidth = constraints.maxWidth != double.infinity;
+
+        final button = SizedBox(
+          height: 56,
+          child: OutlinedButton(
+            onPressed: onPress,
+            style: OutlinedButton.styleFrom(
+              backgroundColor: backgroundColor,
+              shape: const StadiumBorder(),
+              side: borderColor != null
+                  ? BorderSide(color: borderColor!)
+                  : BorderSide.none,
+              elevation: 0,
             ),
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: hasFiniteWidth
+                  ? MainAxisSize.max
+                  : MainAxisSize.min,
+              children: [
+                if (icon != null) ...[icon!, const SizedBox(width: 12)],
+                Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+        if (hasFiniteWidth) {
+          return SizedBox(width: constraints.maxWidth, child: button);
+        }
+
+        return IntrinsicWidth(child: button);
+      },
     );
   }
 }
