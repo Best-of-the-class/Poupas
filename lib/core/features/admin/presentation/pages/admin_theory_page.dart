@@ -32,7 +32,7 @@ class _AdminTheoryState extends State<AdminTheory> {
     await showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
         return Center(

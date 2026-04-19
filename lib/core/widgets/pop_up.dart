@@ -72,7 +72,7 @@ class PopUp extends StatelessWidget {
       context: context,
       barrierDismissible: true,
       barrierLabel: '',
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim1, anim2) {
         return PopUp(title: title, subtitle: subtitle, buttons: buttons);

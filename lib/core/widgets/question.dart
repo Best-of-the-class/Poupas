@@ -28,7 +28,7 @@ class Question extends StatelessWidget {
       height: 90,
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: activeColor.withOpacity(0.5),
+        color: activeColor.withValues(alpha: 0.5),
         border: Border.all(color: activeColor, width: 2),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -66,7 +66,7 @@ class Question extends StatelessWidget {
                       Text(
                         subtitle,
                         style: AppTextStyles.body.copyWith(
-                          color: activeColor.withOpacity(0.9),
+                          color: activeColor.withValues(alpha: 0.9),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),

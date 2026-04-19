@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/theme/app_colors.dart';
-import 'package:pomo/core/theme/app_text_styles.dart';
 
 class EditProfileHeader extends StatelessWidget {
   final String imagePath;
@@ -52,7 +51,6 @@ class EditProfileHeader extends StatelessWidget {
                   backgroundImage: AssetImage(imagePath),
                 ),
               ),
-
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -66,7 +64,7 @@ class EditProfileHeader extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -117,7 +115,6 @@ class EditProfileHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -131,7 +128,6 @@ class EditProfileHeader extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       Navigator.pop(context, _availableAvatars[index]);
-                      // TODO: atualizar avatar selecionado
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -148,7 +144,6 @@ class EditProfileHeader extends StatelessWidget {
                   );
                 },
               ),
-
               const SizedBox(height: 8),
             ],
           ),
