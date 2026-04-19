@@ -52,6 +52,9 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocListener<NavigationBloc, NavigationState>(
       listenWhen: (previous, current) {
         if (current is NavigationErrorEffect &&
@@ -92,43 +95,49 @@ class _SignInPageState extends State<SignInPage> {
                   subtitle:
                       'Insira seu nome e email abaixo para se cadastrar em Poupas',
                 ),
+
                 const SizedBox(height: 40),
-                const Align(
+
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Nome Completo',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 8),
                 Input(
                   hint: 'Insira seu nome aqui',
                   keyboardType: TextInputType.name,
                   onChanged: (value) => _userName = value,
                 ),
+
                 const SizedBox(height: 16),
-                const Align(
+
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Email',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 8),
                 Input(
                   hint: 'nome@email.com',
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) => _userEmail = value,
                 ),
+
                 const SizedBox(height: 32),
+
                 WideButton(
                   text: 'Continuar',
                   onPress: () {
@@ -139,56 +148,58 @@ class _SignInPageState extends State<SignInPage> {
                     );
                   },
                 ),
+
                 const SizedBox(height: 24),
+
                 Row(
                   children: [
-                    const Expanded(
-                      child: Divider(color: Color(0xFFD9D9D9), thickness: 1),
-                    ),
+                    const Expanded(child: Divider(thickness: 1)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         '•',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                    const Expanded(
-                      child: Divider(color: Color(0xFFD9D9D9), thickness: 1),
-                    ),
+                    const Expanded(child: Divider(thickness: 1)),
                   ],
                 ),
+
                 const SizedBox(height: 14),
+
                 RichText(
                   textAlign: TextAlign.center,
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 14,
+                  text: TextSpan(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: Colors.grey,
                       height: 1.5,
                     ),
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text:
                             'Ao clicar em continuar, você concorda com nossos ',
                       ),
                       TextSpan(
                         text: 'Termos de Serviço',
-                        style: TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
-                      TextSpan(text: ' e '),
+                      const TextSpan(text: ' e '),
                       TextSpan(
                         text: 'Política de Privacidade',
-                        style: TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 14),
               ],
             ),

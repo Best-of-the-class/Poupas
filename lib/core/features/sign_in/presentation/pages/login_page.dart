@@ -10,7 +10,6 @@ import '../../../../widgets/heading_text.dart';
 import '../../../../widgets/navigate_top_corner.dart';
 import '../../../../widgets/pop_up.dart';
 
-// IMPORTANTE
 import '../bloc/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -50,6 +49,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
@@ -69,27 +71,23 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: NavigateTopCorner(route: 'welcome'),
                 ),
-
                 const HeadingText(
                   title: 'Login',
                   subtitle: 'Faça login utilizando seu email e senha',
                 ),
-
-                // EMAIL
                 const SizedBox(height: 40),
-                const Align(
+
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Email',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -101,16 +99,15 @@ class _LoginPageState extends State<LoginPage> {
                   onChanged: (value) => _userEmail = value,
                 ),
 
-                // SENHA
                 const SizedBox(height: 16),
-                const Align(
+
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Senha',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -125,28 +122,25 @@ class _LoginPageState extends State<LoginPage> {
                       _obscurePassword
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: const Color(0xFFE32626),
+                      color: colorScheme.primary,
                     ),
                     onPressed: () =>
                         setState(() => _obscurePassword = !_obscurePassword),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
+                    style: textTheme.bodyMedium,
                     children: [
-                      const TextSpan(
-                        text: 'Esqueceu sua senha? ',
-                      ),
+                      const TextSpan(text: 'Esqueceu sua senha? '),
                       TextSpan(
                         text: 'Recuperar senha',
-                        style: const TextStyle(
-                          color: Color(0xFFE32626),
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                         recognizer: TapGestureRecognizer()
@@ -158,8 +152,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                // BOTÃO COM LOADING
                 const SizedBox(height: 20),
+
                 BlocBuilder<LoginBloc, LoginState>(
                   builder: (context, state) {
                     final isLoading = state is LoginLoading;
@@ -177,55 +171,50 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
 
-                // DIVIDER
                 const SizedBox(height: 24),
+
                 Row(
                   children: [
-                    const Expanded(
-                      child: Divider(color: Color(0xFFD9D9D9), thickness: 1),
-                    ),
+                    const Expanded(child: Divider(thickness: 1)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         '•',
-                        style:
-                            TextStyle(color: Colors.grey, fontSize: 14),
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                    const Expanded(
-                      child: Divider(color: Color(0xFFD9D9D9), thickness: 1),
-                    ),
+                    const Expanded(child: Divider(thickness: 1)),
                   ],
                 ),
 
-                // TERMOS
                 const SizedBox(height: 14),
+
                 RichText(
                   textAlign: TextAlign.center,
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontSize: 14,
+                  text: TextSpan(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: Colors.grey,
                       height: 1.5,
                     ),
                     children: [
-                      TextSpan(
-                        text:
-                            'Ao clicar em entrar, você concorda com nossos ',
+                      const TextSpan(
+                        text: 'Ao clicar em entrar, você concorda com nossos ',
                       ),
                       TextSpan(
                         text: 'Termos de Serviço',
-                        style: TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
-                      TextSpan(text: ' e '),
+                      const TextSpan(text: ' e '),
                       TextSpan(
                         text: 'Política de Privacidade',
-                        style: TextStyle(
+                        style: textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
