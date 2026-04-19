@@ -22,11 +22,14 @@ class WideButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     final effectiveBgColor = backgroundColor ?? AppColors.primary;
     final effectiveTextColor = textColor ?? AppColors.textLight;
 
     final label = Text(
       text,
+      maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.body.copyWith(
         color: effectiveTextColor,
@@ -35,9 +38,9 @@ class WideButton extends StatelessWidget {
       ),
     );
 
-    final content = icon != null
+    final child = icon != null
         ? Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               icon!,
@@ -56,27 +59,15 @@ class WideButton extends StatelessWidget {
             ? BorderSide(color: borderColor!)
             : BorderSide.none,
         elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
       ),
-      child: content,
+      child: child,
     );
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isWide =
-            constraints.hasBoundedWidth && constraints.maxWidth > 300;
-
-        if (isWide) {
-          return SizedBox(
-            width: constraints.maxWidth,
-            height: 56,
-            child: button,
-          );
-        }
-
-        return IntrinsicWidth(child: SizedBox(height: 56, child: button));
-      },
+    return SizedBox(
+      height: 56,
+      width: isMobile ? double.infinity : null,
+      child: button,
     );
   }
 }
