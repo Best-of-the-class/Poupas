@@ -32,7 +32,7 @@ class HeadingText extends StatelessWidget {
           style: AppTextStyles.body.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            color: AppColors.textDark.withOpacity(0.9),
+            color: AppColors.textDark.withValues(alpha: 0.9),
             height: 1.4,
           ),
         ),

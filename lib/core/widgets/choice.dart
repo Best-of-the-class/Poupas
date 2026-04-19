@@ -29,7 +29,9 @@ class Choice extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(
-          color: isCorrect ? themeColor : AppColors.border.withOpacity(0.3),
+          color: isCorrect
+              ? themeColor
+              : AppColors.border.withValues(alpha: 0.3),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(30),
@@ -79,7 +81,7 @@ class Choice extends StatelessWidget {
                 border: Border.all(
                   color: isSelected
                       ? AppColors.success
-                      : AppColors.border.withOpacity(0.5),
+                      : AppColors.border.withValues(alpha: 0.5),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(6),
