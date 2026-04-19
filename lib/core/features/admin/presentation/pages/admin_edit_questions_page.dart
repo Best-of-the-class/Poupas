@@ -6,6 +6,7 @@ import '../../../../widgets/custom_editor.dart';
 import '../../../../widgets/missing_question.dart';
 import '../../../../widgets/question.dart';
 import '../../../../widgets/wide_button.dart';
+import '../../../../widgets/pop_up.dart';
 import '../bloc/question_bloc.dart';
 
 class AdminEditQuestions extends StatefulWidget {
@@ -26,6 +27,7 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
   );
   int _selectedCorrectIndex = 0;
   final int _totalQuestions = 4;
+  bool _isPopupOpen = false;
 
   @override
   void initState() {
@@ -56,6 +58,29 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
     });
   }
 
+  Future<void> _showError(String message) async {
+    if (_isPopupOpen) return;
+    _isPopupOpen = true;
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      pageBuilder: (context, _, __) => Center(
+        child: PopUp(
+          title: 'Ops!',
+          subtitle: message,
+          buttons: [
+            WideButton(
+              text: 'Entendido',
+              onPress: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+    );
+    _isPopupOpen = false;
+  }
+
   @override
   void dispose() {
     for (final c in _choiceControllers) c.dispose();
@@ -67,9 +92,13 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5EEDA),
       body: BlocListener<AdminQuestionsBloc, AdminQuestionsState>(
-        listenWhen: (prev, curr) => prev.viewingIndex != curr.viewingIndex,
+        listenWhen: (prev, curr) =>
+            prev.viewingIndex != curr.viewingIndex ||
+            prev.errorId != curr.errorId,
         listener: (context, state) {
-          if (state.viewingIndex != null) {
+          if (state.errorMessage != null) {
+            _showError(state.errorMessage!);
+          } else if (state.viewingIndex != null) {
             final q = state.questions[state.viewingIndex!];
             _editorKey.currentState?.setContent(q.questionText);
             for (int i = 0; i < 3; i++) {
@@ -209,8 +238,7 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                                         child: Question(
                                           title: q.title,
                                           subtitle: q.subtitle,
-                                          isSelected:
-                                              state.viewingIndex == index,
+                                          isSelected: q.isSelected,
                                           onToggle: () => context
                                               .read<AdminQuestionsBloc>()
                                               .add(

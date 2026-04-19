@@ -106,7 +106,7 @@ class _AdminActivitiesState extends State<AdminActivities> {
                               actionButtonIcon: Icons.add,
                               onActionButtonTap: () {
                                 context.pushNamed(
-                                  RoutesAdapter.adminQuestions,
+                                  'adminTheory',
                                   extra: ModuleDifficulty.values[i],
                                 );
                               },

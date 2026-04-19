@@ -13,7 +13,7 @@ class AdminSuccessPage extends StatelessWidget {
       backgroundColor: const Color(0xFFF5EEDA),
       body: CustomPositionedImage(
         imageSize: 220,
-        posX: 540,
+        posX: (MediaQuery.of(context).size.width / 2) - (220 / 2),
         posY: 100,
         imagePath:
             'lib/core/features/forgot_password/presentation/assets/images/poup_check.png',
@@ -36,9 +36,15 @@ class AdminSuccessPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 48),
-                WideButton(
-                  text: 'Voltar para Início',
-                  onPress: () => context.goNamed(RoutesAdapter.adminActivities),
+                Center(
+                  child: SizedBox(
+                    width: 280,
+                    child: WideButton(
+                      text: 'Voltar para Início',
+                      onPress: () =>
+                          context.goNamed(RoutesAdapter.adminActivities),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -8,6 +8,7 @@ import '../../../../widgets/missing_question.dart';
 import '../../../../widgets/question.dart';
 import '../../../../widgets/wide_button.dart';
 import '../../../../widgets/module.dart';
+import '../../../../widgets/pop_up.dart';
 import '../../../../network/adapters/routes_adapter.dart';
 import '../bloc/question_bloc.dart';
 import '../bloc/lesson_bloc.dart';
@@ -24,18 +25,21 @@ class _AdminQuestionsState extends State<AdminQuestions> {
   final Color themeColor = const Color(0xFFE32626);
   final GlobalKey<CustomEditorState> _editorKey =
       GlobalKey<CustomEditorState>();
-  final TextEditingController _titleController = TextEditingController();
   final List<TextEditingController> _choiceControllers = List.generate(
     3,
     (_) => TextEditingController(),
   );
   int _selectedCorrectIndex = 0;
   final int _totalQuestions = 4;
+  bool _isPopupOpen = false;
 
   @override
   void initState() {
     super.initState();
     _setupWindow();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AdminQuestionsBloc>().add(ResetQuestions());
+    });
   }
 
   void _setupWindow() async {
@@ -54,20 +58,38 @@ class _AdminQuestionsState extends State<AdminQuestions> {
     });
   }
 
+  Future<void> _showError(String message) async {
+    if (_isPopupOpen) return;
+    _isPopupOpen = true;
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      pageBuilder: (context, _, __) => Center(
+        child: PopUp(
+          title: 'Ops!',
+          subtitle: message,
+          buttons: [
+            WideButton(
+              text: 'Entendido',
+              onPress: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+    );
+    _isPopupOpen = false;
+  }
+
   @override
   void dispose() {
-    _titleController.dispose();
     for (final c in _choiceControllers) c.dispose();
     super.dispose();
   }
 
   void _createLesson(BuildContext context, AdminQuestionsState state) {
-    final title = _titleController.text.trim().isEmpty
-        ? 'Nova Aula'
-        : _titleController.text.trim();
-
+    final title = AdminQuestionsBloc.tempTitle ?? 'Nova Aula';
     AdminQuestionsBloc.persistForLesson(title, state.questions);
-
     context.read<LessonBloc>().add(CreateLesson(title, widget.difficulty));
     context.goNamed(RoutesAdapter.adminSuccess);
   }
@@ -78,11 +100,16 @@ class _AdminQuestionsState extends State<AdminQuestions> {
       backgroundColor: const Color(0xFFF5EEDA),
       body: BlocListener<AdminQuestionsBloc, AdminQuestionsState>(
         listenWhen: (prev, curr) =>
-            prev.questions.length != curr.questions.length,
+            prev.questions.length != curr.questions.length ||
+            prev.errorId != curr.errorId,
         listener: (context, state) {
-          _editorKey.currentState?.setContent('');
-          for (final c in _choiceControllers) c.clear();
-          setState(() => _selectedCorrectIndex = 0);
+          if (state.errorMessage != null) {
+            _showError(state.errorMessage!);
+          } else {
+            _editorKey.currentState?.setContent('');
+            for (final c in _choiceControllers) c.clear();
+            setState(() => _selectedCorrectIndex = 0);
+          }
         },
         child: SafeArea(
           child: Padding(
@@ -92,29 +119,13 @@ class _AdminQuestionsState extends State<AdminQuestions> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Agora crie 4 questões',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2D2D2D),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: 400,
-                          child: TextField(
-                            controller: _titleController,
-                            decoration: const InputDecoration(
-                              hintText: 'Título da Aula',
-                              border: UnderlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
+                    const Text(
+                      'Agora crie 4 questões',
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF2D2D2D),
+                      ),
                     ),
                     BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(
                       builder: (context, state) {
@@ -133,9 +144,7 @@ class _AdminQuestionsState extends State<AdminQuestions> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 32),
-
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -175,33 +184,49 @@ class _AdminQuestionsState extends State<AdminQuestions> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            WideButton(
-                              text: 'Adicionar questão',
-                              backgroundColor: themeColor,
-                              onPress: () {
-                                context.read<AdminQuestionsBloc>().add(
-                                  SaveQuestion(
-                                    questionText:
-                                        _editorKey
-                                            .currentState
-                                            ?.controller
-                                            .document
-                                            .toPlainText() ??
-                                        '',
-                                    choices: _choiceControllers
-                                        .map((c) => c.text)
-                                        .toList(),
-                                    correctIndex: _selectedCorrectIndex,
-                                  ),
+                            BlocBuilder<
+                              AdminQuestionsBloc,
+                              AdminQuestionsState
+                            >(
+                              builder: (context, state) {
+                                final canAdd =
+                                    state.questions.length < _totalQuestions;
+                                return WideButton(
+                                  text: canAdd
+                                      ? 'Adicionar questão'
+                                      : 'Limite de questões atingido',
+                                  backgroundColor: canAdd
+                                      ? themeColor
+                                      : Colors.grey,
+                                  onPress: canAdd
+                                      ? () {
+                                          context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(
+                                                SaveQuestion(
+                                                  questionText:
+                                                      _editorKey
+                                                          .currentState
+                                                          ?.controller
+                                                          .document
+                                                          .toPlainText() ??
+                                                      '',
+                                                  choices: _choiceControllers
+                                                      .map((c) => c.text)
+                                                      .toList(),
+                                                  correctIndex:
+                                                      _selectedCorrectIndex,
+                                                ),
+                                              );
+                                        }
+                                      : () {},
                                 );
                               },
                             ),
                           ],
                         ),
                       ),
-
                       const SizedBox(width: 40),
-
                       Expanded(
                         flex: 4,
                         child:
