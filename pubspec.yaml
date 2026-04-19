@@ -41,6 +41,10 @@ dependencies:
   get_it: ^9.2.1
   flutter_animate: ^4.5.2
   flutter_dotenv: ^6.0.0
+  window_manager: ^0.5.1
+  flutter_quill: ^11.5.0
+  dotted_border: ^3.1.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +76,8 @@ flutter:
     - lib/core/features/forgot_password/presentation/assets/images/poup_check.png
     - lib/core/features/user_profile/presentation/assets/images/avatar_1.png
     - lib/core/assets/images/folha-icon-active-menu.png
+    - lib/core/assets/images/maca-check.png
+    - lib/core/assets/images/maca-check.png
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
     - lib/core/features/entry/presentation/assets/image/oi.png
