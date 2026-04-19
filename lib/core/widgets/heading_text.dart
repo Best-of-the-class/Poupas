@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class HeadingText extends StatelessWidget {
   final String title;
@@ -21,21 +23,16 @@ class HeadingText extends StatelessWidget {
         Text(
           title.toUpperCase(),
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            letterSpacing: 1.2,
-          ),
+          style: AppTextStyles.title.copyWith(fontSize: 22, letterSpacing: 1.2),
         ),
-        const SizedBox(height: 8), 
+        const SizedBox(height: 8),
         Text(
           subtitle,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: AppTextStyles.body.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            color: Colors.black87,
+            color: AppColors.textDark.withValues(alpha: 0.9),
             height: 1.4,
           ),
         ),

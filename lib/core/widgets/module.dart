@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 enum ModuleDifficulty { easy, medium, hard }
 
@@ -23,26 +24,26 @@ class Module {
     switch (difficulty) {
       case ModuleDifficulty.easy:
         return const Module(
-          primaryColor: Color(0xFF006400),
-          cardBackgroundColor: Color(0xFFD4E8D1),
-          iconOneBackgroundColor: Color(0xFF008000),
-          iconTwoBackgroundColor: Color(0xFF004D00),
+          primaryColor: AppColors.moduloFacilPrimary,
+          cardBackgroundColor: AppColors.moduloFacilBg,
+          iconOneBackgroundColor: AppColors.moduloFacilIcon1,
+          iconTwoBackgroundColor: AppColors.moduloFacilIcon2,
           titlePrefix: 'Módulo Fácil',
         );
       case ModuleDifficulty.medium:
         return const Module(
-          primaryColor: Color(0xFFFF8C00),
-          cardBackgroundColor: Color(0xFFFFEBD0),
-          iconOneBackgroundColor: Color(0xFFFFA500),
-          iconTwoBackgroundColor: Color(0xFFE67E22),
+          primaryColor: AppColors.moduloMedioPrimary,
+          cardBackgroundColor: AppColors.moduloMedioBg,
+          iconOneBackgroundColor: AppColors.moduloMedioIcon1,
+          iconTwoBackgroundColor: AppColors.moduloMedioIcon2,
           titlePrefix: 'Módulo Intermediário',
         );
       case ModuleDifficulty.hard:
         return const Module(
-          primaryColor: Color(0xFFD32F2F),
-          cardBackgroundColor: Color(0xFFFFCDD2),
-          iconOneBackgroundColor: Color(0xFFE53935),
-          iconTwoBackgroundColor: Color(0xFFB71C1C),
+          primaryColor: AppColors.moduloDificilPrimary,
+          cardBackgroundColor: AppColors.moduloDificilBg,
+          iconOneBackgroundColor: AppColors.moduloDificilIcon1,
+          iconTwoBackgroundColor: AppColors.moduloDificilIcon2,
           titlePrefix: 'Módulo Difícil',
         );
     }

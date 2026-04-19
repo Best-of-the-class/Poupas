@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class WideButton extends StatelessWidget {
   final String text;
   final VoidCallback onPress;
-  final Color backgroundColor;
-  final Color textColor;
+  final Color? backgroundColor;
+  final Color? textColor;
   final Color? borderColor;
   final Widget? icon;
 
@@ -12,56 +14,60 @@ class WideButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPress,
-    this.backgroundColor = const Color(0xFFE32626),
-    this.textColor = Colors.white,
+    this.backgroundColor,
+    this.textColor,
     this.borderColor,
     this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final hasFiniteWidth = constraints.maxWidth != double.infinity;
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
-        final button = SizedBox(
-          height: 56,
-          child: OutlinedButton(
-            onPressed: onPress,
-            style: OutlinedButton.styleFrom(
-              backgroundColor: backgroundColor,
-              shape: const StadiumBorder(),
-              side: borderColor != null
-                  ? BorderSide(color: borderColor!)
-                  : BorderSide.none,
-              elevation: 0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: hasFiniteWidth
-                  ? MainAxisSize.max
-                  : MainAxisSize.min,
-              children: [
-                if (icon != null) ...[icon!, const SizedBox(width: 12)],
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+    final effectiveBgColor = backgroundColor ?? AppColors.primary;
+    final effectiveTextColor = textColor ?? AppColors.textLight;
 
-        if (hasFiniteWidth) {
-          return SizedBox(width: constraints.maxWidth, child: button);
-        }
+    final label = Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppTextStyles.body.copyWith(
+        color: effectiveTextColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+    );
 
-        return IntrinsicWidth(child: button);
-      },
+    final child = icon != null
+        ? Row(
+            mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon!,
+              const SizedBox(width: 8),
+              Flexible(child: label),
+            ],
+          )
+        : label;
+
+    final button = OutlinedButton(
+      onPressed: onPress,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: effectiveBgColor,
+        shape: const StadiumBorder(),
+        side: borderColor != null
+            ? BorderSide(color: borderColor!)
+            : BorderSide.none,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+      ),
+      child: child,
+    );
+
+    return SizedBox(
+      height: 56,
+      width: isMobile ? double.infinity : null,
+      child: button,
     );
   }
 }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 import 'background.dart';
 
 class LoadingBackground extends StatefulWidget {
   final String imagePath;
   final String loadingText;
-  final Color color;
+  final Color? color;
 
   const LoadingBackground({
     super.key,
     required this.imagePath,
     this.loadingText = "moedas",
-    this.color = const Color(0xFFFDF5E6),
+    this.color,
   });
 
   @override
@@ -46,7 +48,7 @@ class _LoadingBackgroundState extends State<LoadingBackground>
   Widget build(BuildContext context) {
     return Background(
       position: ImagePosition.center,
-      color: widget.color,
+      color: widget.color ?? AppColors.background,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,10 +72,9 @@ class _LoadingBackgroundState extends State<LoadingBackground>
             const SizedBox(height: 5),
             Text(
               "Carregando ${widget.loadingText}...",
-              style: const TextStyle(
+              style: AppTextStyles.title.copyWith(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: AppColors.title,
               ),
             ),
           ],

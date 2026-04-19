@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 class CustomPositionedImage extends StatelessWidget {
   final Widget child;
   final String? imagePath;
   final double imageSize;
-  final Color color;
+  final Color? color;
   final double posX;
   final double posY;
 
@@ -13,7 +14,7 @@ class CustomPositionedImage extends StatelessWidget {
     required this.child,
     this.imagePath,
     this.imageSize = 226.0,
-    this.color = const Color(0xFFFDF5E6),
+    this.color,
     this.posX = 109.0,
     this.posY = 200.0,
   });
@@ -24,7 +25,7 @@ class CustomPositionedImage extends StatelessWidget {
     final bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
-      backgroundColor: color,
+      backgroundColor: color ?? AppColors.background,
       body: Stack(
         children: [
           if (imagePath != null)

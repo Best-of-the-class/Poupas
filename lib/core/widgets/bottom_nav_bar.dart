@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
 
-  const BottomNavBar({
-    super.key,
-    required this.currentIndex,
-  });
+  const BottomNavBar({super.key, required this.currentIndex});
 
   void _onTap(BuildContext context, int index) {
     switch (index) {
@@ -15,10 +13,14 @@ class BottomNavBar extends StatelessWidget {
         context.go('/home');
         break;
       case 1:
-        context.go('/home');  // lembrar de atualizar para a rota correta quando tiver a página de pratica
+        context.go(
+          '/home',
+        ); // lembrar de atualizar para a rota correta quando tiver a página de pratica
         break;
       case 2:
-        context.go('/home');  // lembrar de atualizar para a rota correta quando tiver a página de conquistas
+        context.go(
+          '/home',
+        ); // lembrar de atualizar para a rota correta quando tiver a página de conquistas
         break;
       case 3:
         context.go('/profile');
@@ -29,15 +31,11 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 16,
-      ),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: Container(
         height: 75,
         decoration: BoxDecoration(
-          color: const Color(0xFFFBA29B),
+          color: AppColors.perfilSequencia,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
@@ -67,17 +65,13 @@ class BottomNavBar extends StatelessWidget {
             curve: Curves.easeInOut,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: isActive
-                  ? const Color(0xFFE52727)
-                  : Colors.transparent,
+              color: isActive ? AppColors.primary : Colors.transparent,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Icon(
               icon,
               size: 40,
-              color: isActive
-                  ? Colors.white
-                  : const Color(0xFFE52727),
+              color: isActive ? AppColors.textLight : AppColors.primary,
             ),
           ),
 

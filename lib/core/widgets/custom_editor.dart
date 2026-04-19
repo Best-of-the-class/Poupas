@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 class CustomEditor extends StatefulWidget {
-  final Color themeColor;
+  final Color? themeColor;
   final String placeholder;
   const CustomEditor({
     super.key,
-    required this.themeColor,
+    this.themeColor,
     this.placeholder = 'Digite aqui o conteúdo teórico',
   });
 
@@ -33,9 +34,11 @@ class CustomEditorState extends State<CustomEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = widget.themeColor ?? AppColors.primary;
+
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: widget.themeColor, width: 2),
+        border: Border.all(color: primaryColor, width: 2),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
@@ -46,13 +49,13 @@ class CustomEditorState extends State<CustomEditor> {
               topRight: Radius.circular(28),
             ),
             child: Container(
-              color: widget.themeColor,
+              color: primaryColor,
               child: Theme(
                 data: Theme.of(context).copyWith(
-                  canvasColor: widget.themeColor,
+                  canvasColor: primaryColor,
                   colorScheme: Theme.of(
                     context,
-                  ).colorScheme.copyWith(surface: widget.themeColor),
+                  ).colorScheme.copyWith(surface: primaryColor),
                 ),
                 child: QuillSimpleToolbar(
                   controller: _controller,
@@ -78,10 +81,10 @@ class CustomEditorState extends State<CustomEditor> {
                       base: QuillToolbarBaseButtonOptions(
                         iconTheme: QuillIconTheme(
                           iconButtonUnselectedData: IconButtonData(
-                            color: Colors.white,
+                            color: AppColors.textLight,
                           ),
                           iconButtonSelectedData: IconButtonData(
-                            color: Colors.white,
+                            color: AppColors.textLight,
                           ),
                         ),
                       ),
@@ -98,7 +101,7 @@ class CustomEditorState extends State<CustomEditor> {
                 bottomRight: Radius.circular(28),
               ),
               child: Container(
-                color: Colors.white,
+                color: AppColors.textLight,
                 padding: const EdgeInsets.all(16),
                 child: QuillEditor(
                   scrollController: ScrollController(),

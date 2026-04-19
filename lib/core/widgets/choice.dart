@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/theme/app_text_styles.dart';
 
 class Choice extends StatelessWidget {
   final String letter;
@@ -27,7 +29,9 @@ class Choice extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(
-          color: isCorrect ? themeColor : Colors.grey.withOpacity(0.3),
+          color: isCorrect
+              ? themeColor
+              : AppColors.border.withValues(alpha: 0.3),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(30),
@@ -38,16 +42,15 @@ class Choice extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFCC99),
+              color: AppColors.perfilAvatar,
               borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(
               letter,
-              style: const TextStyle(
+              style: AppTextStyles.title.copyWith(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: AppColors.textDark,
               ),
             ),
           ),
@@ -56,15 +59,17 @@ class Choice extends StatelessWidget {
             child: TextField(
               controller: controller,
               cursorColor: themeColor,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Alternativa...',
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
-                hintStyle: TextStyle(color: Colors.grey),
+                errorBorder: InputBorder.none,
+                hintStyle: AppTextStyles.body.copyWith(color: Colors.grey),
                 contentPadding: EdgeInsets.zero,
+                fillColor: Colors.transparent,
               ),
-              style: const TextStyle(fontSize: 16),
+              style: AppTextStyles.body,
             ),
           ),
           GestureDetector(
@@ -75,15 +80,19 @@ class Choice extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: isSelected
-                      ? Colors.green
-                      : Colors.grey.withOpacity(0.5),
+                      ? AppColors.success
+                      : AppColors.border.withValues(alpha: 0.5),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(6),
-                color: isSelected ? Colors.green : Colors.transparent,
+                color: isSelected ? AppColors.success : Colors.transparent,
               ),
               child: isSelected
-                  ? const Icon(Icons.check, size: 18, color: Colors.white)
+                  ? const Icon(
+                      Icons.check,
+                      size: 18,
+                      color: AppColors.textLight,
+                    )
                   : null,
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'module.dart';
+import '../theme/app_colors.dart';
 
 class Lecture extends StatelessWidget {
   final String title;
@@ -52,7 +53,7 @@ class Lecture extends StatelessWidget {
               width: 52,
               height: double.infinity,
               color: theme.iconOneBackgroundColor,
-              child: Icon(iconOne, color: Colors.white, size: 24),
+              child: Icon(iconOne, color: AppColors.textLight, size: 24),
             ),
           ),
           GestureDetector(
@@ -61,7 +62,7 @@ class Lecture extends StatelessWidget {
               width: 52,
               height: double.infinity,
               color: theme.iconTwoBackgroundColor,
-              child: Icon(iconTwo, color: Colors.white, size: 24),
+              child: Icon(iconTwo, color: AppColors.textLight, size: 24),
             ),
           ),
         ],
