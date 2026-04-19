@@ -35,4 +35,19 @@ class AppColors {
   static const perfilExercicios = Color(0xFF7ECCE1);
   static const perfilPontuacao = Color(0xFFFBD564);
   static const perfilSequencia = Color(0xFFFBA29B);
+
+  static const moduloFacilPrimary = Color(0xFF006400);
+  static const moduloFacilBg = Color(0xFFD4E8D1);
+  static const moduloFacilIcon1 = Color(0xFF008000);
+  static const moduloFacilIcon2 = Color(0xFF004D00);
+
+  static const moduloMedioPrimary = Color(0xFFFF8C00);
+  static const moduloMedioBg = Color(0xFFFFEBD0);
+  static const moduloMedioIcon1 = Color(0xFFFFA500);
+  static const moduloMedioIcon2 = Color(0xFFE67E22);
+
+  static const moduloDificilPrimary = Color(0xFFD32F2F);
+  static const moduloDificilBg = Color(0xFFFFCDD2);
+  static const moduloDificilIcon1 = Color(0xFFE53935);
+  static const moduloDificilIcon2 = Color(0xFFB71C1C);
 }

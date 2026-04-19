@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 enum ImagePosition { top, center, bottom }
 
@@ -7,7 +8,7 @@ class Background extends StatelessWidget {
   final String? imagePath;
   final ImagePosition position;
   final double imageSize;
-  final Color color;
+  final Color? color;
 
   const Background({
     super.key,
@@ -15,7 +16,7 @@ class Background extends StatelessWidget {
     this.imagePath,
     this.position = ImagePosition.top,
     this.imageSize = 226.0,
-    this.color = const Color(0xFFFDF5E6),
+    this.color,
   });
 
   @override
@@ -24,7 +25,7 @@ class Background extends StatelessWidget {
     final bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
-      backgroundColor: color,
+      backgroundColor: color ?? AppColors.background,
       body: Stack(
         children: [
           if (imagePath != null)

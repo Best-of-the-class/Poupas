@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomo/core/theme/app_colors.dart';
 
 class NavigateTopCorner extends StatelessWidget {
   final String route;
@@ -12,7 +13,7 @@ class NavigateTopCorner extends StatelessWidget {
     required this.route,
     this.icon = Icons.arrow_back,
     this.params = const {},
-    this.color = const Color(0xFF212121),
+    this.color = AppColors.textDark,
   });
 
   @override

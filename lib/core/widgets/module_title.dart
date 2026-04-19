@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'module.dart';
+import '../theme/app_colors.dart';
 
 class ModuleTitle extends StatelessWidget {
   final String title;
@@ -19,7 +20,7 @@ class ModuleTitle extends StatelessWidget {
         title,
         textAlign: TextAlign.center,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.textLight,
           fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
