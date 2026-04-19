@@ -3,7 +3,12 @@ import 'package:flutter_quill/flutter_quill.dart';
 
 class CustomEditor extends StatefulWidget {
   final Color themeColor;
-  const CustomEditor({super.key, required this.themeColor});
+  final String placeholder;
+  const CustomEditor({
+    super.key,
+    required this.themeColor,
+    this.placeholder = 'Digite aqui o conteúdo teórico',
+  });
 
   @override
   State<CustomEditor> createState() => CustomEditorState();
@@ -99,8 +104,8 @@ class CustomEditorState extends State<CustomEditor> {
                   scrollController: ScrollController(),
                   focusNode: FocusNode(),
                   controller: _controller,
-                  config: const QuillEditorConfig(
-                    placeholder: 'Digite aqui o enunciado da questão',
+                  config: QuillEditorConfig(
+                    placeholder: widget.placeholder,
                     autoFocus: false,
                     expands: true,
                     padding: EdgeInsets.zero,

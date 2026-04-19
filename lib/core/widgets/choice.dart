@@ -23,11 +23,11 @@ class Choice extends StatelessWidget {
     return Container(
       height: 60,
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5EEDA),
+        color: Colors.transparent,
         border: Border.all(
-          color: isCorrect ? themeColor : Colors.transparent,
+          color: isCorrect ? themeColor : Colors.grey.withOpacity(0.3),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(30),
@@ -55,10 +55,14 @@ class Choice extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              cursorColor: themeColor,
               decoration: const InputDecoration(
                 hintText: 'Alternativa...',
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
                 hintStyle: TextStyle(color: Colors.grey),
+                contentPadding: EdgeInsets.zero,
               ),
               style: const TextStyle(fontSize: 16),
             ),
@@ -70,16 +74,16 @@ class Choice extends StatelessWidget {
               height: 24,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected ? Colors.green : Colors.grey,
+                  color: isSelected
+                      ? Colors.green
+                      : Colors.grey.withOpacity(0.5),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(6),
-                color: isSelected
-                    ? Colors.green.withOpacity(0.1)
-                    : Colors.transparent,
+                color: isSelected ? Colors.green : Colors.transparent,
               ),
               child: isSelected
-                  ? const Icon(Icons.check, size: 18, color: Colors.green)
+                  ? const Icon(Icons.check, size: 18, color: Colors.white)
                   : null,
             ),
           ),
