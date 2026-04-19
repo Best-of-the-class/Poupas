@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/providers/bloc_injection.dart';
 import 'core/providers/global_bloc_providers.dart';
 import 'core/network/adapters/routes_adapter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await init();
   runApp(const GlobalBlocProviders(child: MyApp()));
 }
