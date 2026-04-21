@@ -64,7 +64,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
           text: "Excluir conta",
           onPress: () {
             Navigator.pop(context);
-            // TODO: deletar conta
+            // TODO: deletar conta back
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ActionResultPage(
+                  imagePath: 'lib/core/assets/images/maca-sad.png',
+                  descriptionText: '''Sua conta foi apagada junto com todas as boas memórias com Poup. Aguardamos seu retorno em breve, antes que Poup decida não te perdoar mais  :(
+
+Cadastre-se com uma nova conta quando se sentir pronto para voltar.''',
+                  buttonText: 'Até logo!',
+                  onButtonPressed: () {
+                    context.go('/home');
+                  },
+                ),
+              ),
+              (route) => false,
+            );
           },
           backgroundColor: Colors.transparent,
           textColor: AppColors.error,

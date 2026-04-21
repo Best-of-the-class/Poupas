@@ -81,6 +81,7 @@ flutter:
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
     - lib/core/features/entry/presentation/assets/image/oi.png
+    - lib/core/assets/images/maca-sad.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
