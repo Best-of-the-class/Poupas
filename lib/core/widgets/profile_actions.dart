@@ -2,9 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
+import 'package:pomo/core/widgets/pop_up.dart';
+import 'package:pomo/core/widgets/wide_button.dart';
+import 'package:pomo/core/widgets/action_result_page.dart';
 
 class ProfileActions extends StatelessWidget {
   const ProfileActions({super.key});
+
+void _showLogoutDialog(BuildContext context) {
+  PopUp.show(
+    context,
+    title: "Sair da conta",
+    subtitle: "Tem certeza que deseja sair da sua conta?",
+    buttons: [
+      WideButton(
+        text: "Cancelar",
+        onPress: () => Navigator.pop(context),
+        backgroundColor: AppColors.primary,
+        textColor: AppColors.textLight,
+      ),
+      WideButton(
+        text: "Sair",
+        onPress: () {
+          Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActionResultPage(
+                imagePath: 'lib/core/assets/images/maca-check.png',
+                descriptionText: 'Você saiu da sua conta.',
+                buttonText: 'Ir para início',
+                onButtonPressed: () {
+                  context.go('/welcome');
+                },
+              ),
+            ),
+            (route) => false,
+          );
+        },
+        backgroundColor: Colors.transparent,
+        textColor: AppColors.error,
+        borderColor: AppColors.error,
+      ),
+    ],
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +72,7 @@ class ProfileActions extends StatelessWidget {
             icon: Icons.logout,
             label: 'Sair',
             isLogout: true,
-            onTap: () {
-              // TODO: logout
-            },
+            onTap: () => _showLogoutDialog(context),
           ),
         ],
       ),

@@ -47,7 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  void _showDeleteAccountDialog() {
+ void _showDeleteAccountDialog() {
     PopUp.show(
       context,
       title: "Excluir conta",
@@ -72,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
       ],
     );
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF363636)),
           onPressed: () {
-            context.push('/profile');
+            context.pop();
+            //context.push('/profile'); Ao fazer assim vc ta criando outra instancia de Perfil, no caso so precisaria voltar com o code acima
           },
         ),
         title: const Text(

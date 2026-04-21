@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            context.go('/forgot-password');
+                            context.push('/forgot-password');
                           },
                       ),
                     ],
