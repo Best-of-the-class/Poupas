@@ -47,7 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  void _showDeleteAccountDialog() {
+ void _showDeleteAccountDialog() {
     PopUp.show(
       context,
       title: "Excluir conta",
@@ -64,7 +64,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
           text: "Excluir conta",
           onPress: () {
             Navigator.pop(context);
-            // TODO: deletar conta
+            // TODO: deletar conta back
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ActionResultPage(
+                  imagePath: 'lib/core/assets/images/maca-sad.png',
+                  descriptionText: '''Sua conta foi apagada junto com todas as boas memórias com Poup. Aguardamos seu retorno em breve, antes que Poup decida não te perdoar mais  :(
+
+Cadastre-se com uma nova conta quando se sentir pronto para voltar.''',
+                  buttonText: 'Até logo!',
+                  onButtonPressed: () {
+                    context.go('/home');
+                  },
+                ),
+              ),
+              (route) => false,
+            );
           },
           backgroundColor: Colors.transparent,
           textColor: AppColors.error,
@@ -72,7 +88,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
       ],
     );
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +100,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF363636)),
           onPressed: () {
-            context.push('/profile');
+            context.pop();
+            //context.push('/profile'); Ao fazer assim vc ta criando outra instancia de Perfil, no caso so precisaria voltar com o code acima
           },
         ),
         title: const Text(

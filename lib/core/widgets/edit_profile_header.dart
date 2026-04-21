@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 
-class EditProfileHeader extends StatelessWidget {
+class EditProfileHeader extends StatefulWidget {
   final String imagePath;
-  final VoidCallback? onEditAvatar;
 
   const EditProfileHeader({
     super.key,
     required this.imagePath,
-    this.onEditAvatar,
   });
 
   static const List<String> _availableAvatars = [
@@ -19,6 +17,19 @@ class EditProfileHeader extends StatelessWidget {
     'lib/core/features/user_profile/presentation/assets/images/avatar_5.png',
     'lib/core/features/user_profile/presentation/assets/images/avatar_6.png',
   ];
+
+  @override
+  State<EditProfileHeader> createState() => _EditProfileHeaderState();
+}
+
+class _EditProfileHeaderState extends State<EditProfileHeader> {
+  late String _selectedAvatar;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedAvatar = widget.imagePath;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +49,7 @@ class EditProfileHeader extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+              /// Avatar principal
               Container(
                 width: totalDiameter,
                 height: totalDiameter,
@@ -48,14 +60,16 @@ class EditProfileHeader extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: avatarRadius,
-                  backgroundImage: AssetImage(imagePath),
+                  backgroundImage: AssetImage(_selectedAvatar),
                 ),
               ),
+
+              ///Botão editar
               Positioned(
                 bottom: 0,
                 right: 0,
                 child: GestureDetector(
-                  onTap: onEditAvatar ?? () => _showAvatarModal(context),
+                  onTap: () => _showAvatarModal(context),
                   child: Container(
                     width: pencilSize,
                     height: pencilSize,
@@ -64,9 +78,8 @@ class EditProfileHeader extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
+                          color: Colors.black.withOpacity(0.2),
                           blurRadius: 4,
-                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -86,67 +99,120 @@ class EditProfileHeader extends StatelessWidget {
   }
 
   void _showAvatarModal(BuildContext context) {
-    showModalBottomSheet(
+    showGeneralDialog(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Escolher avatar',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF363636),
-                ),
-              ),
-              const SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemCount: _availableAvatars.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context, _availableAvatars[index]);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFFE8B07A),
-                          width: 2,
+      barrierDismissible: true,
+      barrierLabel: "Fechar",
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (context, anim1, anim2) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+                child: Material(
+                  borderRadius: BorderRadius.circular(24),
+                  color: AppColors.perfilAvatar,
+                  child: Container(
+                    height: 550,
+                    padding:
+                        const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 12),
+
+                        /// 📝 título
+                        const Text(
+                          'Selecione um novo avatar',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF363636),
+                          ),
                         ),
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(_availableAvatars[index]),
-                      ),
+
+                        const SizedBox(height: 12),
+
+                        /// 🧩 GRID
+                        Expanded(
+                          child: GridView.builder(
+                            physics:
+                                const NeverScrollableScrollPhysics(),
+                            itemCount:
+                                EditProfileHeader._availableAvatars.length,
+
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                            ),
+
+                            itemBuilder: (context, index) {
+                              final avatar = EditProfileHeader._availableAvatars[index];
+                              final isSelected = avatar == _selectedAvatar;
+
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedAvatar = avatar;
+                                  });
+
+                                  setModalState(() {});
+                                  // TODO BACKEND:
+                                  // Esta seleção ainda é temporária (UI only).
+                                  // NÃO persistir no banco aqui.
+
+                                },
+
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  clipBehavior: Clip.none,
+                                  children: [
+
+                                    /// Borda externa (sempre mesma circunferência)
+                                    CircleAvatar(
+                                      radius: 65,
+                                      backgroundColor: isSelected
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
+                                    ),
+
+                                    /// Avatar interno
+                                    CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage: AssetImage(avatar),
+                                    ),
+
+                                    /// CHECK
+                                    if (isSelected)
+                                      Positioned(
+                                        bottom: -2,
+                                        right: -2,
+                                        child: IgnorePointer(
+                                          child: Image.asset(
+                                            'lib/core/features/user_profile/presentation/assets/images/check.png',
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-            ],
-          ),
+            );
+          },
         );
       },
     );

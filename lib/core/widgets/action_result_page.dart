@@ -28,8 +28,8 @@ class ActionResultPage extends StatelessWidget {
             children: [
               Image.asset(
                 imagePath,
-                width: 140,
-                height: 140,
+                width: 150, //Aumentei tamanho (Anahi)
+                height: 150,
                 fit: BoxFit.contain,
               ),
 
@@ -37,7 +37,7 @@ class ActionResultPage extends StatelessWidget {
 
               Text(
                 descriptionText,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.justify,
                 style: AppTextStyles.body.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.normal,

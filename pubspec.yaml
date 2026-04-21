@@ -75,12 +75,19 @@ flutter:
     - lib/core/features/sign_in/presentation/assets/images/poup_caterpillar.png
     - lib/core/features/forgot_password/presentation/assets/images/poup_check.png
     - lib/core/features/user_profile/presentation/assets/images/avatar_1.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_2.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_3.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_4.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_5.png
+    - lib/core/features/user_profile/presentation/assets/images/avatar_6.png
+    - lib/core/features/user_profile/presentation/assets/images/check.png
     - lib/core/assets/images/folha-icon-active-menu.png
     - lib/core/assets/images/maca-check.png
     - lib/core/assets/images/maca-check.png
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
     - lib/core/features/entry/presentation/assets/image/oi.png
+    - lib/core/assets/images/maca-sad.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
