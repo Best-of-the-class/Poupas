@@ -43,7 +43,7 @@ class BottomNavBar extends StatelessWidget {
           children: [
             _buildItem(context, 0, Icons.home_outlined),
             _buildItem(context, 1, Icons.menu_book_outlined),
-            _buildItem(context, 2, Icons.emoji_events_outlined),
+            _buildItem(context, 2, Icons.workspace_premium_outlined),
             _buildItem(context, 3, Icons.person_outlined),
           ],
         ),
