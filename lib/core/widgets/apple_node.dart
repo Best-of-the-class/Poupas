@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
 
@@ -70,16 +71,25 @@ class _LessonPopup extends StatefulWidget {
 class _LessonPopupState extends State<_LessonPopup> {
   bool isLoading = false;
 
-  void _handleStart() async {
+  void _handleStart(BuildContext context) async {
     setState(() {
       isLoading = true;
     });
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    if (mounted) {
-      Navigator.pop(context);
-    }
+    if (!mounted) return;
+
+    Navigator.pop(context);
+
+    context.push(
+      '/lesson-concept',
+      extra: {
+        'ordem': widget.ordem,
+        'titulo': widget.titulo,
+        'texto': 'Texto temporário da lição...',
+      },
+    );
   }
 
   @override
@@ -114,7 +124,7 @@ class _LessonPopupState extends State<_LessonPopup> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: isLoading ? null : _handleStart,
+                onPressed: isLoading ? null : () => _handleStart(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
