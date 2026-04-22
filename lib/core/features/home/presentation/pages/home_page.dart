@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/layouts/main_layout.dart';
+import 'package:pomo/core/widgets/card_stats_home.dart';
+import 'package:pomo/core/widgets/card_module.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,13 +20,34 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('lib/core/assets/images/background-arvore-trilha.png'),
+          fit: BoxFit.cover, 
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+  children: [
+
+    const CardStatsHome(
+      sequenciaDias: 14,
+      xp: 2584,
+    ),
+
+    const SizedBox(height: 16),
+
+    Expanded(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            CardModule(level: 3),
+
+            const SizedBox(height: 10),
 
             const Text(
               "Home",
@@ -36,15 +60,19 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            const Text(
-              "Ola isso ai 👋",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
+                    const Text(
+                      "Ola isso ai 👋",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-
           ],
+        ),
         ),
       ),
     );

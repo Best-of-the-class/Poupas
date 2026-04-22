@@ -30,6 +30,9 @@ class AppColors {
   static const moduloIntermediario = Color(0xFFFBD564);
   static const moduloAvancado = Color(0xFFEB4335);
 
+  static const sequenciaHome = Color(0xFFEB4335);
+  static const xpHome = Color(0xFFFBBC05);
+
   static const perfilAvatar = Color(0xFFFDC692);
   static const perfilLicoes = Color(0xFFA2CA8B);
   static const perfilExercicios = Color(0xFF7ECCE1);

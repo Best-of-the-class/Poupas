@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomo/core/widgets/bottom_nav_bar.dart';
 
+import 'package:pomo/core/theme/app_colors.dart';
+
 class MainLayout extends StatelessWidget {
   final Widget child;
 
@@ -23,10 +25,19 @@ class MainLayout extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7EEDD),
-      body: child,
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _getIndex(location),
+      backgroundColor: AppColors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(child: child),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: BottomNavBar(
+              currentIndex: _getIndex(location),
+            ),
+          ),
+        ],
       ),
     );
   }
