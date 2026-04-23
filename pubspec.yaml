@@ -82,12 +82,23 @@ flutter:
     - lib/core/features/user_profile/presentation/assets/images/avatar_6.png
     - lib/core/features/user_profile/presentation/assets/images/check.png
     - lib/core/assets/images/folha-icon-active-menu.png
+    - lib/core/assets/icons/icon-modulo-iniciante.png
+    - lib/core/assets/icons/icon-modulo-intermediario.png
+    - lib/core/assets/icons/icon-modulo-avancado.png
+    - lib/core/assets/icons/icon-maca-trilha.png
+    - lib/core/assets/icons/icon-lagarta-direita-trilha.png
+    - lib/core/assets/icons/icon-lagarta-esquerda-trilha.png
+    - lib/core/assets/icons/icon-licao-conceito.png
+    - lib/core/assets/icons/icon-licao-questao.png
+    - lib/core/assets/icons/icon-licao-prova.png
+    - lib/core/assets/icons/icon-iniciar-prova-final.png
+    - lib/core/assets/images/poup-happy.png
     - lib/core/assets/images/maca-check.png
-    - lib/core/assets/images/maca-check.png
+    - lib/core/assets/images/maca-sad.png
+    - lib/core/assets/images/background-arvore-trilha.png
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
     - lib/core/features/entry/presentation/assets/image/oi.png
-    - lib/core/assets/images/maca-sad.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

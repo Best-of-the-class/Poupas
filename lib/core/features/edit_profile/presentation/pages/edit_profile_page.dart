@@ -98,7 +98,7 @@ Cadastre-se com uma nova conta quando se sentir pronto para voltar.''',
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF363636)),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF363636), size: 40),
           onPressed: () {
             context.pop();
             //context.push('/profile'); Ao fazer assim vc ta criando outra instancia de Perfil, no caso so precisaria voltar com o code acima

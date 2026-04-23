@@ -13,6 +13,9 @@ class AppColors {
   static const success = Color(0xFFA2CA8B);
   static const wrong = Color(0xFFFBA29B);
   static const selected = Color(0xFFA2CA8B);
+  static const optionSelected = Color(0xFFFFDCBC);
+  static const optionBorderSelected = Color(0xFFFFAA5A);
+  static const correctCheck = Color(0xFF117302);
 
   static const highlight = Color(0xFFFBBC05);
   static const border = Color(0xFFE0E0E0);
@@ -29,6 +32,9 @@ class AppColors {
   static const moduloIniciante = Color(0xFF34A853);
   static const moduloIntermediario = Color(0xFFFBD564);
   static const moduloAvancado = Color(0xFFEB4335);
+
+  static const sequenciaHome = Color(0xFFEB4335);
+  static const xpHome = Color(0xFFFBBC05);
 
   static const perfilAvatar = Color(0xFFFDC692);
   static const perfilLicoes = Color(0xFFA2CA8B);

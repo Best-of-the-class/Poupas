@@ -31,7 +31,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
       child: Container(
         height: 75,
         decoration: BoxDecoration(
@@ -43,7 +43,7 @@ class BottomNavBar extends StatelessWidget {
           children: [
             _buildItem(context, 0, Icons.home_outlined),
             _buildItem(context, 1, Icons.menu_book_outlined),
-            _buildItem(context, 2, Icons.emoji_events_outlined),
+            _buildItem(context, 2, Icons.workspace_premium_outlined),
             _buildItem(context, 3, Icons.person_outlined),
           ],
         ),
