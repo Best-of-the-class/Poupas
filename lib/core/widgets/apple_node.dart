@@ -7,12 +7,14 @@ class AppleNode extends StatelessWidget {
   final int ordem;
   final String titulo;
   final int level;
+  final bool isLastInModule;
 
   const AppleNode({
     super.key,
     required this.ordem,
     required this.titulo,
     required this.level,
+    this.isLastInModule = false,
   });
 
   void _showLessonPopup(BuildContext context) {
@@ -23,6 +25,7 @@ class AppleNode extends StatelessWidget {
         titulo: titulo,
         ordem: ordem,
         level: level,
+        isLastInModule: isLastInModule,
         );
       },
     );
@@ -57,11 +60,13 @@ class _LessonPopup extends StatefulWidget {
   final String titulo;
   final int ordem;
   final int level;
+  final bool isLastInModule;
 
   const _LessonPopup({
     required this.titulo,
     required this.ordem,
     required this.level,
+    this.isLastInModule = false, 
   });
 
   @override
@@ -83,11 +88,26 @@ class _LessonPopupState extends State<_LessonPopup> {
     Navigator.pop(context);
 
     context.push(
-      '/lesson-concept',
+      '/lesson',
       extra: {
-        'ordem': widget.ordem,
-        'titulo': widget.titulo,
-        'texto': 'Texto temporário da lição...',
+        'licao': {
+          'ordem': widget.ordem,
+          'titulo': widget.titulo,
+          'texto_conceito': 'Texto temporário...',
+          'recompensa_xp': 100,
+        },
+        'atividades': [
+          {
+            'enunciado': 'Pergunta 1',
+            'ordem': 1,
+            'prova_final': widget.isLastInModule,
+          },
+          {
+            'enunciado': 'Pergunta 2',
+            'ordem': 2,
+            'prova_final': widget.isLastInModule,
+          },
+        ],
       },
     );
   }

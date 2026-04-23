@@ -8,11 +8,14 @@ class LessonConceptPage extends StatelessWidget {
   final String titulo;
   final String texto;
 
+  final VoidCallback? onNext;
+
   const LessonConceptPage({
     super.key,
     this.ordem = 1,
     this.titulo = 'Lição',
     this.texto = 'Texto temporário da lição...',
+    this.onNext,
   });
 
   @override
@@ -21,9 +24,8 @@ class LessonConceptPage extends StatelessWidget {
       vidasAtuais: 5,
       vidasTotal: 5,
       buttonText: 'Próximo',
-      onButtonPressed: () {
-        Navigator.pop(context);
-      },
+
+      onButtonPressed: onNext ?? () => Navigator.pop(context),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -13,6 +13,9 @@ class AppColors {
   static const success = Color(0xFFA2CA8B);
   static const wrong = Color(0xFFFBA29B);
   static const selected = Color(0xFFA2CA8B);
+  static const optionSelected = Color(0xFFFFDCBC);
+  static const optionBorderSelected = Color(0xFFFFAA5A);
+  static const correctCheck = Color(0xFF117302);
 
   static const highlight = Color(0xFFFBBC05);
   static const border = Color(0xFFE0E0E0);

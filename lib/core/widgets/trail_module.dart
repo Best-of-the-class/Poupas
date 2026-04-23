@@ -20,6 +20,10 @@ class TrailModule extends StatelessWidget {
         final offsetX = isLeft ? -60.0 : 60.0;
         final caterpillarOffsetX = isLeft ? -30.0 : 30.0;
 
+        final isLastInModule =
+          index == lessons.length - 1 ||
+          lessons[index]['level'] != lessons[index + 1]['level'];
+
         return Column(
           children: [
             SizedBox(
@@ -32,6 +36,7 @@ class TrailModule extends StatelessWidget {
                     ordem: lesson['ordem'],
                     titulo: lesson['titulo'],
                     level: lesson['level'] ?? 1,
+                    isLastInModule: isLastInModule, 
                   ),
                 ),
               ),
@@ -39,7 +44,7 @@ class TrailModule extends StatelessWidget {
 
             const SizedBox(height: 4),
 
-            if (index != lessons.length - 1)
+            if (!isLastInModule)
               SizedBox(
                 width: double.infinity,
                 child: Align(
