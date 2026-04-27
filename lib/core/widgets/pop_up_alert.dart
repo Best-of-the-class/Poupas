@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'heading_text.dart';
 import 'wide_button.dart';
 import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/responsive/size_extensions.dart';
 
 class AlertPopUp extends StatelessWidget {
   final String title;
@@ -21,8 +22,8 @@ class AlertPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final dialogWidth = isMobile ? screenWidth * 0.88 : screenWidth * 0.4;
+//    final isMobile = screenWidth < 600;
+    final dialogWidth = context.isMobile ? screenWidth * 0.88 : screenWidth * 0.4;
 
     return Dialog(
       backgroundColor: AppColors.background,

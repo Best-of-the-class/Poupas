@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
+import 'package:pomo/core/responsive/size_extensions.dart';
 
 class WideButton extends StatelessWidget {
   final String text;
@@ -22,9 +23,8 @@ class WideButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-    // mesma altura do input
-    final double height = isMobile ? 56 : 46;
+//    final isMobile = MediaQuery.of(context).size.width < 600;
+    final double height = context.isMobile ? 56 : 46;
 
     final effectiveBgColor = backgroundColor ?? AppColors.primary;
     final effectiveTextColor = textColor ?? AppColors.textLight;
@@ -66,7 +66,7 @@ class WideButton extends StatelessWidget {
     );
 
     return FractionallySizedBox(
-      widthFactor: isMobile ? 1.0 : 0.80, // desktop menor que input
+      widthFactor: context.isMobile ? 1.0 : 0.80, // desktop menor que input
       child: SizedBox(
         height: height,
         child: button,
