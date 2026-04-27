@@ -23,6 +23,8 @@ class WideButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
+    // mesma altura do input
+    final double height = isMobile ? 56 : 46;
 
     final effectiveBgColor = backgroundColor ?? AppColors.primary;
     final effectiveTextColor = textColor ?? AppColors.textLight;
@@ -40,7 +42,6 @@ class WideButton extends StatelessWidget {
 
     final child = icon != null
         ? Row(
-            mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               icon!,
@@ -64,10 +65,12 @@ class WideButton extends StatelessWidget {
       child: child,
     );
 
-    return SizedBox(
-      height: 56,
-      width: isMobile ? double.infinity : null,
-      child: button,
+    return FractionallySizedBox(
+      widthFactor: isMobile ? 1.0 : 0.80, // desktop menor que input
+      child: SizedBox(
+        height: height,
+        child: button,
+      ),
     );
   }
 }

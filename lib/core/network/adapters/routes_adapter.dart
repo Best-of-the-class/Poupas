@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
-import '../../features/sign_in/presentation/pages/loading_page.dart';
+import '../../features/login/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
-import '../../features/sign_in/presentation/bloc/login_bloc.dart';
+import '../../features/login/presentation/bloc/login_bloc.dart';
 import '../../features/sign_in/presentation/pages/sign_in_password_page.dart';
 import '../../features/sign_in/presentation/pages/sign_in_page.dart';
-import '../../features/sign_in/presentation/pages/login_page.dart';
+import '../../features/login/presentation/pages/login_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_code_page.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_reset_page.dart';
@@ -53,7 +53,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/admin-activities' : '/loadingWelcome',
+      initialLocation: isDesktopAdmin ? '/login' : '/loadingWelcome',
       routes: [
         GoRoute(
           name: loadingWelcome,

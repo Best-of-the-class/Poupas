@@ -23,6 +23,10 @@ class Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    final double verticalPadding = isMobile ? 16 : 2;
+
     return TextFormField(
       onChanged: onChanged,
       obscureText: obscureText,
@@ -33,11 +37,11 @@ class Input extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: AppTextStyles.body.copyWith(color: AppColors.border),
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 24,
-          vertical: 20,
+          vertical: verticalPadding,
         ),
-
+        
         suffixIcon: suffixIcon != null
             ? Padding(
                 padding: const EdgeInsets.only(right: 12),
