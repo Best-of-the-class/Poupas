@@ -9,7 +9,7 @@ class LoadingPage extends StatelessWidget {
   const LoadingPage({
     super.key, 
     this.text = "maçãs", 
-    this.imagePath = 'lib/core/features/login/presentation/assets/images/poup_caterpillar.png',
+    this.imagePath = 'lib/core/features/sign_in/presentation/assets/images/poup_caterpillar.png',
     this.backgroundColor = const Color(0xFFF7EEDD),
   });
 

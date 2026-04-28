@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pomo/core/features/edit_profile/presentation/pages/edit_profile_page.dart';
-import '../../features/login/presentation/pages/loading_page.dart';
+import '../../features/sign_in/presentation/pages/loading_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/user_profile/presentation/pages/profile_page.dart';
 import '../../features/login/presentation/bloc/login_bloc.dart';
@@ -53,7 +53,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/login' : '/loadingWelcome',
+      initialLocation: isDesktopAdmin ? '/loadingWelcome' : '/loadingWelcome',
       routes: [
         GoRoute(
           name: loadingWelcome,
