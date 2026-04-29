@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 
 class NavigateTopCorner extends StatelessWidget {
-  final String route;
+  final String? route;
   final IconData icon;
   final Map<String, String> params;
   final Color color;
 
   const NavigateTopCorner({
     super.key,
-    required this.route,
+    this.route,
     this.icon = Icons.arrow_back,
     this.params = const {},
     this.color = AppColors.textDark,
@@ -22,7 +22,11 @@ class NavigateTopCorner extends StatelessWidget {
       alignment: Alignment.centerLeft,
       icon: Icon(icon, color: color, size: 28),
       onPressed: () {
-        context.pushNamed(route, pathParameters: params);
+        if (context.canPop()) {
+          context.pop(); // volta tela anterior
+        } else if (route != null) {
+          context.goNamed(route!, pathParameters: params);
+        }
       },
     );
   }
