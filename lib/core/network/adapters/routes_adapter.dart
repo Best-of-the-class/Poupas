@@ -53,7 +53,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/loadingWelcome' : '/loadingWelcome',
+      initialLocation: isDesktopAdmin ? '/admin-activities' : '/loadingWelcome',
       routes: [
         GoRoute(
           name: loadingWelcome,
