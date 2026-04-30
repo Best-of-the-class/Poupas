@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "titulo": "Primeiros passos",
+    "descricao": "Completou sua primeira lição",
+    "tipo_desbloqueio": "licao",
+    "icone": "pencil",
+    "background_cor": "green"
+  },
+  {
+    "id": 2,
+    "titulo": "Poup Aprendiz",
+    "descricao": "10 respostas corretas",
+    "tipo_desbloqueio": "atividade",
+    "icone": "student",
+    "background_cor": "blue"
+  },
+  {
+    "id": 3,
+    "titulo": "Megamente",
+    "descricao": "50 respostas corretas",
+    "tipo_desbloqueio": "atividade",
+    "icone": "megamente",
+    "background_cor": "blue"
+  },
+  {
+    "id": 4,
+    "titulo": "Poup Guru",
+    "descricao": "100 respostas corretas",
+    "tipo_desbloqueio": "atividade",
+    "icone": "guru",
+    "background_cor": "blue"
+  },
+  {
+    "id": 5,
+    "titulo": "Imparável",
+    "descricao": "10 acertos seguidos",
+    "tipo_desbloqueio": "atividade",
+    "icone": "pencil",
+    "background_cor": "green"
+  },
+  {
+    "id": 6,
+    "titulo": "Sequência de ouro",
+    "descricao": "Sequência de 30 dias",
+    "tipo_desbloqueio": "sequencia",
+    "icone": "calendar",
+    "background_cor": "red"
+  },
+  {
+    "id": 7,
+    "titulo": "Poup Lendário",
+    "descricao": "Sequência de 100 dias",
+    "tipo_desbloqueio": "sequencia",
+    "icone": "calendar",
+    "background_cor": "red"
+  },
+  {
+    "id": 8,
+    "titulo": "Caçador de Juros",
+    "descricao": "Aprendeu sobre Juros Simples",
+    "tipo_desbloqueio": "licao",
+    "icone": "dollar",
+    "background_cor": "green"
+  },
+  {
+    "id": 9,
+    "titulo": "Poupador",
+    "descricao": "Ganhou 1500XP",
+    "tipo_desbloqueio": "pontuacao",
+    "icone": "lending",
+    "background_cor": "yellow"
+  },
+  {
+    "id": 10,
+    "titulo": "Maratonista",
+    "descricao": "Completou 5 lições em 1 dia",
+    "tipo_desbloqueio": "licao",
+    "icone": "run",
+    "background_cor": "yellow"
+  }
+]

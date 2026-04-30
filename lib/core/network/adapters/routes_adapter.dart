@@ -16,6 +16,7 @@ import '../../features/forgot_password/presentation/pages/forgot_password_reset_
 import '../../features/forgot_password/presentation/pages/forgot_password_confirmation.dart';
 import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/lesson/presentation/pages/lesson_page.dart';
+import '../../features/badges/presentation/pages/badges_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_theory_page.dart';
@@ -38,6 +39,7 @@ class RoutesAdapter {
   static const String resetPasswordConfirmation = 'reset_password_confirmation';
   static const String profile = 'profile';
   static const String lesson = 'lesson';
+  static const String badges = 'badges';
   static const String adminActivities = 'adminActivities';
   static const String adminTheory = 'adminTheory';
   static const String adminQuestions = 'adminQuestions';
@@ -120,6 +122,11 @@ class RoutesAdapter {
               atividades: data['atividades'],
             );
           },
+        ),
+        GoRoute(
+          name: badges,
+          path: '/badges',
+          builder: (context, state) => const BadgesPage(),
         ),
         GoRoute(
           name: load,

@@ -56,4 +56,9 @@ class AppColors {
   static const moduloDificilBg = Color(0xFFFFCDD2);
   static const moduloDificilIcon1 = Color(0xFFE53935);
   static const moduloDificilIcon2 = Color(0xFFB71C1C);
+
+  static const Color badgeBlue = Color(0xFF7ECCE1);
+  static const Color badgeGreen = Color(0xFFA2CA8B);
+  static const Color badgeRed = Color(0xFFFBA29B);
+  static const Color badgeYellow = Color(0xFFFBD564);
 }
