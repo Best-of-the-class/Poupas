@@ -83,7 +83,7 @@ class _BadgePreviewOverlayState extends State<BadgePreviewOverlay>
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: widget.backgroundColor.withOpacity(0.60),
+      color: widget.backgroundColor.withOpacity(0.65),
 
       child: GestureDetector(
         onTap: () => Navigator.pop(context),
