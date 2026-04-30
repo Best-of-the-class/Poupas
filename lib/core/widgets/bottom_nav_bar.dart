@@ -19,8 +19,8 @@ class BottomNavBar extends StatelessWidget {
         break;
       case 2:
         context.go(
-          '/home',
-        ); // lembrar de atualizar para a rota correta quando tiver a página de conquistas
+          '/badges',
+        ); 
         break;
       case 3:
         context.go('/profile');
@@ -30,14 +30,14 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+  return Padding(
+    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+    child: Material(
+      elevation: 8,
+      borderRadius: BorderRadius.circular(30),
+      color: AppColors.perfilSequencia,
       child: Container(
         height: 75,
-        decoration: BoxDecoration(
-          color: AppColors.perfilSequencia,
-          borderRadius: BorderRadius.circular(30),
-        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -48,7 +48,8 @@ class BottomNavBar extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildItem(BuildContext context, int index, IconData icon) {

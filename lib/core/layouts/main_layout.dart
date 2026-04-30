@@ -15,7 +15,7 @@ class MainLayout extends StatelessWidget {
   int _getIndex(String location) {
     if (location.startsWith('/home')) return 0;
     if (location.startsWith('/book')) return 1;
-    if (location.startsWith('/achievements')) return 2;
+    if (location.startsWith('/badges')) return 2;
     if (location.startsWith('/profile')) return 3;
     return 0;
   }

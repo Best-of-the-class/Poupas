@@ -93,6 +93,7 @@ flutter:
     - lib/core/assets/icons/icon-licao-questao.png
     - lib/core/assets/icons/icon-licao-prova.png
     - lib/core/assets/icons/icon-iniciar-prova-final.png
+    - lib/core/assets/icons/icon-poup-circle.png
     - lib/core/assets/images/poup-happy.png
     - lib/core/assets/images/maca-check.png
     - lib/core/assets/images/maca-sad.png
@@ -102,6 +103,15 @@ flutter:
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
     - lib/core/features/entry/presentation/assets/image/oi.png
+    - lib/core/features/badges/presentation/assets/calendar.png
+    - lib/core/features/badges/presentation/assets/dollar.png
+    - lib/core/features/badges/presentation/assets/guru.png
+    - lib/core/features/badges/presentation/assets/lending.png
+    - lib/core/features/badges/presentation/assets/megamente.png
+    - lib/core/features/badges/presentation/assets/pencil.png
+    - lib/core/features/badges/presentation/assets/run.png
+    - lib/core/features/badges/presentation/assets/student.png
+    - lib/core/features/badges/data/badges.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
