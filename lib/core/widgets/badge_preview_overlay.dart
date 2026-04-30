@@ -92,10 +92,10 @@ class _BadgePreviewOverlayState extends State<BadgePreviewOverlay>
           child: ScaleTransition(
             scale: scale,
 
-            child: Container(
-              width: 320,
-              height: 380,
-              padding: const EdgeInsets.all(16),
+          child: Container(
+              width: 340,
+              height: 400,
+              padding: const EdgeInsets.all(20), 
               decoration: BoxDecoration(
                 color: widget.backgroundColor,
                 borderRadius: BorderRadius.circular(20),
@@ -117,15 +117,18 @@ class _BadgePreviewOverlayState extends State<BadgePreviewOverlay>
                         widget.titulo,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.title.copyWith(
-                          fontSize: 30,
+                          fontSize: 32,
                           color: Colors.white,
                         ),
                       ),
 
                       SizedBox(
-                        width: 280,
-                        height: 280,
-                        child: Image.asset(iconPath),
+                        width: 120,
+                        height: 120,
+                        child: Image.asset(
+                          iconPath,
+                          fit: BoxFit.contain,
+                        )
                       ),
 
                       Align(
@@ -135,11 +138,11 @@ class _BadgePreviewOverlayState extends State<BadgePreviewOverlay>
                           child: Text(
                             widget.descricao,
                             style: AppTextStyles.body.copyWith(
-                              fontSize: 12,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
-                          ),
+                        )
                         ),
                       ),
                     ],

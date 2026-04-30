@@ -19,6 +19,8 @@ class BadgesPage extends StatelessWidget {
 class BadgesContent extends StatelessWidget {
   const BadgesContent({super.key});
 
+
+
   final List<Map<String, dynamic>> badges = const [
     {
       "titulo": "Primeiros passos",
@@ -112,7 +114,7 @@ class BadgesContent extends StatelessWidget {
               ),
             ),
 
-            // // botão de teste para mostrar a conquista desbloqueada
+            // // botão de teste da debora para mostrar a screen de conquista desbloqueada, pode remover depois
             // ElevatedButton(
             //   onPressed: () {
             //     BadgeUnlockedPage.show(
@@ -120,7 +122,7 @@ class BadgesContent extends StatelessWidget {
             //       titulo: 'Primeiros passos',
             //       descricao: 'Completou sua primeira lição',
             //       iconName: 'pencil',
-            //       backgroundColor: const Color(0xFFA2CA8B),
+            //       backgroundColor: AppColors.badgeGreen,
             //     );
             //   },
             //   child: const Text('Testar conquista'),
@@ -129,26 +131,52 @@ class BadgesContent extends StatelessWidget {
             const SizedBox(height: 20),
 
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.only(bottom: 120),
-                itemCount: badges.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1,
-                ),
-                itemBuilder: (context, index) {
-                  final badge = badges[index];
+              child: badges.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.workspace_premium_outlined,
+                            size: 90,
+                            color: AppColors.primary.withOpacity(0.3),
+                          ),
 
-                  return BadgeCard(
-                    titulo: badge['titulo'],
-                    descricao: badge['descricao'],
-                    iconName: badge['icone'],
-                    backgroundColorKey: badge['background_cor'],
-                  );
-                },
-              ),
+                          const SizedBox(height: 16),
+
+                          Text(
+                            'Você ainda não desbloqueou nenhuma conquista. Continue aprendendo e deixe Poup orgulhoso!',
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.body.copyWith(
+                              fontSize: 16,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    )
+                  : GridView.builder(
+                      padding: const EdgeInsets.only(bottom: 120),
+                      itemCount: badges.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final badge = badges[index];
+
+                        return BadgeCard(
+                          titulo: badge['titulo'],
+                          descricao: badge['descricao'],
+                          iconName: badge['icone'],
+                          backgroundColorKey: badge['background_cor'],
+                        );
+                      },
+                    ),
             ),
           ],
         ),

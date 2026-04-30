@@ -24,25 +24,13 @@ class BadgeUnlockedPage extends StatefulWidget {
     required Color backgroundColor,
   }) {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 350),
-        pageBuilder: (_, __, ___) => BadgeUnlockedPage(
+      MaterialPageRoute(
+        builder: (_) => BadgeUnlockedPage(
           titulo: titulo,
           descricao: descricao,
           iconName: iconName,
           backgroundColor: backgroundColor,
         ),
-        transitionsBuilder: (_, anim, __, child) {
-          return FadeTransition(
-            opacity: anim,
-            child: ScaleTransition(
-              scale: Tween(begin: 0.95, end: 1.0).animate(
-                CurvedAnimation(parent: anim, curve: Curves.easeOut),
-              ),
-              child: child,
-            ),
-          );
-        },
       ),
     );
   }
@@ -58,93 +46,103 @@ class _BadgeUnlockedPageState extends State<BadgeUnlockedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: widget.backgroundColor,
-
-        body: SafeArea(
+      backgroundColor: widget.backgroundColor,
+      body: SafeArea(
         child: Column(
-            children: [
+          children: [
             const SizedBox(height: 20),
 
             Text(
-                'Conquista Desbloqueada!',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.title.copyWith(
+              'Conquista Desbloqueada!',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.title.copyWith(
                 fontSize: 20,
                 color: Colors.white,
-                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Você pode encontrar essa conquista na seção de conquistas do menu.',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body.copyWith(
+                fontSize: 14,
+                color: Colors.white,
+              ),
             ),
 
             Expanded(
-                child: Center(
+              child: Center(
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                        widget.titulo,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.title.copyWith(
-                        fontSize: 24,
+                      widget.titulo,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 32,
                         color: Colors.white,
-                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 30),
 
                     SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image.asset(
+                      width: 150,
+                      height: 150,
+                      child: Image.asset(
                         iconPath,
                         fit: BoxFit.contain,
-                    ),
+                      ),
                     ),
 
                     const SizedBox(height: 30),
 
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
                         widget.descricao,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.body.copyWith(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                        ),
+                      ),
                     ),
-                    ],
+                  ],
                 ),
-                ),
+              ),
             ),
 
             Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    ),
-                    child: Text(
+                  ),
+                  child: Text(
                     'Legal!',
                     style: AppTextStyles.body.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    ),
+                  ),
                 ),
-                ),
+              ),
             ),
-            ],
+          ],
         ),
-        ),
+      ),
     );
   }
 }
