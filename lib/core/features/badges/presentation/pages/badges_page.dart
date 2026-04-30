@@ -3,6 +3,7 @@ import 'package:pomo/core/layouts/main_layout.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/widgets/badge_card.dart';
+import 'package:pomo/core/features/badges/presentation/pages/badge_unlocked_page.dart';
 
 class BadgesPage extends StatelessWidget {
   const BadgesPage({super.key});
@@ -110,6 +111,20 @@ class BadgesContent extends StatelessWidget {
                 height: 1.5,
               ),
             ),
+
+            // // botão de teste para mostrar a conquista desbloqueada
+            // ElevatedButton(
+            //   onPressed: () {
+            //     BadgeUnlockedPage.show(
+            //       context,
+            //       titulo: 'Primeiros passos',
+            //       descricao: 'Completou sua primeira lição',
+            //       iconName: 'pencil',
+            //       backgroundColor: const Color(0xFFA2CA8B),
+            //     );
+            //   },
+            //   child: const Text('Testar conquista'),
+            // ),
 
             const SizedBox(height: 20),
 
