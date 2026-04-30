@@ -2,6 +2,10 @@
 
 O Poupas é um aplicativo mobile de gamificação para educação financeira voltado para o público infanto-juvenil. 
 
+```bash
+  feature/conquistas
+```
+
 <br>
 
 ## Instalação
