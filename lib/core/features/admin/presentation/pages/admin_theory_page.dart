@@ -9,6 +9,7 @@ import '../../../../network/adapters/routes_adapter.dart';
 import '../../../../widgets/module.dart';
 import '../bloc/navigator_bloc.dart';
 import '../bloc/question_bloc.dart';
+import '../../../sign_in/presentati../../../../widgets/navigate_top_corner.dart';
 
 class AdminTheory extends StatefulWidget {
   final ModuleDifficulty difficulty;
@@ -85,6 +86,8 @@ class _AdminTheoryState extends State<AdminTheory> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    const SizedBox(height: 20),
+                    const NavigateTopCorner(),
                     const Text(
                       'Vamos começar com a teoria',
                       style: TextStyle(

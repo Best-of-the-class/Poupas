@@ -7,6 +7,7 @@ import '../../../../network/adapters/routes_adapter.dart';
 import '../../../../widgets/module.dart';
 import '../../../../widgets/module_group.dart';
 import '../../../../widgets/wide_button.dart';
+import '../../../../widgets/pop_up.dart';
 
 class AdminActivities extends StatefulWidget {
   const AdminActivities({super.key});
@@ -121,11 +122,41 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                 );
                               },
                               onDelete: (index) {
-                                context.read<LessonBloc>().add(
-                                  DeleteLesson(
-                                    ModuleDifficulty.values[i],
-                                    index,
-                                  ),
+                                final difficulty = ModuleDifficulty.values[i];
+
+                                final lessonTitle =
+                                    (state.lessonsByDifficulty[difficulty] ?? [])[index];
+
+                                PopUp.show(
+                                  context,
+                                  title: 'Excluir aula',
+                                  subtitle:
+                                      'Deseja realmente excluir "$lessonTitle"? Essa ação não poderá ser desfeita.',
+                                  buttons: [
+                                    WideButton(
+                                      text: 'Cancelar',
+                                      onPress: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+
+                                    WideButton(
+                                      text: 'Excluir',
+                                      backgroundColor: Colors.transparent,
+                                      textColor: Colors.red,
+                                      borderColor: Colors.red,
+                                      onPress: () {
+                                        Navigator.pop(context);
+
+                                        context.read<LessonBloc>().add(
+                                          DeleteLesson(
+                                            difficulty,
+                                            index,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 );
                               },
                             ),

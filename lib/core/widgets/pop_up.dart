@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'heading_text.dart';
 import 'wide_button.dart';
 import 'package:pomo/core/theme/app_colors.dart';
+import 'package:pomo/core/responsive/size_extensions.dart';
 
 class PopUp extends StatelessWidget {
   final String title;
@@ -18,9 +19,9 @@ class PopUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final dialogWidth = isMobile ? screenWidth * 0.88 : screenWidth * 0.4;
+    final screenWidth = context.width;
+
+    final dialogWidth = context.isMobile ? screenWidth * 0.88 : 520.0;
 
     return Dialog(
       backgroundColor: AppColors.background,
@@ -28,36 +29,43 @@ class PopUp extends StatelessWidget {
       child: SizedBox(
         width: dialogWidth,
         child:
-            Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 8),
-                      HeadingText(
-                        title: title,
-                        subtitle: subtitle,
-                        alignment: CrossAxisAlignment.center,
-                      ),
-                      const SizedBox(height: 32),
-                      Column(
-                        children:
-                            buttons
-                                .expand(
-                                  (button) => [
-                                    button,
-                                    const SizedBox(height: 12),
-                                  ],
-                                )
-                                .toList()
-                              ..removeLast(),
-                      ),
-                    ],
-                  ),
-                )
-                .animate()
-                .fade(duration: 200.ms)
-                .shake(hz: 4, curve: Curves.easeInOutCubic, duration: 400.ms),
+        Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              HeadingText(
+                title: title,
+                subtitle: subtitle,
+                alignment: CrossAxisAlignment.center,
+              ),
+              const SizedBox(height: 32),
+              context.isMobile
+                  ? Column(
+                      children: [
+                        for (int i = 0; i < buttons.length; i++) ...[
+                          buttons[i],
+                          if (i < buttons.length - 1)
+                            const SizedBox(height: 12),
+                        ],
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        for (int i = 0; i < buttons.length; i++) ...[
+                          Expanded(child: buttons[i]),
+                          if (i < buttons.length - 1)
+                            const SizedBox(width: 12),
+                        ],
+                      ],
+                    ),
+            ],
+          ),
+        )
+        .animate()
+        .fade(duration: 200.ms)
+        .shake(hz: 4, curve: Curves.easeInOutCubic, duration: 400.ms),
       ),
     );
   }

@@ -78,7 +78,7 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
         position: ImagePosition.bottom,
         imageSize: 393,
         imagePath:
-            'lib/core/features/sign_in/presentation/assets/images/poup_bottom.png',
+            'lib/core/assets/images/poup_bottom.png',
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SingleChildScrollView(

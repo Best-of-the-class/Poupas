@@ -71,7 +71,8 @@ flutter:
 
   assets:
     - .env
-    - lib/core/features/sign_in/presentation/assets/images/poup_bottom.png
+
+
     - lib/core/features/sign_in/presentation/assets/images/poup_caterpillar.png
     - lib/core/features/forgot_password/presentation/assets/images/poup_check.png
     - lib/core/features/user_profile/presentation/assets/images/avatar_1.png
@@ -95,6 +96,8 @@ flutter:
     - lib/core/assets/images/poup-happy.png
     - lib/core/assets/images/maca-check.png
     - lib/core/assets/images/maca-sad.png
+    - lib/core/assets/images/poup_bottom.png    
+    - lib/core/assets/images/poupas_assinatura.png
     - lib/core/assets/images/background-arvore-trilha.png
     - lib/core/features/entry/presentation/assets/image/Poup.png
     - lib/core/features/entry/presentation/assets/image/oculos.png
