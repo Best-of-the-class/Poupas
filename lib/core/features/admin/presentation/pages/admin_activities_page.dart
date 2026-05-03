@@ -21,6 +21,10 @@ class _AdminActivitiesState extends State<AdminActivities> {
   void initState() {
     super.initState();
     _setupWindow();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LessonBloc>().add(LoadLessons());
+    });
   }
 
   void _setupWindow() async {
@@ -90,6 +94,27 @@ class _AdminActivitiesState extends State<AdminActivities> {
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
                 child: BlocBuilder<LessonBloc, LessonState>(
                   builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFE32626),
+                        ),
+                      );
+                    }
+
+                    if (state.errorMessage != null &&
+                        state.lessonsByDifficulty.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Erro ao carregar as aulas: ${state.errorMessage}',
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                          ),
+                        ),
+                      );
+                    }
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -119,13 +144,12 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                         .values[i]] ??
                                     [])[index];
                                 context.pushNamed(
-                                  RoutesAdapter.adminEditQuestions,
+                                  RoutesAdapter.adminTheory,
                                   extra: lessonTitle,
                                 );
                               },
                               onDelete: (index) {
                                 final difficulty = ModuleDifficulty.values[i];
-
                                 final lessonTitle =
                                     (state.lessonsByDifficulty[difficulty] ??
                                     [])[index];
@@ -142,13 +166,13 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                         Navigator.pop(context);
                                       },
                                     ),
-
                                     WideButton(
                                       text: 'Excluir',
                                       backgroundColor: Colors.transparent,
                                       textColor: Colors.red,
                                       borderColor: Colors.red,
                                       onPress: () {
+                                        // Fecha o popup
                                         Navigator.pop(context);
 
                                         context.read<LessonBloc>().add(

@@ -3,6 +3,11 @@ import '../entities/question_item.dart';
 
 abstract class AdminQuestionsEvent {}
 
+class LoadQuestionsFromApi extends AdminQuestionsEvent {
+  final List<QuestionItem> questions;
+  LoadQuestionsFromApi(this.questions);
+}
+
 class LoadQuestionsByLesson extends AdminQuestionsEvent {
   final String lessonTitle;
   LoadQuestionsByLesson(this.lessonTitle);
@@ -97,6 +102,7 @@ class AdminQuestionsBloc
   };
 
   static String? _tempLessonTitle;
+  static String? _tempLessonTheory;
   String? _currentLesson;
 
   AdminQuestionsBloc() : super(const AdminQuestionsState()) {
@@ -108,6 +114,7 @@ class AdminQuestionsBloc
     on<DeleteQuestion>(_onDelete);
     on<ToggleQuestionSelection>(_onToggle);
     on<ResetQuestions>(_onReset);
+    on<LoadQuestionsFromApi>((event, emit) => emit(state.copyWith(questions: event.questions, resetView: true, clearError: true)));
   }
 
   static List<QuestionItem> _generateDefaultQuestions() {
@@ -240,5 +247,12 @@ class AdminQuestionsBloc
   static bool isDefaultLesson(String title) => _defaultLessons.contains(title);
 
   static void setTempTitle(String title) => _tempLessonTitle = title;
+  
+  static void setTempData(String title, String theory) {
+    _tempLessonTitle = title;
+    _tempLessonTheory = theory;
+  }
+
   static String? get tempTitle => _tempLessonTitle;
+  static String? get tempTheory => _tempLessonTheory;
 }

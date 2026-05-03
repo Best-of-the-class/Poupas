@@ -11,6 +11,7 @@ class Input extends StatelessWidget {
   final Widget? suffixIcon;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String)? onChanged;
+  final TextEditingController? controller;
 
   const Input({
     super.key,
@@ -20,14 +21,16 @@ class Input extends StatelessWidget {
     this.suffixIcon,
     this.inputFormatters,
     this.onChanged,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-//    final isMobile = MediaQuery.of(context).size.width < 600;
+//  final isMobile = MediaQuery.of(context).size.width < 600;
     final double verticalPadding = context.isMobile ? 16 : 2;
 
     return TextFormField(
+      controller: controller,
       onChanged: onChanged,
       obscureText: obscureText,
       keyboardType: keyboardType,

@@ -151,6 +151,12 @@ class RoutesAdapter {
           name: adminTheory,
           path: '/admin-theory',
           builder: (context, state) {
+            if (state.extra is String) {
+              return AdminTheory(
+                difficulty: ModuleDifficulty.easy,
+                editLessonTitle: state.extra as String,
+              );
+            }
             final difficulty = state.extra as ModuleDifficulty;
             return AdminTheory(difficulty: difficulty);
           },
