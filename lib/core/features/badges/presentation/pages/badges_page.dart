@@ -128,7 +128,7 @@ class BadgesContent extends StatelessWidget {
             //   child: const Text('Testar conquista'),
             // ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
             Expanded(
               child: badges.isEmpty
