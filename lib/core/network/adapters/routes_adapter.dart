@@ -25,6 +25,7 @@ import '../../features/admin/presentation/pages/admin_theory_page.dart';
 import '../../features/admin/presentation/pages/admin_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_edit_questions_page.dart';
 import '../../features/admin/presentation/pages/admin_success_page.dart';
+import '../../features/admin/presentation/pages/admin_dictionary_page.dart';
 import '../../widgets/module.dart';
 
 class RoutesAdapter {
@@ -50,6 +51,7 @@ class RoutesAdapter {
   static const String editProfile = 'edit-profile';
   static const String adminEditQuestions = 'adminEditQuestions';
   static const String adminSuccess = 'adminSuccess';
+  static const String adminDictionary = 'adminDictionary';
   static bool get isDesktopAdmin {
     final result = !kIsWeb && (Platform.isWindows || Platform.isLinux);
     return result;
@@ -187,6 +189,11 @@ class RoutesAdapter {
           name: adminSuccess,
           path: '/admin-success',
           builder: (context, state) => const AdminSuccessPage(),
+        ),
+        GoRoute(
+          name: adminDictionary,
+          path: '/admin-dictionary',
+          builder: (context, state) => const AdminDictionary(),
         ),
         GoRoute(
           name: editProfile,

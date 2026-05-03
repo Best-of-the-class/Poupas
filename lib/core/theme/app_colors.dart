@@ -64,4 +64,9 @@ class AppColors {
 
   static const Color shortcutDictionary = Color(0xFFFDC692);
   static const Color shortcutPractice = Color(0xFFA2CA8B);
+  
+  static const dictionaryPrimary = Color(0xFF4285F4);
+  static const dictionaryBg = Color(0xFFC6D9FF);
+  static const dictionaryIcon1 = Color(0xFF639BF6);
+  static const dictionaryIcon2 = Color(0xFF1E68D7);
 }
