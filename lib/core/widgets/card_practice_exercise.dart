@@ -32,106 +32,112 @@ class CardPracticeExercise extends StatelessWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: config.cardColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 65,
-                  height: 65,
-                  decoration: BoxDecoration(
-                    color: config.iconBackground,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      config.icon,
-                      width: 48,
-                      height: 48,
+    @override
+    Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: onTap,
+        child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+            color: config.cardColor,
+            borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+            Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                color: config.cardColor,
+                borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                children: [
+                    Container(
+                    width: 65,
+                    height: 65,
+                    decoration: BoxDecoration(
+                        color: config.iconBackground,
+                        borderRadius: BorderRadius.circular(16),
                     ),
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Lição $ordem | $titulo',
-                        style: AppTextStyles.title.copyWith(
-                          fontSize: 16,
-                          color: const Color(0xFF363636),
+                    child: Center(
+                        child: Image.asset(
+                        config.icon,
+                        width: 48,
+                        height: 48,
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF363636),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                    ),
+                    ),
 
-        AnimatedCrossFade(
-          duration: const Duration(milliseconds: 250),
-          crossFadeState:
-              isOpen ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-          firstChild: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-            ),
-            ),
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                    const SizedBox(width: 16),
+
+                    Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                        Text(
+                            'Lição $ordem | $titulo',
+                            style: AppTextStyles.title.copyWith(
+                            fontSize: 16,
+                            color: AppColors.textDark,
+                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                            subtitle,
+                            style: AppTextStyles.body.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                            ),
+                        ),
+                        ],
+                    ),
+                    ),
+                ],
                 ),
-              ),
-              child: Text(
-                'Iniciar exercício',
-                style: AppTextStyles.body.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
-          ),
-          secondChild: const SizedBox.shrink(),
+
+            AnimatedCrossFade(
+                duration: const Duration(milliseconds: 250),
+                crossFadeState: isOpen
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+
+                firstChild: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                    ),
+                ),
+                child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                    ),
+                    ),
+                    child: Text(
+                    'Iniciar exercício',
+                    style: AppTextStyles.body.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                    ),
+                    ),
+                ),
+                ),
+
+                secondChild: const SizedBox.shrink(),
+            ),
+            ],
         ),
-      ],
+        ),
     );
-  }
+    }
 }
