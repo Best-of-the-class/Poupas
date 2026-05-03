@@ -62,7 +62,9 @@ class _AdminActivitiesState extends State<AdminActivities> {
                   WideButton(
                     text: 'Dicionário',
                     backgroundColor: const Color(0xFF4285F4),
-                    onPress: () {},
+                    onPress: () {
+                      context.pushNamed(RoutesAdapter.adminDictionary);
+                    },
                   ),
                   const Spacer(),
                   WideButton(
@@ -125,7 +127,8 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                 final difficulty = ModuleDifficulty.values[i];
 
                                 final lessonTitle =
-                                    (state.lessonsByDifficulty[difficulty] ?? [])[index];
+                                    (state.lessonsByDifficulty[difficulty] ??
+                                    [])[index];
 
                                 PopUp.show(
                                   context,
@@ -149,10 +152,7 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                         Navigator.pop(context);
 
                                         context.read<LessonBloc>().add(
-                                          DeleteLesson(
-                                            difficulty,
-                                            index,
-                                          ),
+                                          DeleteLesson(difficulty, index),
                                         );
                                       },
                                     ),
