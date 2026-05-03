@@ -105,11 +105,19 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
       "indiceCorreta": q.correctIndex
     }).toList();
 
+    final novoTitulo = (AdminQuestionsBloc.tempTitle != null && AdminQuestionsBloc.tempTitle!.isNotEmpty)
+        ? AdminQuestionsBloc.tempTitle!
+        : (details['tituloLicao'] ?? widget.lessonTitle ?? 'Sem Título');
+        
+    final novaTeoria = (AdminQuestionsBloc.tempTheory != null && AdminQuestionsBloc.tempTheory!.isNotEmpty)
+        ? AdminQuestionsBloc.tempTheory!
+        : (details['textoConceito'] ?? '');
+
     context.read<LessonBloc>().add(UpdateLesson(
-      tituloAntigo: widget.lessonTitle!,
-      dificuldade: details['dificuldade'],
-      tituloLicao: details['tituloLicao'],
-      textoConceito: details['textoConceito'],
+      tituloAntigo: widget.lessonTitle!, 
+      dificuldade: details['dificuldade'] ?? 0,
+      tituloLicao: novoTitulo.toString(),
+      textoConceito: novaTeoria.toString(),
       questoes: questoesJson,
     ));
   }
@@ -120,23 +128,30 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
       backgroundColor: const Color(0xFFF5EEDA),
       body: MultiBlocListener(
         listeners: [
-          // Listener da API (LessonBloc)
           BlocListener<LessonBloc, LessonState>(
             listenWhen: (prev, curr) => prev.lessonDetails != curr.lessonDetails || prev.isSuccess != curr.isSuccess,
             listener: (context, state) {
               if (state.isSuccess) {
-                context.pop(); 
+                context.go('/admin-activities'); 
               } else if (state.lessonDetails != null) {
-                final questoesApi = state.lessonDetails!['questoes'] as List<dynamic>;
+              
+                final questoesApi = state.lessonDetails!['questoes'] as List<dynamic>? ?? [];
+                
                 final questionsParsed = questoesApi.asMap().entries.map((entry) {
                   final i = entry.key;
-                  final q = entry.value;
+                  final q = entry.value as Map<String, dynamic>? ?? {};
+                  
+                  final enunciado = q['enunciado'] ?? q['Enunciado'] ?? '';
+                  final alternativasRaw = q['alternativas'] ?? q['Alternativas'] ?? [];
+                  final alternativasList = (alternativasRaw as List<dynamic>).map((e) => e?.toString() ?? '').toList();
+                  final indice = q['indiceCorreta'] ?? q['IndiceCorreta'] ?? 0;
+
                   return QuestionItem(
                     title: 'Questão ${i + 1}',
                     subtitle: 'Questão salva',
-                    questionText: q['enunciado'],
-                    choices: List<String>.from(q['alternativas']),
-                    correctIndex: q['indiceCorreta'],
+                    questionText: enunciado.toString(),
+                    choices: alternativasList,
+                    correctIndex: indice as int,
                     isSelected: false,
                   );
                 }).toList();

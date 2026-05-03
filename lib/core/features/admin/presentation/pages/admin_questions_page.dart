@@ -15,7 +15,13 @@ import '../bloc/lesson_bloc.dart';
 
 class AdminQuestions extends StatefulWidget {
   final ModuleDifficulty difficulty;
-  const AdminQuestions({super.key, required this.difficulty});
+  final String? editLessonTitle;
+
+  const AdminQuestions({
+    super.key, 
+    required this.difficulty,
+    this.editLessonTitle,
+  });
 
   @override
   State<AdminQuestions> createState() => _AdminQuestionsState();

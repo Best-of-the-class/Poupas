@@ -146,32 +146,24 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
   }
 
   Future<void> _onDelete(DeleteLesson event, Emitter<LessonState> emit) async {
-    print("⚙️ PASSO 2: O BLoC recebeu a ordem de deletar!");
 
     final updated = Map<ModuleDifficulty, List<String>>.from(state.lessonsByDifficulty);
     final list = List<String>.from(updated[event.difficulty] ?? []);
 
-    print("🔍 Tamanho da lista atual: ${list.length}. Tentando apagar o index: ${event.index}");
     
     if (event.index < 0 || event.index >= list.length) {
-      print("⚠️ ERRO: O index é inválido! A ação foi cancelada.");
       return;
     }
     
     final tituloParaDeletar = list[event.index];
-    print("🚀 PASSO 3: Título encontrado: $tituloParaDeletar. Indo para a API...");
 
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    final baseUrl = dotenv.env['API_URL'] ?? 'http://localhost:5038/api';
+    final baseUrl = dotenv.env['API_URL'] ?? 'http://localhost:7141/api';
     final url = Uri.parse('$baseUrl/Licao/deletar/${Uri.encodeComponent(tituloParaDeletar)}');
 
     try {
       final response = await http.delete(url);
-
-      print("📍 PASSO 4: O servidor respondeu com Status: ${response.statusCode}");
-      print("📍 PASSO 5: Mensagem do servidor: ${response.body}");
-
       if (response.statusCode == 200) {
         list.removeAt(event.index);
         updated[event.difficulty] = list;
@@ -187,7 +179,6 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
         ));
       }
     } catch (e) {
-      print("🚨 ERRO GRAVE DE CONEXÃO: $e");
       emit(state.copyWith(
         isLoading: false,
         errorMessage: "Falha ao conectar com o servidor: $e",
@@ -242,7 +233,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
   Future<void> _onLoadDetails(LoadLessonDetails event, Emitter<LessonState> emit) async {
     emit(state.copyWith(isLoading: true, isSuccess: false));
     
-    final baseUrl = dotenv.env['API_URL'] ?? 'http://localhost:5038/api';
+    final baseUrl = dotenv.env['API_URL'] ?? 'http://localhost:7141/api';
     final url = Uri.parse('$baseUrl/Licao/detalhes/${Uri.encodeComponent(event.titulo)}');
 
     try {
