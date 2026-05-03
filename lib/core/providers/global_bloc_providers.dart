@@ -26,6 +26,10 @@ class GlobalBlocProviders extends StatelessWidget {
         ),
         BlocProvider<AdminQuestionsBloc>.value(value: sl<AdminQuestionsBloc>()),
         BlocProvider<LessonBloc>.value(value: sl<LessonBloc>()),
+        BlocProvider<DictionaryBloc>.value(value: sl<DictionaryBloc>()),
+        BlocProvider<DictionaryValidatorBloc>.value(
+          value: sl<DictionaryValidatorBloc>(),
+        ),
       ],
       child: child,
     );
