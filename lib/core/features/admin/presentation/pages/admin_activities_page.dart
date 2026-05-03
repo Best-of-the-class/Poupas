@@ -21,6 +21,10 @@ class _AdminActivitiesState extends State<AdminActivities> {
   void initState() {
     super.initState();
     _setupWindow();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LessonBloc>().add(LoadLessons());
+    });
   }
 
   void _setupWindow() async {
@@ -88,6 +92,22 @@ class _AdminActivitiesState extends State<AdminActivities> {
                 padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
                 child: BlocBuilder<LessonBloc, LessonState>(
                   builder: (context, state) {
+                    
+                    if (state.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: Color(0xFFE32626)),
+                      );
+                    }
+
+                    if (state.errorMessage != null && state.lessonsByDifficulty.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Erro ao carregar as aulas: ${state.errorMessage}',
+                          style: const TextStyle(color: Colors.red, fontSize: 18),
+                        ),
+                      );
+                    }
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -157,6 +177,12 @@ class _AdminActivitiesState extends State<AdminActivities> {
                                       },
                                     ),
                                   ],
+                                );
+                                context.read<LessonBloc>().add(
+                                  DeleteLesson(
+                                    ModuleDifficulty.values[i],
+                                    index,
+                                  ),
                                 );
                               },
                             ),

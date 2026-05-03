@@ -89,9 +89,26 @@ class _AdminQuestionsState extends State<AdminQuestions> {
 
   void _createLesson(BuildContext context, AdminQuestionsState state) {
     final title = AdminQuestionsBloc.tempTitle ?? 'Nova Aula';
-    AdminQuestionsBloc.persistForLesson(title, state.questions);
-    context.read<LessonBloc>().add(CreateLesson(title, widget.difficulty));
-    context.goNamed(RoutesAdapter.adminSuccess);
+    final theory = AdminQuestionsBloc.tempTheory ?? '';
+
+    final questoesJson = state.questions
+        .map(
+          (q) => {
+            "enunciado": q.questionText,
+            "alternativas": q.choices,
+            "indiceCorreta": q.correctIndex,
+          },
+        )
+        .toList();
+
+    context.read<LessonBloc>().add(
+      CreateLesson(
+        dificuldade: widget.difficulty.index + 1,
+        tituloLicao: title,
+        textoConceito: theory,
+        questoes: questoesJson,
+      ),
+    );
   }
 
   @override
@@ -111,168 +128,186 @@ class _AdminQuestionsState extends State<AdminQuestions> {
             setState(() => _selectedCorrectIndex = 0);
           }
         },
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Agora crie 4 questões',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D2D2D),
-                      ),
-                    ),
-                    BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(
-                      builder: (context, state) {
-                        final isComplete =
-                            state.questions.length == _totalQuestions;
-                        return WideButton(
-                          text: 'Criar Aula',
-                          backgroundColor: isComplete
-                              ? const Color(0xFF2E7D32)
-                              : Colors.grey,
-                          onPress: isComplete
-                              ? () => _createLesson(context, state)
-                              : () {},
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: BlocListener<LessonBloc, LessonState>(
+          listenWhen: (previous, current) =>
+              previous.isSuccess != current.isSuccess ||
+              previous.errorMessage != current.errorMessage,
+          listener: (context, state) {
+            if (state.isSuccess) {
+              context.goNamed(RoutesAdapter.adminSuccess);
+            } else if (state.errorMessage != null) {
+              _showError(state.errorMessage!);
+            }
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: CustomEditor(
-                                key: _editorKey,
-                                themeColor: themeColor,
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20),
-                              child: Text(
-                                'Digite as alternativas e marque a correta',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            ...List.generate(
-                              3,
-                              (index) => Choice(
-                                letter: String.fromCharCode(65 + index),
-                                controller: _choiceControllers[index],
-                                isSelected: _selectedCorrectIndex == index,
-                                isCorrect: _selectedCorrectIndex == index,
-                                themeColor: themeColor,
-                                onSelected: () => setState(
-                                  () => _selectedCorrectIndex = index,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            BlocBuilder<
-                              AdminQuestionsBloc,
-                              AdminQuestionsState
-                            >(
-                              builder: (context, state) {
-                                final canAdd =
-                                    state.questions.length < _totalQuestions;
-                                return WideButton(
-                                  text: canAdd
-                                      ? 'Adicionar questão'
-                                      : 'Limite de questões atingido',
-                                  backgroundColor: canAdd
-                                      ? themeColor
-                                      : Colors.grey,
-                                  onPress: canAdd
-                                      ? () {
-                                          context
-                                              .read<AdminQuestionsBloc>()
-                                              .add(
-                                                SaveQuestion(
-                                                  questionText:
-                                                      _editorKey
-                                                          .currentState
-                                                          ?.controller
-                                                          .document
-                                                          .toPlainText() ??
-                                                      '',
-                                                  choices: _choiceControllers
-                                                      .map((c) => c.text)
-                                                      .toList(),
-                                                  correctIndex:
-                                                      _selectedCorrectIndex,
-                                                ),
-                                              );
-                                        }
-                                      : () {},
-                                );
-                              },
-                            ),
-                          ],
+                      const Text(
+                        'Agora crie 4 questões',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2D2D2D),
                         ),
                       ),
-                      const SizedBox(width: 40),
-                      Expanded(
-                        flex: 4,
-                        child:
-                            BlocBuilder<
-                              AdminQuestionsBloc,
-                              AdminQuestionsState
-                            >(
-                              builder: (context, state) {
-                                final missingCount =
-                                    _totalQuestions - state.questions.length;
-                                return ListView(
-                                  padding: EdgeInsets.zero,
-                                  children: [
-                                    ...List.generate(state.questions.length, (
-                                      index,
-                                    ) {
-                                      final q = state.questions[index];
-                                      return Question(
-                                        title: q.title,
-                                        subtitle: q.subtitle,
-                                        isSelected: q.isSelected,
-                                        onToggle: () => context
-                                            .read<AdminQuestionsBloc>()
-                                            .add(
-                                              ToggleQuestionSelection(index),
-                                            ),
-                                        onDelete: () => context
-                                            .read<AdminQuestionsBloc>()
-                                            .add(DeleteQuestion(index)),
-                                      );
-                                    }),
-                                    ...List.generate(
-                                      missingCount,
-                                      (_) => const MissingQuestion(
-                                        themeColor: Color(0xFF2E7D32),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                      BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(
+                        builder: (context, state) {
+                          final isComplete =
+                              state.questions.length == _totalQuestions;
+
+                          return BlocBuilder<LessonBloc, LessonState>(
+                            builder: (context, lessonState) {
+                              final isLoading = lessonState.isLoading;
+                              return WideButton(
+                                text: isLoading ? 'Salvando...' : 'Criar Aula',
+                                backgroundColor: isComplete && !isLoading
+                                    ? const Color(0xFF2E7D32)
+                                    : Colors.grey,
+                                onPress: isComplete && !isLoading
+                                    ? () => _createLesson(context, state)
+                                    : () {},
+                              );
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 32),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: CustomEditor(
+                                  key: _editorKey,
+                                  themeColor: themeColor,
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Text(
+                                  'Digite as alternativas e marque a correta',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              ...List.generate(
+                                3,
+                                (index) => Choice(
+                                  letter: String.fromCharCode(65 + index),
+                                  controller: _choiceControllers[index],
+                                  isSelected: _selectedCorrectIndex == index,
+                                  isCorrect: _selectedCorrectIndex == index,
+                                  themeColor: themeColor,
+                                  onSelected: () => setState(
+                                    () => _selectedCorrectIndex = index,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              BlocBuilder<
+                                AdminQuestionsBloc,
+                                AdminQuestionsState
+                              >(
+                                builder: (context, state) {
+                                  final canAdd =
+                                      state.questions.length < _totalQuestions;
+                                  return WideButton(
+                                    text: canAdd
+                                        ? 'Adicionar questão'
+                                        : 'Limite de questões atingido',
+                                    backgroundColor: canAdd
+                                        ? themeColor
+                                        : Colors.grey,
+                                    onPress: canAdd
+                                        ? () {
+                                            context
+                                                .read<AdminQuestionsBloc>()
+                                                .add(
+                                                  SaveQuestion(
+                                                    questionText:
+                                                        _editorKey
+                                                            .currentState
+                                                            ?.controller
+                                                            .document
+                                                            .toPlainText() ??
+                                                        '',
+                                                    choices: _choiceControllers
+                                                        .map((c) => c.text)
+                                                        .toList(),
+                                                    correctIndex:
+                                                        _selectedCorrectIndex,
+                                                  ),
+                                                );
+                                          }
+                                        : () {},
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 40),
+                        Expanded(
+                          flex: 4,
+                          child:
+                              BlocBuilder<
+                                AdminQuestionsBloc,
+                                AdminQuestionsState
+                              >(
+                                builder: (context, state) {
+                                  final missingCount =
+                                      _totalQuestions - state.questions.length;
+                                  return ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: [
+                                      ...List.generate(state.questions.length, (
+                                        index,
+                                      ) {
+                                        final q = state.questions[index];
+                                        return Question(
+                                          title: q.title,
+                                          subtitle: q.subtitle,
+                                          isSelected: q.isSelected,
+                                          onToggle: () => context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(
+                                                ToggleQuestionSelection(index),
+                                              ),
+                                          onDelete: () => context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(DeleteQuestion(index)),
+                                        );
+                                      }),
+                                      ...List.generate(
+                                        missingCount,
+                                        (_) => const MissingQuestion(
+                                          themeColor: Color(0xFF2E7D32),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

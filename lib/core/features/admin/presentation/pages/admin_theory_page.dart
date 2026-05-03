@@ -60,17 +60,24 @@ class _AdminTheoryState extends State<AdminTheory> {
       backgroundColor: const Color(0xFFF5EEDA),
       body: BlocListener<AdminNavigationBloc, AdminNavigationState>(
         listenWhen: (prev, curr) {
-          if (curr is AdminErrorEffect && prev is AdminErrorEffect)
+          if (curr is AdminErrorEffect && prev is AdminErrorEffect) {
             return curr.id != prev.id;
-          if (curr is AdminNavSideEffect && prev is AdminNavSideEffect)
+          }
+          if (curr is AdminNavSideEffect && prev is AdminNavSideEffect) {
             return curr.id != prev.id;
+          }
           return true;
         },
         listener: (context, state) {
           if (state is AdminErrorEffect) {
             _showErrorPopup(context, state.message);
           } else if (state is AdminNavSideEffect) {
-            AdminQuestionsBloc.setTempTitle(_currentTitle);
+            
+            final content = _editorKey.currentState?.controller.document.toPlainText() ?? '';
+            
+            AdminQuestionsBloc.setTempData(_currentTitle, content); 
+            // ------------------------------
+
             context.pushNamed(
               RoutesAdapter.adminQuestions,
               extra: widget.difficulty,
