@@ -98,7 +98,7 @@ class BadgesContent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
                 fontSize: 20,
-                color: AppColors.textDark,
+                color: AppColors.title,
               ),
             ),
 

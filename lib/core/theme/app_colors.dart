@@ -61,4 +61,7 @@ class AppColors {
   static const Color badgeGreen = Color(0xFFA2CA8B);
   static const Color badgeRed = Color(0xFFFBA29B);
   static const Color badgeYellow = Color(0xFFFBD564);
+
+  static const Color shortcutDictionary = Color(0xFFFDC692);
+  static const Color shortcutPractice = Color(0xFFA2CA8B);
 }

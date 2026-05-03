@@ -14,8 +14,8 @@ class BottomNavBar extends StatelessWidget {
         break;
       case 1:
         context.go(
-          '/home',
-        ); // lembrar de atualizar para a rota correta quando tiver a página de pratica
+          '/practice-intro',
+        ); 
         break;
       case 2:
         context.go(

@@ -107,7 +107,7 @@ Cadastre-se com uma nova conta quando se sentir pronto para voltar.''',
         title: const Text(
           'Editar Perfil',
           style: TextStyle(
-            color: Color(0xFF363636),
+            color: AppColors.title,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),

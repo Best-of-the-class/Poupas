@@ -17,6 +17,7 @@ import '../../features/forgot_password/presentation/pages/forgot_password_confir
 import '../../features/entry/presentation/pages/welcome_page.dart';
 import '../../features/lesson/presentation/pages/lesson_page.dart';
 import '../../features/badges/presentation/pages/badges_page.dart';
+import '../../features/practice/presentation/pages/practice_intro_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_theory_page.dart';
@@ -40,6 +41,7 @@ class RoutesAdapter {
   static const String profile = 'profile';
   static const String lesson = 'lesson';
   static const String badges = 'badges';
+  static const String practiceIntro = 'practice-intro';
   static const String adminActivities = 'adminActivities';
   static const String adminTheory = 'adminTheory';
   static const String adminQuestions = 'adminQuestions';
@@ -127,6 +129,11 @@ class RoutesAdapter {
           name: badges,
           path: '/badges',
           builder: (context, state) => const BadgesPage(),
+        ),
+        GoRoute(
+          name: practiceIntro,
+          path: '/practice-intro',
+          builder: (context, state) => const PracticeIntroPage(),
         ),
         GoRoute(
           name: load,
