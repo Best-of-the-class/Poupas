@@ -103,8 +103,13 @@ class CardPracticeExercise extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+            ),
             ),
             child: ElevatedButton(
               onPressed: () {},

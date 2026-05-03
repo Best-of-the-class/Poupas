@@ -5,7 +5,6 @@ import 'package:pomo/core/theme/app_text_styles.dart';
 import 'package:pomo/core/widgets/card_practice_exercise.dart';
 import 'package:pomo/core/widgets/card_lesson_topic.dart';
 
-/// ✅ MOCK DE EXERCÍCIOS
 const List<Map<String, dynamic>> mockExercises = [
   {
     "ordem": 1,
@@ -66,7 +65,6 @@ class _PracticePageState extends State<PracticePage> {
         centerTitle: true,
       ),
 
-      /// ✅ BODY
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -87,7 +85,6 @@ class _PracticePageState extends State<PracticePage> {
 
               const SizedBox(height: 20),
 
-              /// ✅ LISTA OU EMPTY STATE
               Expanded(
                 child: mockExercises.isEmpty
                     ? const _EmptyState()
@@ -101,8 +98,6 @@ class _PracticePageState extends State<PracticePage> {
                             titulo: exercise['titulo'],
                             type: exercise['type'],
                             isOpen: openedIndex == index,
-
-                            /// 🎯 ACCORDION
                             onTap: () {
                               setState(() {
                                 if (openedIndex == index) {
@@ -124,7 +119,6 @@ class _PracticePageState extends State<PracticePage> {
   }
 }
 
-/// ✅ ESTADO VAZIO
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
 
@@ -135,9 +129,9 @@ class _EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.workspace_premium_outlined,
-            size: 80,
-            color: AppColors.textDark.withOpacity(0.4),
+            Icons.menu_book_outlined,
+            size: 90,
+            color: AppColors.primary.withOpacity(0.3),
           ),
 
           const SizedBox(height: 20),
@@ -146,10 +140,12 @@ class _EmptyState extends StatelessWidget {
             'Nenhum exercício disponível ainda.\nContinue estudando para liberar práticas!',
             textAlign: TextAlign.center,
             style: AppTextStyles.body.copyWith(
-              fontSize: 14,
+              fontSize: 16,
               color: AppColors.textDark,
             ),
           ),
+
+          const SizedBox(height: 40),
         ],
       ),
     );
