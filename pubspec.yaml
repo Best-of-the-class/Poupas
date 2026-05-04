@@ -94,6 +94,8 @@ flutter:
     - lib/core/assets/icons/icon-licao-prova.png
     - lib/core/assets/icons/icon-iniciar-prova-final.png
     - lib/core/assets/icons/icon-poup-circle.png
+    - lib/core/assets/icons/icon-btn-dicionario.png
+    - lib/core/assets/icons/icon-btn-pratica.png
     - lib/core/assets/images/poup-happy.png
     - lib/core/assets/images/maca-check.png
     - lib/core/assets/images/maca-sad.png

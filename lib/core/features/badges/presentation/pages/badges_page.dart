@@ -98,7 +98,7 @@ class BadgesContent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: AppTextStyles.title.copyWith(
                 fontSize: 20,
-                color: AppColors.textDark,
+                color: AppColors.title,
               ),
             ),
 
@@ -128,7 +128,7 @@ class BadgesContent extends StatelessWidget {
             //   child: const Text('Testar conquista'),
             // ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
             Expanded(
               child: badges.isEmpty
@@ -153,7 +153,7 @@ class BadgesContent extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     )

@@ -6,16 +6,55 @@ import 'package:pomo/core/theme/app_text_styles.dart';
 class LessonResultPage extends StatelessWidget {
   final int acertos;
   final int erros;
-  final int xpGanho;
+  final int? xpBase;
   final bool ganhouSequencia;
 
   const LessonResultPage({
     super.key,
     this.acertos = 3,
     this.erros = 1,
-    this.xpGanho = 120,
+    this.xpBase,
     this.ganhouSequencia = true,
   });
+
+  int get xpCalculado {
+    if (xpBase != null) return xpBase!;
+    return acertos * 100;
+  }
+  
+  bool get teveErros => erros > 0;
+  bool get tudoCorreto => erros == 0;
+  bool get soErros => acertos == 0 && erros > 0;
+
+  String get tituloMensagem {
+    if (tudoCorreto) return 'UAU, PARABÉNS!';
+    if (soErros) return 'HMM...';
+    return 'QUASE LÁ!';
+  }
+
+  String get subtituloMensagem {
+    if (tudoCorreto) return 'Você mandou muito bem!';
+    if (soErros) return 'Revise o conteúdo e tente de novo';
+    return 'Você está evoluindo, continue!';
+  }
+
+  Color get circleColor {
+    if (tudoCorreto) return AppColors.resultSuccessBg;
+    if (soErros) return AppColors.resultErrorBg;
+    return AppColors.resultWarningBg; 
+  }
+
+  Color get iconColor {
+    if (tudoCorreto) return AppColors.resultSuccessIcon;
+    if (soErros) return AppColors.resultErrorIcon;
+    return AppColors.resultWarningIcon;
+  }
+
+  IconData get resultIcon {
+    if (tudoCorreto) return Icons.check;
+    if (soErros) return Icons.close;
+    return Icons.warning_amber_rounded;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +89,14 @@ class LessonResultPage extends StatelessWidget {
                             Container(
                               width: 80,
                               height: 80,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFA2CA8B),
+                              decoration: BoxDecoration(
+                                color: circleColor,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
-                                Icons.check,
+                              child: Icon(
+                                resultIcon,
                                 size: 48,
-                                color: Color(0xFF117302),
+                                color: iconColor,
                               ),
                             ),
 
@@ -68,7 +107,7 @@ class LessonResultPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'UAU, PARABÉNS!',
+                                    tituloMensagem,
                                     style: AppTextStyles.title.copyWith(
                                       fontSize: 18,
                                       color: AppColors.textDark,
@@ -76,7 +115,7 @@ class LessonResultPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Mais um desafio concluído',
+                                    subtituloMensagem,
                                     style: AppTextStyles.body.copyWith(
                                       fontSize: 14,
                                       color: AppColors.textDark,
@@ -110,7 +149,7 @@ class LessonResultPage extends StatelessWidget {
 
                         _ResultRow(
                           label: 'Pontuação (XP)',
-                          value: '+$xpGanho',
+                          value: '+$xpCalculado',
                           color: const Color(0xFFFBD564),
                           icon: Icons.star_outline,
                         ),
