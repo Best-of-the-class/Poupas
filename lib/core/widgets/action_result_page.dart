@@ -28,7 +28,7 @@ class ActionResultPage extends StatelessWidget {
             children: [
               Image.asset(
                 imagePath,
-                width: 150, //Aumentei tamanho (Anahi)
+                width: 150, 
                 height: 150,
                 fit: BoxFit.contain,
               ),

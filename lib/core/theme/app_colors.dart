@@ -69,4 +69,13 @@ class AppColors {
   static const dictionaryBg = Color(0xFFC6D9FF);
   static const dictionaryIcon1 = Color(0xFF639BF6);
   static const dictionaryIcon2 = Color(0xFF1E68D7);
+
+  static const resultSuccessBg = Color(0xFFA2CA8B);
+  static const resultSuccessIcon = Color(0xFF117302);
+
+  static const resultWarningBg = Color(0xFFFFEFC0);
+  static const resultWarningIcon = Color(0xFFFBD564);
+
+  static const resultErrorBg = Color(0xFFFBA29B);
+  static const resultErrorIcon = Color(0xFFE52727);
 }

@@ -93,7 +93,7 @@ class _LessonPageState extends State<LessonPage> {
           key: const ValueKey('result'),
           acertos: acertos,
           erros: erros,
-          xpGanho: widget.licao['recompensa_xp'] ?? 100,
+          xpBase: widget.licao['recompensa_xp'],
           ganhouSequencia: true,
         );
       }

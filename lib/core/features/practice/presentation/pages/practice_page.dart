@@ -9,17 +9,26 @@ const List<Map<String, dynamic>> mockExercises = [
   {
     "ordem": 1,
     "titulo": "Juros Simples",
-    "type": LessonType.questao
+    "type": LessonType.questao,
+    "pergunta": "Quanto é 100 + 10%?",
+    "alternativas": ["105", "110", "120"],
+    "indiceCorreto": 1,
   },
   {
     "ordem": 2,
     "titulo": "Juros Compostos",
-    "type": LessonType.questao
+    "type": LessonType.questao,
+    "pergunta": "Qual o resultado após 1 período?",
+    "alternativas": ["110", "120", "130"],
+    "indiceCorreto": 0,
   },
   {
     "ordem": 3,
     "titulo": "Revisão Geral",
-    "type": LessonType.prova
+    "type": LessonType.prova,
+    "pergunta": "Qual conceito define juros compostos?",
+    "alternativas": ["Linear", "Exponencial", "Fixo"],
+    "indiceCorreto": 1,
   },
 ];
 
@@ -93,21 +102,23 @@ class _PracticePageState extends State<PracticePage> {
                         itemBuilder: (context, index) {
                           final exercise = mockExercises[index];
 
-                          return CardPracticeExercise(
-                            ordem: exercise['ordem'],
-                            titulo: exercise['titulo'],
-                            type: exercise['type'],
-                            isOpen: openedIndex == index,
-                            onTap: () {
-                              setState(() {
-                                if (openedIndex == index) {
-                                  openedIndex = null;
-                                } else {
-                                  openedIndex = index;
-                                }
-                              });
-                            },
-                          );
+                        return CardPracticeExercise(
+                          ordem: exercise['ordem'],
+                          titulo: exercise['titulo'],
+                          type: exercise['type'],
+                          isOpen: openedIndex == index,
+                          onTap: () {
+                            setState(() {
+                              openedIndex = openedIndex == index ? null : index;
+                            });
+                          },
+
+                          pergunta: exercise['pergunta'],
+                          alternativas: List<String>.from(exercise['alternativas']),
+                          indiceCorreto: exercise['indiceCorreto'],
+
+                          isFinalExam: exercise['type'] == LessonType.prova,
+                        );
                         },
                       ),
               ),

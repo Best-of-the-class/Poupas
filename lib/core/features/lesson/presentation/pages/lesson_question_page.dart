@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomo/core/layouts/lesson_layout.dart';
 import 'package:pomo/core/widgets/card_lesson_topic.dart';
+import 'package:pomo/core/features/practice/presentation/pages/practice_result_page.dart';
 import 'package:pomo/core/widgets/pop_up_alert.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
 import 'package:pomo/core/theme/app_colors.dart';
@@ -13,6 +14,7 @@ class LessonQuestionPage extends StatefulWidget {
   final List<String> alternativas;
   final int indiceCorreto;
   final bool isFinalExam;
+  final bool isPractice;
   final Function(bool acertou)? onNext;
 
   const LessonQuestionPage({
@@ -23,6 +25,7 @@ class LessonQuestionPage extends StatefulWidget {
     required this.alternativas,
     required this.indiceCorreto,
     this.isFinalExam = false,
+    this.isPractice = false,
     this.onNext,
   });
 
@@ -37,7 +40,7 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
   void _handleButton() {
     if (!answered) {
       if (selectedIndex == null) {
-        _showSelectOptionAlert(); // 👈 NOVO
+        _showSelectOptionAlert();
         return;
       }
 
@@ -46,6 +49,19 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
       });
     } else {
       final acertou = selectedIndex == widget.indiceCorreto;
+
+      if (widget.isPractice) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PracticeResultPage(
+              acertos: acertou ? 1 : 0,
+              erros: acertou ? 0 : 1,
+            ),
+          ),
+        );
+        return;
+      }
 
       if (widget.onNext != null) {
         widget.onNext!(acertou);
@@ -63,13 +79,16 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
     );
   }
 
-  String get buttonText => answered ? 'Próximo' : 'Responder';
+  String get buttonText {
+    if (!answered) return 'Responder';
+    return widget.isPractice ? 'Finalizar' : 'Próximo';
+  }
 
   @override
   Widget build(BuildContext context) {
     return LessonLayout(
-      vidasAtuais: 5,
-      vidasTotal: 5,
+      vidasAtuais: widget.isPractice ? 0 : 5,
+      vidasTotal: widget.isPractice ? 0 : 5,
       buttonText: buttonText,
       onButtonPressed: _handleButton,
 
