@@ -3,7 +3,18 @@ import 'package:pomo/core/theme/app_colors.dart';
 import 'stats_card.dart';
 
 class StatsSection extends StatelessWidget {
-  const StatsSection({super.key});
+  final int licoesConcluidas;
+  final int exerciciosResolvidos;
+  final int pontuacao;
+  final int sequenciaDias;
+
+  const StatsSection({
+    super.key,
+    required this.licoesConcluidas,
+    required this.exerciciosResolvidos,
+    required this.pontuacao,
+    required this.sequenciaDias,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,27 +27,27 @@ class StatsSection extends StatelessWidget {
         mainAxisSpacing: 12,
         childAspectRatio: 1.6,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [
+        children: [
           StatsCard(
-            value: 20,
+            value: licoesConcluidas,
             label: "Lições concluídas",
             color: AppColors.perfilLicoes,
             icon: Icons.menu_book_outlined,
           ),
           StatsCard(
-            value: 35,
+            value: exerciciosResolvidos,
             label: "Exercícios resolvidos",
             color: AppColors.perfilExercicios,
             icon: Icons.edit_outlined,
           ),
           StatsCard(
-            value: 2584,
+            value: pontuacao,
             label: "Pontuação (XP)",
             color: AppColors.perfilPontuacao,
             icon: Icons.star_outline,
           ),
           StatsCard(
-            value: 14,
+            value: sequenciaDias,
             label: "Sequência de dias",
             color: AppColors.perfilSequencia,
             icon: Icons.local_fire_department_outlined,

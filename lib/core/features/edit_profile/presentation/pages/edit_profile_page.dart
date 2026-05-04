@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomo/core/features/user_profile/presentation/bloc/profile_bloc.dart';
 import 'package:pomo/core/widgets/edit_profile_header.dart';
 import 'package:pomo/core/widgets/pop_up.dart';
 import 'package:pomo/core/widgets/wide_button.dart';
 import 'package:pomo/core/widgets/action_result_page.dart';
+import 'package:pomo/services/current_user_service.dart';
 
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
@@ -19,6 +22,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _nameController = TextEditingController(text: 'Nome Usuário');
   final _emailController = TextEditingController(text: 'nomeusuario@email.com');
   final _formKey = GlobalKey<FormState>();
+  final CurrentUserService _currentUser = CurrentUserService.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final email = _currentUser.email;
+      if (email != null && email.isNotEmpty) {
+        context.read<ProfileBloc>().add(LoadProfile(email));
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -29,19 +44,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void _saveChanges() {
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ActionResultPage(
-            imagePath:
-                'lib/core/assets/images/maca-check.png',
-            descriptionText:
-                'Suas alterações foram salvas com sucesso!',
-            buttonText: 'Voltar para Meu Perfil',
-            onButtonPressed: () {
-              context.go('/profile');
-            },
-          ),
+      final currentEmail =
+          context.read<ProfileBloc>().state.profile?.email ?? _currentUser.email;
+
+      if (currentEmail == null || currentEmail.isEmpty) {
+        PopUp.show(
+          context,
+          title: "Ops!",
+          subtitle:
+              "Não foi possível identificar o usuário atual. Faça login novamente.",
+          buttons: [
+            WideButton(
+              text: "Fechar",
+              onPress: () => Navigator.pop(context),
+            ),
+          ],
+        );
+        return;
+      }
+
+      context.read<ProfileBloc>().add(
+        UpdateProfile(
+          emailAtual: currentEmail,
+          novoNome: _nameController.text.trim(),
+          novoEmail: _emailController.text.trim(),
         ),
       );
     }
@@ -92,118 +118,160 @@ Cadastre-se com uma nova conta quando se sentir pronto para voltar.''',
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state.profile != null) {
+          _nameController.text = state.profile!.nomeUsuario;
+          _emailController.text = state.profile!.email;
+        }
+
+        if (state.successMessage != null) {
+          context.read<ProfileBloc>().add(ClearProfileFeedback());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActionResultPage(
+                imagePath:
+                    'lib/core/assets/images/maca-check.png',
+                descriptionText:
+                    'Suas alterações foram salvas com sucesso!',
+                buttonText: 'Voltar para Meu Perfil',
+                onButtonPressed: () {
+                  context.go('/profile');
+                },
+              ),
+            ),
+          );
+        }
+
+        if (state.errorMessage != null) {
+          context.read<ProfileBloc>().add(ClearProfileFeedback());
+          PopUp.show(
+            context,
+            title: "Ops!",
+            subtitle: state.errorMessage!,
+            buttons: [
+              WideButton(
+                text: "Fechar",
+                onPress: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: AppColors.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF363636), size: 40),
-          onPressed: () {
-            context.pop();
-            //context.push('/profile'); Ao fazer assim vc ta criando outra instancia de Perfil, no caso so precisaria voltar com o code acima
-          },
-        ),
-        title: const Text(
-          'Editar Perfil',
-          style: TextStyle(
-            color: Color(0xFF363636),
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
+        appBar: AppBar(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF363636), size: 40),
+            onPressed: () {
+              context.pop();
+              //context.push('/profile'); Ao fazer assim vc ta criando outra instancia de Perfil, no caso so precisaria voltar com o code acima
+            },
           ),
+          title: const Text(
+            'Editar Perfil',
+            style: TextStyle(
+              color: Color(0xFF363636),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                EditProfileHeader(
-                  imagePath:
-                      'lib/core/features/user_profile/presentation/assets/images/avatar_1.png',
-                ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  EditProfileHeader(
+                    imagePath:
+                        'lib/core/features/user_profile/presentation/assets/images/avatar_1.png',
+                  ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _EditField(
-                        label: 'Nome',
-                        hint: 'Digite seu nome',
-                        controller: _nameController,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Por favor, insira seu nome';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      _EditField(
-                        label: 'Email',
-                        hint: 'Digite seu email',
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Por favor, insira seu email';
-                          }
-                          if (!value.contains('@')) {
-                            return 'Email inválido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 28),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _EditField(
+                          label: 'Nome',
+                          hint: 'Digite seu nome',
+                          controller: _nameController,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Por favor, insira seu nome';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _EditField(
+                          label: 'Email',
+                          hint: 'Digite seu email',
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Por favor, insira seu email';
+                            }
+                            if (!value.contains('@')) {
+                              return 'Email inválido';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 28),
 
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _saveChanges,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _saveChanges,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              elevation: 0,
                             ),
-                            elevation: 0,
-                          ),
-                          child: Text(
-                            'Salvar alterações',
-                            style: AppTextStyles.body.copyWith(
-                              color: AppColors.textLight,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                            child: Text(
+                              'Salvar alterações',
+                              style: AppTextStyles.body.copyWith(
+                                color: AppColors.textLight,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      const SizedBox(height: 28),
+                        const SizedBox(height: 28),
 
-                      _ActionItem(
-                        icon: Icons.lock_outline,
-                        label: 'Alterar Senha',
-                        onTap: () {
-                          context.push('/forgot-password');
-                        },
-                      ),
-                      _ActionItem(
-                        icon: Icons.delete_outline,
-                        label: 'Excluir Conta',
-                        isDestructive: true,
-                        onTap: _showDeleteAccountDialog,
-                      ),
+                        _ActionItem(
+                          icon: Icons.lock_outline,
+                          label: 'Alterar Senha',
+                          onTap: () {
+                            context.push('/forgot-password');
+                          },
+                        ),
+                        _ActionItem(
+                          icon: Icons.delete_outline,
+                          label: 'Excluir Conta',
+                          isDestructive: true,
+                          onTap: _showDeleteAccountDialog,
+                        ),
 
-                      const SizedBox(height: 16),
-                    ],
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

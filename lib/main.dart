@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:pomo/core/theme/app_theme.dart';
+import 'package:pomo/services/current_user_service.dart';
 import 'core/providers/bloc_injection.dart';
 import 'core/providers/global_bloc_providers.dart';
 import 'core/network/adapters/routes_adapter.dart';
@@ -12,6 +13,7 @@ import 'core/network/adapters/routes_adapter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  await CurrentUserService.instance.init();
   await init();
   runApp(const GlobalBlocProviders(child: MyApp()));
 }

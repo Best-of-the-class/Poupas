@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../services/current_user_service.dart';
 import 'login_validator.dart';
 import '../../../../network/api_interceptor.dart'; 
 
@@ -33,6 +34,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   // Instanciando o nosso "Caminhão Blindado"
   final ApiInterceptor _api = ApiInterceptor(); 
+  final CurrentUserService _currentUser = CurrentUserService.instance;
 
   Future<void> _onLogin(
     LoginSubmitted event,
@@ -59,6 +61,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
 
       if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        await _currentUser.setUser(
+          email: event.email,
+          name: body['nome'] ?? body['Nome'],
+        );
         emit(LoginSuccess());
       } else if (response.statusCode == 401) {
         final body = jsonDecode(response.body);

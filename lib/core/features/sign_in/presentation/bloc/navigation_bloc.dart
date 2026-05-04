@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../services/auth_service.dart';
+import '../../../../../services/current_user_service.dart';
 import 'validator_bloc.dart';
 
 abstract class NavigationEvent {}
@@ -42,6 +43,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late StreamSubscription _validatorSubscription;
   String? _pendingRoute;
   final AuthService _authService = AuthService();
+  final CurrentUserService _currentUser = CurrentUserService.instance;
 
   bool isDialogOpen = false;
 
@@ -64,6 +66,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             _pendingRoute = null;
             return;
           }
+          await _currentUser.setUser(email: data.email, name: data.name);
         }
         final route = _pendingRoute!;
         _pendingRoute = null;
