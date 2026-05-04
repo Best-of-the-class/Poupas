@@ -10,6 +10,7 @@ import '../../../../widgets/wide_button.dart';
 import '../../../../widgets/module.dart';
 import '../../../../widgets/pop_up.dart';
 import '../../../../network/adapters/routes_adapter.dart';
+import '../../../../widgets/navigate_top_corner.dart';
 import '../bloc/question_bloc.dart';
 import '../bloc/lesson_bloc.dart';
 
@@ -18,7 +19,7 @@ class AdminQuestions extends StatefulWidget {
   final String? editLessonTitle;
 
   const AdminQuestions({
-    super.key, 
+    super.key,
     required this.difficulty,
     this.editLessonTitle,
   });
@@ -147,18 +148,21 @@ class _AdminQuestionsState extends State<AdminQuestions> {
           },
           child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Agora crie 4 questões',
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2D2D2D),
+                      const NavigateTopCorner(),
+                      const SizedBox(width: 20),
+                      const Expanded(
+                        child: Text(
+                          'Agora crie 4 questões',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2D2D2D),
+                          ),
                         ),
                       ),
                       BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(

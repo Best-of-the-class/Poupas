@@ -20,6 +20,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   String _userEmail = '';
   String _userName = '';
+  bool _loading = false;
 
   Future<void> _showErrorPopup(BuildContext context, String message) async {
     final bloc = context.read<NavigationBloc>();
@@ -70,16 +71,17 @@ class _SignInPageState extends State<SignInPage> {
       },
       listener: (context, state) {
         if (state is NavigationSideEffect) {
+          setState(() => _loading = false);
           context.pushNamed(state.routeName, extra: state.arguments);
         } else if (state is NavigationErrorEffect) {
+          setState(() => _loading = false);
           _showErrorPopup(context, state.message);
         }
       },
       child: Background(
         position: ImagePosition.bottom,
         imageSize: 393,
-        imagePath:
-            'lib/core/assets/images/poup_bottom.png',
+        imagePath: 'lib/core/assets/images/poup_bottom.png',
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SingleChildScrollView(
@@ -139,8 +141,10 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 32),
 
                 WideButton(
-                  text: 'Continuar',
+                  text: _loading ? 'Carregando...' : 'Continuar',
                   onPress: () {
+                    if (_loading) return;
+                    setState(() => _loading = true);
                     context.read<NavigationBloc>().requestStepOne(
                       'sign-in-password',
                       _userName,

@@ -20,6 +20,7 @@ class SignInPagePassword extends StatefulWidget {
 
 class _SignInPagePasswordState extends State<SignInPagePassword> {
   bool _obscurePassword = true;
+  bool _loading = false;
   String _password = '';
   String _confirmPassword = '';
 
@@ -69,16 +70,17 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
       },
       listener: (context, state) {
         if (state is NavigationSideEffect) {
+          setState(() => _loading = false);
           context.pushNamed(state.routeName, extra: state.arguments);
         } else if (state is NavigationErrorEffect) {
+          setState(() => _loading = false);
           _showErrorPopup(context, state.message);
         }
       },
       child: Background(
         position: ImagePosition.bottom,
         imageSize: 393,
-        imagePath:
-            'lib/core/assets/images/poup_bottom.png',
+        imagePath: 'lib/core/assets/images/poup_bottom.png',
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SingleChildScrollView(
@@ -140,9 +142,12 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                   onChanged: (value) => _confirmPassword = value,
                 ),
                 const SizedBox(height: 32),
+
                 WideButton(
-                  text: 'Crie uma senha',
+                  text: _loading ? 'Carregando...' : 'Crie uma senha',
                   onPress: () {
+                    if (_loading) return;
+                    setState(() => _loading = true);
                     context.read<NavigationBloc>().requestStepTwo(
                       'home',
                       _password,
@@ -150,6 +155,7 @@ class _SignInPagePasswordState extends State<SignInPagePassword> {
                     );
                   },
                 ),
+
                 const SizedBox(height: 24),
                 Row(
                   children: [
