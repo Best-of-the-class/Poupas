@@ -8,6 +8,7 @@ import '../../../../widgets/missing_question.dart';
 import '../../../../widgets/question.dart';
 import '../../../../widgets/wide_button.dart';
 import '../../../../widgets/pop_up.dart';
+import '../../../../widgets/navigate_top_corner.dart';
 import '../entities/question_item.dart';
 import '../bloc/question_bloc.dart';
 import '../bloc/lesson_bloc.dart';
@@ -88,7 +89,10 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
     super.dispose();
   }
 
-  void _finalizarEdicao(BuildContext context, AdminQuestionsState questionsState) {
+  void _finalizarEdicao(
+    BuildContext context,
+    AdminQuestionsState questionsState,
+  ) {
     if (questionsState.questions.length < 4) {
       _showError("A aula precisa ter exatamente 4 questões antes de salvar!");
       return;
@@ -98,28 +102,38 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
     if (lessonState.lessonDetails == null) return;
 
     final details = lessonState.lessonDetails!;
-    
-    final questoesJson = questionsState.questions.map((q) => {
-      "enunciado": q.questionText,
-      "alternativas": q.choices,
-      "indiceCorreta": q.correctIndex
-    }).toList();
 
-    final novoTitulo = (AdminQuestionsBloc.tempTitle != null && AdminQuestionsBloc.tempTitle!.isNotEmpty)
+    final questoesJson = questionsState.questions
+        .map(
+          (q) => {
+            "enunciado": q.questionText,
+            "alternativas": q.choices,
+            "indiceCorreta": q.correctIndex,
+          },
+        )
+        .toList();
+
+    final novoTitulo =
+        (AdminQuestionsBloc.tempTitle != null &&
+            AdminQuestionsBloc.tempTitle!.isNotEmpty)
         ? AdminQuestionsBloc.tempTitle!
         : (details['tituloLicao'] ?? widget.lessonTitle ?? 'Sem Título');
-        
-    final novaTeoria = (AdminQuestionsBloc.tempTheory != null && AdminQuestionsBloc.tempTheory!.isNotEmpty)
+
+    final novaTeoria =
+        (AdminQuestionsBloc.tempTheory != null &&
+            AdminQuestionsBloc.tempTheory!.isNotEmpty)
         ? AdminQuestionsBloc.tempTheory!
         : (details['textoConceito'] ?? '');
 
-    context.read<LessonBloc>().add(UpdateLesson(
-      tituloAntigo: widget.lessonTitle!, 
-      dificuldade: details['dificuldade'] ?? 0,
-      tituloLicao: novoTitulo.toString(),
-      textoConceito: novaTeoria.toString(),
-      questoes: questoesJson,
-    ));
+    context.read<LessonBloc>().add(
+      UpdateLesson(
+        tituloAntigo: widget.lessonTitle!,
+        dificuldade: details['dificuldade'] ?? 0,
+        tituloLicao: novoTitulo.toString(),
+        textoConceito: novaTeoria.toString(),
+        questoes: questoesJson,
+      ),
+    );
   }
 
   @override
@@ -129,21 +143,28 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
       body: MultiBlocListener(
         listeners: [
           BlocListener<LessonBloc, LessonState>(
-            listenWhen: (prev, curr) => prev.lessonDetails != curr.lessonDetails || prev.isSuccess != curr.isSuccess,
+            listenWhen: (prev, curr) =>
+                prev.lessonDetails != curr.lessonDetails ||
+                prev.isSuccess != curr.isSuccess,
             listener: (context, state) {
               if (state.isSuccess) {
-                context.go('/admin-activities'); 
+                context.go('/admin-activities');
               } else if (state.lessonDetails != null) {
-              
-                final questoesApi = state.lessonDetails!['questoes'] as List<dynamic>? ?? [];
-                
-                final questionsParsed = questoesApi.asMap().entries.map((entry) {
+                final questoesApi =
+                    state.lessonDetails!['questoes'] as List<dynamic>? ?? [];
+
+                final questionsParsed = questoesApi.asMap().entries.map((
+                  entry,
+                ) {
                   final i = entry.key;
                   final q = entry.value as Map<String, dynamic>? ?? {};
-                  
+
                   final enunciado = q['enunciado'] ?? q['Enunciado'] ?? '';
-                  final alternativasRaw = q['alternativas'] ?? q['Alternativas'] ?? [];
-                  final alternativasList = (alternativasRaw as List<dynamic>).map((e) => e?.toString() ?? '').toList();
+                  final alternativasRaw =
+                      q['alternativas'] ?? q['Alternativas'] ?? [];
+                  final alternativasList = (alternativasRaw as List<dynamic>)
+                      .map((e) => e?.toString() ?? '')
+                      .toList();
                   final indice = q['indiceCorreta'] ?? q['IndiceCorreta'] ?? 0;
 
                   return QuestionItem(
@@ -155,8 +176,10 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                     isSelected: false,
                   );
                 }).toList();
-                
-                context.read<AdminQuestionsBloc>().add(LoadQuestionsFromApi(questionsParsed));
+
+                context.read<AdminQuestionsBloc>().add(
+                  LoadQuestionsFromApi(questionsParsed),
+                );
               }
             },
           ),
@@ -182,32 +205,42 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
         ],
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(40.0),
+            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.lessonTitle != null
-                          ? 'Editando: ${widget.lessonTitle}'
-                          : 'Edite suas questões',
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF2D2D2D),
+                    const NavigateTopCorner(),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Text(
+                        widget.lessonTitle != null
+                            ? 'Editando: ${widget.lessonTitle}'
+                            : 'Edite suas questões',
+                        style: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2D2D2D),
+                        ),
                       ),
                     ),
                     BlocBuilder<LessonBloc, LessonState>(
                       builder: (context, lessonState) {
                         return WideButton(
-                          text: lessonState.isLoading ? 'Salvando...' : 'Finalizar Edição',
-                          backgroundColor: lessonState.isLoading ? Colors.grey : const Color(0xFF2E7D32),
-                          onPress: lessonState.isLoading 
-                              ? () {} 
-                              : () => _finalizarEdicao(context, context.read<AdminQuestionsBloc>().state),
+                          text: lessonState.isLoading
+                              ? 'Salvando...'
+                              : 'Finalizar Edição',
+                          backgroundColor: lessonState.isLoading
+                              ? Colors.grey
+                              : const Color(0xFF2E7D32),
+                          onPress: lessonState.isLoading
+                              ? () {}
+                              : () => _finalizarEdicao(
+                                  context,
+                                  context.read<AdminQuestionsBloc>().state,
+                                ),
                         );
-                      }
+                      },
                     ),
                   ],
                 ),
@@ -251,7 +284,10 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(
+                            BlocBuilder<
+                              AdminQuestionsBloc,
+                              AdminQuestionsState
+                            >(
                               builder: (context, state) {
                                 final isViewing = state.viewingIndex != null;
                                 return WideButton(
@@ -263,14 +299,25 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                                       : Colors.grey,
                                   onPress: isViewing
                                       ? () {
-                                          context.read<AdminQuestionsBloc>().add(
-                                            UpdateQuestion(
-                                              index: state.viewingIndex!,
-                                              questionText: _editorKey.currentState?.controller.document.toPlainText() ?? '',
-                                              choices: _choiceControllers.map((c) => c.text).toList(),
-                                              correctIndex: _selectedCorrectIndex,
-                                            ),
-                                          );
+                                          context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(
+                                                UpdateQuestion(
+                                                  index: state.viewingIndex!,
+                                                  questionText:
+                                                      _editorKey
+                                                          .currentState
+                                                          ?.controller
+                                                          .document
+                                                          .toPlainText() ??
+                                                      '',
+                                                  choices: _choiceControllers
+                                                      .map((c) => c.text)
+                                                      .toList(),
+                                                  correctIndex:
+                                                      _selectedCorrectIndex,
+                                                ),
+                                              );
                                         }
                                       : () {},
                                 );
@@ -284,25 +331,42 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                         flex: 4,
                         child: BlocBuilder<LessonBloc, LessonState>(
                           builder: (context, lessonState) {
-                            if (lessonState.isLoading && lessonState.lessonDetails == null) {
-                              return const Center(child: CircularProgressIndicator(color: Color(0xFFE32626)));
+                            if (lessonState.isLoading &&
+                                lessonState.lessonDetails == null) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFFE32626),
+                                ),
+                              );
                             }
-                            
-                            return BlocBuilder<AdminQuestionsBloc, AdminQuestionsState>(
+
+                            return BlocBuilder<
+                              AdminQuestionsBloc,
+                              AdminQuestionsState
+                            >(
                               builder: (context, state) {
                                 return ListView(
                                   padding: EdgeInsets.zero,
                                   children: [
-                                    ...List.generate(state.questions.length, (index) {
+                                    ...List.generate(state.questions.length, (
+                                      index,
+                                    ) {
                                       final q = state.questions[index];
                                       return GestureDetector(
-                                        onTap: () => context.read<AdminQuestionsBloc>().add(LoadQuestionForView(index)),
+                                        onTap: () => context
+                                            .read<AdminQuestionsBloc>()
+                                            .add(LoadQuestionForView(index)),
                                         child: Question(
                                           title: q.title,
                                           subtitle: q.subtitle,
-                                          isSelected: state.viewingIndex == index,
-                                          onToggle: () => context.read<AdminQuestionsBloc>().add(LoadQuestionForView(index)),
-                                          onDelete: () => context.read<AdminQuestionsBloc>().add(DeleteQuestion(index)),
+                                          isSelected:
+                                              state.viewingIndex == index,
+                                          onToggle: () => context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(LoadQuestionForView(index)),
+                                          onDelete: () => context
+                                              .read<AdminQuestionsBloc>()
+                                              .add(DeleteQuestion(index)),
                                         ),
                                       );
                                     }),
@@ -316,7 +380,7 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                                 );
                               },
                             );
-                          }
+                          },
                         ),
                       ),
                     ],
