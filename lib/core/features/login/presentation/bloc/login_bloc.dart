@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_validator.dart';
-import '../../../../network/api_interceptor.dart'; 
+import '../../../../network/api_interceptor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LoginEvent {}
 
 class LoginSubmitted extends LoginEvent {
   final String email;
   final String password;
+  final bool isAdmin;
 
-  LoginSubmitted(this.email, this.password);
+  LoginSubmitted(this.email, this.password, {this.isAdmin = false});
 }
 
 abstract class LoginState {}
@@ -18,11 +20,13 @@ class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
-class LoginSuccess extends LoginState {}
+class LoginSuccess extends LoginState {
+  final String tipo;
+  LoginSuccess(this.tipo);
+}
 
 class LoginError extends LoginState {
   final String message;
-
   LoginError(this.message);
 }
 
@@ -31,16 +35,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginSubmitted>(_onLogin);
   }
 
-  // Instanciando o nosso "Caminhão Blindado"
-  final ApiInterceptor _api = ApiInterceptor(); 
+  final ApiInterceptor _api = ApiInterceptor();
 
-  Future<void> _onLogin(
-    LoginSubmitted event,
-    Emitter<LoginState> emit,
-  ) async {
-
-    final validationError =
-        LoginValidator.validate(event.email, event.password);
+  Future<void> _onLogin(LoginSubmitted event, Emitter<LoginState> emit) async {
+    final validationError = LoginValidator.validate(
+      event.email,
+      event.password,
+    );
 
     if (validationError != null) {
       emit(LoginError(validationError));
@@ -50,26 +51,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(LoginLoading());
 
     try {
-      final response = await _api.post(
-        '/Autenticacao/login', 
-        {
-          'email': event.email,
-          'senha': event.password,
-        }
-      );
+      final endpoint = event.isAdmin
+          ? '/Autenticacao/login-admin'
+          : '/Autenticacao/login';
+
+      final response = await _api.post(endpoint, {
+        'email': event.email,
+        'senha': event.password,
+      });
 
       if (response.statusCode == 200) {
-        emit(LoginSuccess());
-      } else if (response.statusCode == 401) {
         final body = jsonDecode(response.body);
-        emit(LoginError(body['mensagem'] ?? 'Email ou senha incorretos'));
+        final String token = body['token'];
+        final String tipoUsuario = body['tipo'] ?? 'estudante';
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setString('tipo', tipoUsuario);
+
+        emit(LoginSuccess(tipoUsuario));
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        final body = jsonDecode(response.body);
+        emit(LoginError(body['mensagem'] ?? 'Credenciais inválidas.'));
       } else {
-        print('Erro do servidor: ${response.statusCode} - ${response.body}');
         emit(LoginError('Erro no servidor. Tente novamente mais tarde.'));
       }
     } catch (e) {
-      emit(LoginError('Não foi possível conectar ao servidor. Verifique sua conexão.'));
-      print('Erro no login: $e');
+      emit(
+        LoginError(
+          'Não foi possível conectar ao servidor. Verifique sua conexão.',
+        ),
+      );
     }
   }
 }

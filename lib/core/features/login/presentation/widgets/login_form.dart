@@ -11,7 +11,12 @@ import '../../../../widgets/wide_button.dart';
 import '../bloc/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final bool isAdmin; 
+
+  const LoginForm({
+    super.key,
+    this.isAdmin = false,
+  });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -130,7 +135,11 @@ class _LoginFormState extends State<LoginForm> {
                       if (loading) return;
 
                       context.read<LoginBloc>().add(
-                            LoginSubmitted(email, password),
+                            LoginSubmitted(
+                              email, 
+                              password, 
+                              isAdmin: widget.isAdmin, 
+                            ),
                           );
                     },
                   );

@@ -58,7 +58,7 @@ class LoginDesktopLayout extends StatelessWidget {
                           width: formWidth,
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 2),
-                            child: LoginForm(),
+                            child: LoginForm(isAdmin: true),
                           ),
                         ),
                     ),
