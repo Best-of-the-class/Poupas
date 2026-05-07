@@ -36,8 +36,13 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
+        
         if (state is LoginSuccess) {
-          context.go('/home');
+          if (state.tipo.toLowerCase() == 'admin') {
+            context.go('/admin-activities');
+          } else {
+            context.go('/home');
+          }
         }
 
         if (state is LoginError) {

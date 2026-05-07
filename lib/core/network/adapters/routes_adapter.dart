@@ -29,6 +29,7 @@ import '../../features/admin/presentation/pages/admin_dictionary_page.dart';
 import '../../widgets/module.dart';
 
 class RoutesAdapter {
+  static String initialLocation = '/loadingWelcome';
   static const String loadingWelcome = 'loadingWelcome';
   static const String welcome = 'welcome';
   static const String signIn = 'sign-in';
@@ -61,7 +62,7 @@ class RoutesAdapter {
 
   static GoRouter get router {
     _router ??= GoRouter(
-      initialLocation: isDesktopAdmin ? '/admin-activities' : '/loadingWelcome',
+      initialLocation: initialLocation,
       routes: [
         GoRoute(
           name: loadingWelcome,

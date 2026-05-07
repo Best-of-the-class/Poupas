@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pomo/core/theme/app_theme.dart';
 import 'core/providers/bloc_injection.dart';
 import 'core/providers/global_bloc_providers.dart';
@@ -13,6 +13,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await init();
+
+  final prefs = await SharedPreferences.getInstance();
+  final String? token = prefs.getString('token');
+  final String? tipo = prefs.getString('tipo');
+
+  String rotaInicial = '/loadingWelcome';
+
+  if (token != null && token.isNotEmpty) {
+    if (tipo?.toLowerCase() == 'admin') {
+      rotaInicial = '/admin-activities';
+    } else {
+      rotaInicial = '/home';
+    }
+  }
+
+  RoutesAdapter.initialLocation = rotaInicial;
+
   runApp(const GlobalBlocProviders(child: MyApp()));
 }
 

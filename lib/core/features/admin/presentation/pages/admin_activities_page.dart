@@ -8,6 +8,7 @@ import '../../../../widgets/module.dart';
 import '../../../../widgets/module_group.dart';
 import '../../../../widgets/wide_button.dart';
 import '../../../../widgets/pop_up.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminActivities extends StatefulWidget {
   const AdminActivities({super.key});
@@ -83,6 +84,13 @@ class _AdminActivitiesState extends State<AdminActivities> {
                       await windowManager.setResizable(true);
                       await windowManager.setMinimumSize(Size.zero);
                       await windowManager.setMaximumSize(const Size(-1, -1));
+
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+
+                      if (context.mounted) {
+                        context.go('/login');
+                      }
                     },
                   ),
                 ],
