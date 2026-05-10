@@ -46,6 +46,11 @@ dependencies:
   dotted_border: ^3.1.0
   google_fonts: ^6.2.1
   shared_preferences: ^2.5.5
+  flutter_secure_storage: ^10.1.0
+  device_info_plus: ^12.4.0
+  flutter_localizations:
+    sdk: flutter
+  ffi: ^2.2.0
 
 dev_dependencies:
   flutter_test:
