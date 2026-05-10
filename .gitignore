@@ -46,3 +46,5 @@ app.*.map.json
 
 # Arquivo de variáveis de ambiente
 .env
+
+build_libs.sh
