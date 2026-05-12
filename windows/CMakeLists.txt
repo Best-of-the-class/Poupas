@@ -108,6 +108,6 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   COMPONENT Runtime)
 
 # Bundle libgo_security.dll alongside the app.
-install(FILES "${CMAKE_SOURCE_DIR}/../libs/windows/libgo_security.dll"
+install(FILES "${CMAKE_SOURCE_DIR}/../libs/windows/amd64/go_security.dll"
   DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
   COMPONENT Runtime)
