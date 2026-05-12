@@ -138,8 +138,13 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
     } else {
       if (isCorrect) {
         backgroundColor = AppColors.success; 
-      } else {
+        borderColor = AppColors.success; 
+      } else if (isSelected) {
         backgroundColor = AppColors.wrong;  
+        borderColor = AppColors.wrong; 
+      } else {
+        backgroundColor = AppColors.background;
+        borderColor = AppColors.textDark;
       }
     }
 
@@ -191,12 +196,21 @@ class _LessonQuestionPageState extends State<LessonQuestionPage> {
               ),
             ),
 
-            if (answered && isCorrect)
-              const Icon(
-                Icons.check,
-                color: AppColors.correctCheck,
-                size: 40,
-              ),
+            if (answered) ...[
+              if (isCorrect && isSelected)
+                const Icon(
+                  Icons.check,
+                  color: AppColors.correctCheck,
+                  size: 40,
+                ),
+              
+              if (!isCorrect && isSelected)
+                const Icon(
+                  Icons.close,
+                  color: AppColors.error,
+                  size: 40,
+                ),
+            ]
           ],
         ),
       ),
