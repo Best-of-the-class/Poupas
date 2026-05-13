@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pomo/core/layouts/main_layout.dart';
 import 'package:pomo/core/widgets/card_stats_home.dart';
 import 'package:pomo/core/widgets/card_module.dart';
 import 'package:pomo/core/widgets/trail_module.dart';
+import 'package:pomo/core/features/admin/presentation/bloc/lesson_bloc.dart';
 
-final mockLessons = [
-  {'ordem': 1, 'titulo': 'Introdução do Curso', 'level': 1},
-  {'ordem': 2, 'titulo': 'O que é Educação Financeira', 'level': 1},
-  {'ordem': 3, 'titulo': 'Renda e Despesas', 'level': 1},
-  {'ordem': 4, 'titulo': 'Organizando seu Orçamento', 'level': 1},
-  {'ordem': 5, 'titulo': 'Consumo Consciente', 'level': 1},
-  {'ordem': 6, 'titulo': 'Mas por que economizar?', 'level': 1},
-
-  {'ordem': 7, 'titulo': 'Juros Simples', 'level': 2},
-  {'ordem': 8, 'titulo': 'Juros Compostos', 'level': 2},
-  {'ordem': 9, 'titulo': 'Diferença entre Juros', 'level': 2},
-  {'ordem': 10, 'titulo': 'Inflação na Prática', 'level': 2},
-  {'ordem': 11, 'titulo': 'Poder de Compra', 'level': 2},
-  {'ordem': 12, 'titulo': 'Planejamento Financeiro', 'level': 2},
-
-  {'ordem': 13, 'titulo': 'Introdução aos Investimentos', 'level': 3},
-  {'ordem': 14, 'titulo': 'Renda Fixa', 'level': 3},
-  {'ordem': 15, 'titulo': 'Renda Variável', 'level': 3},
-  {'ordem': 16, 'titulo': 'Diversificação', 'level': 3},
-  {'ordem': 17, 'titulo': 'Perfil de Investidor', 'level': 3},
-  {'ordem': 18, 'titulo': 'Planejamento de Longo Prazo', 'level': 3},
-];
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LessonBloc>().add(LoadLessons());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,65 +35,86 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modulos = [1, 2, 3];
-
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(
-            'lib/core/assets/images/background-arvore-trilha.png',
-          ),
+          image: AssetImage('lib/core/assets/images/background-arvore-trilha.png'),
           fit: BoxFit.cover,
         ),
       ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
+          child: BlocBuilder<LessonBloc, LessonState>(
+            builder: (context, state) {
+              if (state.isLoading && state.lessonsByDifficulty.values.every((l) => l.isEmpty)) {
+                return const Center(child: CircularProgressIndicator(color: Colors.white));
+              }
 
-              const CardStatsHome(
-                sequenciaDias: 14,
-                xp: 2584,
-              ),
+              final List<Map<String, dynamic>> dynamicLessons = [];
+              int globalOrder = 1;
+              int levelCounter = 1;
 
-              const SizedBox(height: 16),
+              for (var entry in state.lessonsByDifficulty.entries) {
+                for (var titulo in entry.value) {
+                  dynamicLessons.add({
+                    'ordem': globalOrder++,
+                    'titulo': titulo,
+                    'level': levelCounter,
+                    'isProva': false,
+                  });
+                }
+                
+                if (entry.value.isNotEmpty) {
+                  dynamicLessons.add({
+                    'ordem': globalOrder++,
+                    'titulo': 'Prova Final - Módulo $levelCounter',
+                    'level': levelCounter,
+                    'isProva': true,
+                  });
+                }
+                levelCounter++;
+              }
 
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...modulos.map((level) {
-                        final lessonsDoModulo = mockLessons
-                            .where((l) => l['level'] == level)
-                            .toList();
+              final modulosAtivos = [1, 2, 3];
 
-                        if (lessonsDoModulo.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
+              return Column(
+                children: [
+                  const CardStatsHome(sequenciaDias: 14, xp: 2584),
+                  const SizedBox(height: 16),
+                  
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...modulosAtivos.map((level) {
+                            final lessonsDoModulo = dynamicLessons
+                                .where((l) => l['level'] == level).toList();
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                            if (lessonsDoModulo.isEmpty) return const SizedBox.shrink();
 
-                            CardModule(level: level),
-
-                            const SizedBox(height: 10),
-
-                            TrailModule(lessons: lessonsDoModulo),
-
-                            const SizedBox(height: 40),
-                          ],
-                        );
-                      }),
-                    ],
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CardModule(level: level),
+                                const SizedBox(height: 10),
+                                TrailModule(
+                                  lessons: lessonsDoModulo,
+                                  progressoAtual: 1, 
+                                ),
+                                const SizedBox(height: 40),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 90),
-            ],
+                  const SizedBox(height: 90),
+                ],
+              );
+            },
           ),
         ),
       ),

@@ -8,6 +8,8 @@ class AppleNode extends StatelessWidget {
   final String titulo;
   final int level;
   final bool isLastInModule;
+  final bool isLocked;
+  final bool isProva;
 
   const AppleNode({
     super.key,
@@ -15,17 +17,30 @@ class AppleNode extends StatelessWidget {
     required this.titulo,
     required this.level,
     this.isLastInModule = false,
+    this.isLocked = false,
+    this.isProva = false,
   });
 
   void _showLessonPopup(BuildContext context) {
+    if (isLocked) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Conclua a lição anterior para desbloquear!'),
+          backgroundColor: Colors.orange.shade800,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return; 
+    }
+
     showDialog(
       context: context,
       builder: (_) {
         return _LessonPopup(
-        titulo: titulo,
-        ordem: ordem,
-        level: level,
-        isLastInModule: isLastInModule,
+          titulo: titulo,
+          ordem: ordem,
+          level: level,
+          isLastInModule: isLastInModule,
         );
       },
     );
@@ -33,24 +48,34 @@ class AppleNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _showLessonPopup(context),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Image.asset(
-            'lib/core/assets/icons/icon-maca-trilha.png',
-            width: 92,
-          ),
-          Text(
-            '$ordem',
-            style: AppTextStyles.body.copyWith(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return Opacity(
+      opacity: isLocked ? 0.6 : 1.0,
+      child: GestureDetector(
+        onTap: () => _showLessonPopup(context),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              isProva 
+                  ? 'lib/core/assets/icons/icon-iniciar-prova-final.png' 
+                  : 'lib/core/assets/icons/icon-maca-trilha.png',
+              width: isProva ? 100 : 92,
             ),
-          ),
-        ],
+            
+            if (!isLocked && !isProva)
+              Text(
+                '$ordem',
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+
+            if (isLocked)
+               const Icon(Icons.lock_rounded, color: Colors.white, size: 40),
+          ],
+        ),
       ),
     );
   }
@@ -86,28 +111,14 @@ class _LessonPopupState extends State<_LessonPopup> {
     if (!mounted) return;
 
     Navigator.pop(context);
-
     context.push(
       '/lesson',
       extra: {
         'licao': {
           'ordem': widget.ordem,
-          'titulo': widget.titulo,
-          'texto_conceito': 'Texto temporário...',
-          'recompensa_xp': 100,
+          'titulo': widget.titulo, 
         },
-        'atividades': [
-          {
-            'enunciado': 'Pergunta 1',
-            'ordem': 1,
-            'prova_final': widget.isLastInModule,
-          },
-          {
-            'enunciado': 'Pergunta 2',
-            'ordem': 2,
-            'prova_final': widget.isLastInModule,
-          },
-        ],
+        'atividades': [],
       },
     );
   }
@@ -147,7 +158,7 @@ class _LessonPopupState extends State<_LessonPopup> {
                 onPressed: isLoading ? null : () => _handleStart(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+                  disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
                   disabledForegroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -164,7 +175,7 @@ class _LessonPopupState extends State<_LessonPopup> {
                       color: Colors.white,
                     ),
                   )
-                : Text('Iniciar aula'),
+                : const Text('Iniciar aula', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
           ],
@@ -241,27 +252,30 @@ class _LessonBadge extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'LIÇÃO #$ordem',
-                style: AppTextStyles.body.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'LIÇÃO #$ordem',
+                  style: AppTextStyles.body.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 2),
-
-              Text(
-                '$title | Módulo $level',
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 12,
-                  color: Colors.white,
+            
+                const SizedBox(height: 2),
+            
+                Text(
+                  '$title | Módulo $level',
+                  style: AppTextStyles.body.copyWith(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

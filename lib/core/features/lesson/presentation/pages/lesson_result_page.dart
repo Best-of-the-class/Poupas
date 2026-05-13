@@ -18,6 +18,8 @@ class LessonResultPage extends StatelessWidget {
   });
 
   int get xpCalculado {
+    if (!tudoCorreto) return 0; 
+    
     if (xpBase != null) return xpBase!;
     return acertos * 100;
   }

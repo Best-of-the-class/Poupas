@@ -3,10 +3,12 @@ import 'package:pomo/core/widgets/apple_node.dart';
 
 class TrailModule extends StatelessWidget {
   final List<Map<String, dynamic>> lessons;
+  final int progressoAtual;
 
   const TrailModule({
     super.key,
     required this.lessons,
+    required this.progressoAtual,
   });
 
   @override
@@ -16,13 +18,14 @@ class TrailModule extends StatelessWidget {
         final lesson = lessons[index];
 
         final isLeft = index % 2 == 0;
-
         final offsetX = isLeft ? -60.0 : 60.0;
         final caterpillarOffsetX = isLeft ? -30.0 : 30.0;
 
         final isLastInModule =
-          index == lessons.length - 1 ||
-          lessons[index]['level'] != lessons[index + 1]['level'];
+            index == lessons.length - 1 ||
+            lessons[index]['level'] != lessons[index + 1]['level'];
+
+        final bool isLocked = lesson['ordem'] > progressoAtual;
 
         return Column(
           children: [
@@ -36,7 +39,9 @@ class TrailModule extends StatelessWidget {
                     ordem: lesson['ordem'],
                     titulo: lesson['titulo'],
                     level: lesson['level'] ?? 1,
-                    isLastInModule: isLastInModule, 
+                    isLastInModule: isLastInModule,
+                    isLocked: isLocked,
+                    isProva: lesson['isProva'] ?? false,
                   ),
                 ),
               ),
@@ -57,6 +62,8 @@ class TrailModule extends StatelessWidget {
                           : 'lib/core/assets/icons/icon-lagarta-esquerda-trilha.png',
                       width: 52.55,
                       height: 52,
+                      color: isLocked ? Colors.grey.withValues(alpha: 0.5) : null,
+                      colorBlendMode: isLocked ? BlendMode.srcATop : null,
                     ),
                   ),
                 ),
