@@ -19,6 +19,7 @@ import '../../features/lesson/presentation/pages/lesson_page.dart';
 import '../../features/badges/presentation/pages/badges_page.dart';
 import '../../features/practice/presentation/pages/practice_intro_page.dart';
 import '../../features/practice/presentation/pages/practice_page.dart';
+import '../../features/practice/presentation/pages/dicionario_page.dart';
 import '../../features/entry/presentation/pages/LoadingInitialPage.dart';
 import '../../features/admin/presentation/pages/admin_activities_page.dart';
 import '../../features/admin/presentation/pages/admin_theory_page.dart';
@@ -46,6 +47,7 @@ class RoutesAdapter {
   static const String badges = 'badges';
   static const String practiceIntro = 'practice-intro';
   static const String practice = 'practice';
+  static const String dicionario = 'dicionario';
   static const String adminActivities = 'adminActivities';
   static const String adminTheory = 'adminTheory';
   static const String adminQuestions = 'adminQuestions';
@@ -144,6 +146,11 @@ class RoutesAdapter {
           name: practice,
           path: '/practice',
           builder: (context, state) => const PracticePage(),
+        ),
+        GoRoute(
+          name: dicionario,
+          path: '/dicionario',
+          builder: (context, state) => const DicionarioPage(),
         ),
         GoRoute(
           name: load,
