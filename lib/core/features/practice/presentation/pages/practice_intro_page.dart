@@ -41,7 +41,7 @@ class PracticeIntroContent extends StatelessWidget {
                       "lib/core/assets/icons/icon-btn-dicionario.png",
                   backgroundColor: AppColors.shortcutDictionary,
                   onTap: () {
-                    // TODO: navegar para dicionário
+                    context.push('/dicionario');
                   },
                 ),
 

@@ -4,7 +4,7 @@ class AppColors {
   static const background = Color(0xFFF7EEDD);
   static const surface = Color(0xFFFFDCBC);
   static const primary = Color(0xFFE52727);
-
+static const softCream = Color(0xFFFFF2C6);
   static const textDark = Color(0xFF363636);
   static const textLight = Color(0xFFFFFFFF);
   static const title = Color(0xFF000000);
