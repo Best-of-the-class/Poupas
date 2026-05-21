@@ -29,7 +29,7 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
     3,
     (_) => TextEditingController(),
   );
-  int _selectedCorrectIndex = 0;
+  int? _selectedCorrectIndex;
   final int _totalQuestions = 4;
   bool _isPopupOpen = false;
 
@@ -95,6 +95,13 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
   ) {
     if (questionsState.questions.length < 4) {
       _showError("A aula precisa ter exatamente 4 questões antes de salvar!");
+      return;
+    }
+
+    if (questionsState.questions.any((question) => question.correctIndex < 0)) {
+      _showError(
+        'Reescolha a alternativa correta de todas as questões antes de finalizar a edição.',
+      );
       return;
     }
 
@@ -165,14 +172,21 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                   final alternativasList = (alternativasRaw as List<dynamic>)
                       .map((e) => e?.toString() ?? '')
                       .toList();
-                  final indice = q['indiceCorreta'] ?? q['IndiceCorreta'] ?? 0;
+                  final indiceRaw = q['indiceCorreta'] ?? q['IndiceCorreta'];
+                  final indice = indiceRaw is int
+                      ? indiceRaw
+                      : indiceRaw is num
+                      ? indiceRaw.toInt()
+                      : int.tryParse(indiceRaw?.toString() ?? '') ?? -1;
 
                   return QuestionItem(
                     title: 'Questão ${i + 1}',
-                    subtitle: 'Questão salva',
+                    subtitle: indice >= 0
+                        ? 'Questão salva'
+                        : 'Selecione novamente a correta',
                     questionText: enunciado.toString(),
                     choices: alternativasList,
-                    correctIndex: indice as int,
+                    correctIndex: indice,
                     isSelected: false,
                   );
                 }).toList();
@@ -198,7 +212,10 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                       ? q.choices[i]
                       : '';
                 }
-                setState(() => _selectedCorrectIndex = q.correctIndex);
+                setState(
+                  () => _selectedCorrectIndex =
+                      q.correctIndex >= 0 ? q.correctIndex : null,
+                );
               }
             },
           ),
@@ -299,6 +316,13 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                                       : Colors.grey,
                                   onPress: isViewing
                                       ? () {
+                                          if (_selectedCorrectIndex == null) {
+                                            _showError(
+                                              'Selecione a alternativa correta antes de salvar a questão.',
+                                            );
+                                            return;
+                                          }
+
                                           context
                                               .read<AdminQuestionsBloc>()
                                               .add(
@@ -315,7 +339,7 @@ class _AdminEditQuestionsState extends State<AdminEditQuestions> {
                                                       .map((c) => c.text)
                                                       .toList(),
                                                   correctIndex:
-                                                      _selectedCorrectIndex,
+                                                      _selectedCorrectIndex!,
                                                 ),
                                               );
                                         }

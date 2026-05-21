@@ -42,140 +42,131 @@ class CardPracticeExercise extends StatelessWidget {
     }
   }
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        child: Container(
+      onTap: onTap,
+      child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
-            ],
+          ],
         ),
 
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20),
 
-            child: Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-
-                Container(
+              Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 color: config.cardColor,
 
                 child: Row(
-                    children: [
+                  children: [
                     Container(
-                        width: 65,
-                        height: 65,
-                        decoration: BoxDecoration(
+                      width: 65,
+                      height: 65,
+                      decoration: BoxDecoration(
                         color: config.iconBackground,
                         borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                        child: Image.asset(
-                            config.icon,
-                            width: 48,
-                            height: 48,
-                        ),
-                        ),
+                      ),
+                      child: Center(
+                        child: Image.asset(config.icon, width: 48, height: 48),
+                      ),
                     ),
 
                     const SizedBox(width: 16),
 
                     Expanded(
-                        child: Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Text(
+                          Text(
                             'Lição $ordem | $titulo',
                             style: AppTextStyles.title.copyWith(
-                                fontSize: 16,
-                                color: AppColors.textDark,
+                              fontSize: 16,
+                              color: AppColors.textDark,
                             ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
                             subtitle,
                             style: AppTextStyles.body.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textDark,
                             ),
-                            ),
+                          ),
                         ],
-                        ),
+                      ),
                     ),
-                    ],
+                  ],
                 ),
-                ),
+              ),
 
-                AnimatedCrossFade(
+              AnimatedCrossFade(
                 duration: const Duration(milliseconds: 250),
                 crossFadeState: isOpen
                     ? CrossFadeState.showFirst
                     : CrossFadeState.showSecond,
 
                 firstChild: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    color: Colors.white,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.white,
 
-                    child: ElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (_) => LessonQuestionPage(
-                                ordem: ordem,
-                                titulo: titulo,
-                                pergunta: pergunta,
-                                alternativas: alternativas,
-                                indiceCorreto: indiceCorreto,
-                                isFinalExam: isFinalExam,
-                                isPractice: true,
-                                onNext: (acertou) {
-                                Navigator.pop(context);
-
-                                if (!acertou) {
-
-                                }
-                                },
-                            ),
-                            ),
-                        );
-                        },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LessonQuestionPage(
+                            ordem: ordem,
+                            titulo: titulo,
+                            pergunta: pergunta,
+                            alternativas: alternativas,
+                            indiceCorreto: indiceCorreto,
+                            isFinalExam: isFinalExam,
+                            isPractice: true,
+                            onNext: (_, __) {
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                     child: Text(
-                        'Iniciar exercício',
-                        style: AppTextStyles.body.copyWith(
+                      'Iniciar exercício',
+                      style: AppTextStyles.body.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        ),
+                      ),
                     ),
-                    ),
+                  ),
                 ),
 
                 secondChild: const SizedBox.shrink(),
-                ),
+              ),
             ],
-            ),
+          ),
         ),
-        ),
+      ),
     );
-    }
+  }
 }

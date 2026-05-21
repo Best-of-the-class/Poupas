@@ -12,9 +12,11 @@ import 'package:pomo/core/features/admin/presentation/bloc/validator_bloc.dart';
 import 'package:pomo/core/features/admin/presentation/bloc/navigator_bloc.dart';
 import 'package:pomo/core/features/admin/presentation/bloc/dictionary_bloc.dart';
 import 'package:pomo/core/features/admin/presentation/bloc/dictionary_validator_bloc.dart';
+import 'package:pomo/core/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 
 import 'package:pomo/core/network/adapters/go_adapter.dart';
 import 'package:pomo/services/auth_service.dart';
+import 'package:pomo/services/profile_service.dart';
 
 export 'package:pomo/core/features/sign_in/presentation/bloc/navigation_bloc.dart';
 export 'package:pomo/core/features/sign_in/presentation/bloc/validator_bloc.dart';
@@ -26,6 +28,7 @@ export 'package:pomo/core/features/admin/presentation/bloc/validator_bloc.dart';
 export 'package:pomo/core/features/admin/presentation/bloc/navigator_bloc.dart';
 export 'package:pomo/core/features/admin/presentation/bloc/dictionary_bloc.dart';
 export 'package:pomo/core/features/admin/presentation/bloc/dictionary_validator_bloc.dart';
+export 'package:pomo/core/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -47,7 +50,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => ValidatorBloc());
 
-  sl.registerLazySingleton(() => AuthService(sl<GoSecurityAdapter>()));
+  sl.registerLazySingleton(() => AuthService());
+  sl.registerLazySingleton(() => ProfileService());
 
   sl.registerLazySingleton(
     () => NavigationBloc(
@@ -74,4 +78,5 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LessonBloc());
   sl.registerLazySingleton(() => DictionaryBloc());
   sl.registerLazySingleton(() => DictionaryValidatorBloc());
+  sl.registerLazySingleton(() => UserProfileBloc(sl<ProfileService>()));
 }

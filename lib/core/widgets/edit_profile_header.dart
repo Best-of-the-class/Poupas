@@ -1,35 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/features/user_profile/presentation/entities/user_profile_data.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 
-class EditProfileHeader extends StatefulWidget {
-  final String imagePath;
+class EditProfileHeader extends StatelessWidget {
+  final int selectedAvatarId;
+  final ValueChanged<int> onAvatarSelected;
 
   const EditProfileHeader({
     super.key,
-    required this.imagePath,
+    required this.selectedAvatarId,
+    required this.onAvatarSelected,
   });
-
-  static const List<String> _availableAvatars = [
-    'lib/core/features/user_profile/presentation/assets/images/avatar_1.png',
-    'lib/core/features/user_profile/presentation/assets/images/avatar_2.png',
-    'lib/core/features/user_profile/presentation/assets/images/avatar_3.png',
-    'lib/core/features/user_profile/presentation/assets/images/avatar_4.png',
-    'lib/core/features/user_profile/presentation/assets/images/avatar_5.png',
-    'lib/core/features/user_profile/presentation/assets/images/avatar_6.png',
-  ];
-
-  @override
-  State<EditProfileHeader> createState() => _EditProfileHeaderState();
-}
-
-class _EditProfileHeaderState extends State<EditProfileHeader> {
-  late String _selectedAvatar;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedAvatar = widget.imagePath;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +41,9 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                 ),
                 child: CircleAvatar(
                   radius: avatarRadius,
-                  backgroundImage: AssetImage(_selectedAvatar),
+                  backgroundImage: AssetImage(
+                    avatarAssetForId(selectedAvatarId),
+                  ),
                 ),
               ),
 
@@ -111,15 +94,16 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
             return Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 30,
+                ),
                 child: Material(
                   borderRadius: BorderRadius.circular(24),
                   color: AppColors.perfilAvatar,
                   child: Container(
                     height: 550,
-                    padding:
-                        const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                    padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
                     child: Column(
                       children: [
                         const SizedBox(height: 12),
@@ -139,40 +123,32 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                         /// 🧩 GRID
                         Expanded(
                           child: GridView.builder(
-                            physics:
-                                const NeverScrollableScrollPhysics(),
-                            itemCount:
-                                EditProfileHeader._availableAvatars.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: availableAvatarIds.length,
 
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 5,
-                              mainAxisSpacing: 5,
-                            ),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5,
+                                ),
 
                             itemBuilder: (context, index) {
-                              final avatar = EditProfileHeader._availableAvatars[index];
-                              final isSelected = avatar == _selectedAvatar;
+                              final avatarId = availableAvatarIds[index];
+                              final avatar = avatarAssetForId(avatarId);
+                              final isSelected = avatarId == selectedAvatarId;
 
                               return GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    _selectedAvatar = avatar;
-                                  });
+                                  onAvatarSelected(avatarId);
 
                                   setModalState(() {});
-                                  // TODO BACKEND:
-                                  // Esta seleção ainda é temporária (UI only).
-                                  // NÃO persistir no banco aqui.
-
                                 },
 
                                 child: Stack(
                                   alignment: Alignment.center,
                                   clipBehavior: Clip.none,
                                   children: [
-
                                     /// Borda externa (sempre mesma circunferência)
                                     CircleAvatar(
                                       radius: 65,

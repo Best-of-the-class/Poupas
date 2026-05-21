@@ -7,7 +7,7 @@ class CodeInput extends StatefulWidget {
   final int length;
   final Function(String)? onCompleted;
 
-  const CodeInput({super.key, this.length = 5, this.onCompleted});
+  const CodeInput({super.key, this.length = 6, this.onCompleted});
 
   @override
   State<CodeInput> createState() => _CodeInputState();

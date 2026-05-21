@@ -8,6 +8,7 @@ class BadgeCard extends StatelessWidget {
   final String descricao;
   final String iconName;
   final String backgroundColorKey;
+  final bool isUnlocked;
 
   const BadgeCard({
     super.key,
@@ -15,6 +16,7 @@ class BadgeCard extends StatelessWidget {
     required this.descricao,
     required this.iconName,
     required this.backgroundColorKey,
+    this.isUnlocked = true,
   });
 
   String get iconPath =>
@@ -49,71 +51,83 @@ class BadgeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _openPreview(context),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(20),
-
-          // 🌟 SOMBRA ADICIONADA
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  titulo,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.title.copyWith(
-                    fontSize: 16,
-                    color: Colors.white,
+      child: Opacity(
+        opacity: isUnlocked ? 1 : 0.45,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    titulo,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
 
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: Image.asset(
-                    iconPath,
-                    fit: BoxFit.contain,
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: Image.asset(
+                      iconPath,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
 
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 6, right: 35),
-                    child: Text(
-                      descricao,
-                      style: AppTextStyles.body.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 6, right: 35),
+                      child: Text(
+                        descricao,
+                        style: AppTextStyles.body.copyWith(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Image.asset(
-                'lib/core/assets/icons/icon-poup-circle.png',
-                width: 30,
-                height: 30,
+                ],
               ),
-            ),
-          ],
+
+              if (!isUnlocked)
+                const Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Icon(
+                    Icons.lock_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Image.asset(
+                  'lib/core/assets/icons/icon-poup-circle.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

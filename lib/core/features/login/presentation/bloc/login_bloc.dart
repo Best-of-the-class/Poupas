@@ -61,9 +61,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       });
 
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body);
-        final String token = body['token'];
-        final String tipoUsuario = body['tipo'] ?? 'estudante';
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        final token = (body['token'] ?? body['Token'] ?? '').toString();
+        final tipoUsuario =
+            (body['tipo'] ?? body['Tipo'] ?? 'estudante').toString();
+
+        if (token.isEmpty) {
+          emit(LoginError('Resposta de autenticação inválida.'));
+          return;
+        }
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
@@ -71,8 +77,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         emit(LoginSuccess(tipoUsuario));
       } else if (response.statusCode == 401 || response.statusCode == 403) {
-        final body = jsonDecode(response.body);
-        emit(LoginError(body['mensagem'] ?? 'Credenciais inválidas.'));
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        emit(
+          LoginError(
+            (body['mensagem'] ?? body['Mensagem'] ?? 'Credenciais inválidas.')
+                .toString(),
+          ),
+        );
       } else {
         emit(LoginError('Erro no servidor. Tente novamente mais tarde.'));
       }
