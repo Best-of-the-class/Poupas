@@ -59,15 +59,17 @@ class PasswordResetValidatorBloc extends ValidatorBloc {
     });
 
     on<ValidateCodeStep>((event, emit) async {
-      if (event.code.trim().length < 4) {
-        emit(ValidationFailure('Código inválido'));
+      final normalizedCode = event.code.trim();
+
+      if (normalizedCode.length != 6 || int.tryParse(normalizedCode) == null) {
+        emit(ValidationFailure('O código deve ter 6 dígitos.'));
         return;
       }
 
-      final ok = await authService.verificarCodigo(_tempEmail, event.code);
+      final ok = await authService.verificarCodigo(_tempEmail, normalizedCode);
 
       if (ok) {
-        _tempCode = event.code;
+        _tempCode = normalizedCode;
         emit(ValidationSuccess(
           ResetPasswordData(email: _tempEmail, code: _tempCode),
         ));

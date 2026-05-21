@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pomo/core/network/api_interceptor.dart';
 import '../../../../widgets/module.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class LessonEvent {}
 class LoadLessons extends LessonEvent {}
@@ -79,18 +78,21 @@ class LessonState {
     bool? isSuccess,
     String? errorMessage,
     Map<String, dynamic>? lessonDetails,
+    bool clearError = false,
   }) {
     return LessonState(
       lessonsByDifficulty: lessonsByDifficulty ?? this.lessonsByDifficulty,
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       lessonDetails: lessonDetails ?? this.lessonDetails,
     );
   }
 }
 
 class LessonBloc extends Bloc<LessonEvent, LessonState> {
+  final ApiInterceptor _api = ApiInterceptor();
+
   LessonBloc() : super(LessonState.initial()) {
     on<LoadLessons>(_onLoadLessons);
     on<CreateLesson>(_onCreate);
@@ -99,40 +101,51 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
     on<UpdateLesson>(_onUpdate);
   }
 
-  String get _baseUrl {
-    final envUrl = dotenv.env['API_BASE_URL'];
-    return envUrl ?? 'https://localhost:7141/api';
-  }
-
   Future<void> _onCreate(CreateLesson event, Emitter<LessonState> emit) async {
-    emit(state.copyWith(isLoading: true, isSuccess: false, errorMessage: null));
-    final url = Uri.parse('$_baseUrl/Licao/criar');
+    emit(state.copyWith(isLoading: true, isSuccess: false, clearError: true));
 
     try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "dificuldade": event.dificuldade,
-          "tituloLicao": event.tituloLicao,
-          "textoConceito": event.textoConceito,
-          "questoes": event.questoes
-        }),
-      );
+      final response = await _api.post('/Licao/criar', {
+        'dificuldade': event.dificuldade,
+        'tituloLicao': event.tituloLicao,
+        'textoConceito': event.textoConceito,
+        'questoes': event.questoes,
+      });
 
       if (response.statusCode == 200) {
-        final updated = Map<ModuleDifficulty, List<String>>.from(state.lessonsByDifficulty);
+        final updated = Map<ModuleDifficulty, List<String>>.from(
+          state.lessonsByDifficulty,
+        );
         final difficultyEnum = ModuleDifficulty.values[event.dificuldade - 1];
-        updated[difficultyEnum] = List<String>.from(updated[difficultyEnum] ?? [])..add(event.tituloLicao);
-        
-        emit(state.copyWith(lessonsByDifficulty: updated, isLoading: false, isSuccess: true));
+        updated[difficultyEnum] = List<String>.from(
+          updated[difficultyEnum] ?? [],
+        )..add(event.tituloLicao);
+
+        emit(
+          state.copyWith(
+            lessonsByDifficulty: updated,
+            isLoading: false,
+            isSuccess: true,
+            clearError: true,
+          ),
+        );
       } else {
         print('ERRO NO CREATE: ${response.statusCode} - ${response.body}');
-        emit(state.copyWith(isLoading: false, errorMessage: "Erro do Servidor: ${response.body}"));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Erro do Servidor: ${response.body}',
+          ),
+        );
       }
     } catch (e) {
       print('ERRO DE CONEXÃO NO CREATE: $e');
-      emit(state.copyWith(isLoading: false, errorMessage: "Falha de conexão: $e"));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Falha de conexão: $e',
+        ),
+      );
     }
   }
 
@@ -141,34 +154,50 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
     final list = List<String>.from(updated[event.difficulty] ?? []);
 
     if (event.index < 0 || event.index >= list.length) return;
-    
-    final tituloParaDeletar = list[event.index];
-    emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    final url = Uri.parse('$_baseUrl/Licao/deletar/${Uri.encodeComponent(tituloParaDeletar)}');
+    final tituloParaDeletar = list[event.index];
+    emit(state.copyWith(isLoading: true, clearError: true));
 
     try {
-      final response = await http.delete(url);
+      final response = await _api.delete(
+        '/Licao/deletar/${Uri.encodeComponent(tituloParaDeletar)}',
+        {},
+      );
       if (response.statusCode == 200) {
         list.removeAt(event.index);
         updated[event.difficulty] = list;
-        emit(state.copyWith(lessonsByDifficulty: updated, isLoading: false));
+        emit(
+          state.copyWith(
+            lessonsByDifficulty: updated,
+            isLoading: false,
+            clearError: true,
+          ),
+        );
       } else {
         print('ERRO NO DELETE: ${response.statusCode} - ${response.body}');
-        emit(state.copyWith(isLoading: false, errorMessage: "Erro ao deletar: ${response.body}"));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Erro ao deletar: ${response.body}',
+          ),
+        );
       }
     } catch (e) {
       print('ERRO DE CONEXÃO NO DELETE: $e');
-      emit(state.copyWith(isLoading: false, errorMessage: "Falha ao conectar: $e"));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Falha ao conectar: $e',
+        ),
+      );
     }
   }
 
   Future<void> _onLoadLessons(LoadLessons event, Emitter<LessonState> emit) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
-    final url = Uri.parse('$_baseUrl/Licao/listar');
+    emit(state.copyWith(isLoading: true, clearError: true));
 
     try {
-      final response = await http.get(url);
+      final response = await _api.get('/Licao/listar');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -183,14 +212,30 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
           fetchedLessons[difEnum] = licoes;
         }
 
-        emit(state.copyWith(lessonsByDifficulty: fetchedLessons, isLoading: false));
+        emit(
+          state.copyWith(
+            lessonsByDifficulty: fetchedLessons,
+            isLoading: false,
+            clearError: true,
+          ),
+        );
       } else {
         print('ERRO NO GET AULAS: ${response.statusCode}');
-        emit(state.copyWith(isLoading: false, errorMessage: "Erro ao buscar aulas."));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Erro ao buscar aulas.',
+          ),
+        );
       }
     } catch (e) {
       print('ERRO DE CONEXÃO NO GET AULAS: $e');
-      emit(state.copyWith(isLoading: false, errorMessage: "Falha de conexão: $e"));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Falha de conexão: $e',
+        ),
+      );
     }
   }
 
@@ -201,51 +246,81 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
       isSuccess: false,
       lessonDetails: null, 
     ));
-    
-    final url = Uri.parse('$_baseUrl/Licao/detalhes/${Uri.encodeComponent(event.titulo)}');
 
     try {
-      final response = await http.get(url);
-      
+      final response = await _api.get(
+        '/Licao/detalhes/${Uri.encodeComponent(event.titulo)}',
+      );
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        emit(state.copyWith(isLoading: false, lessonDetails: data));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            lessonDetails: data,
+            clearError: true,
+          ),
+        );
       } else {
         print('ERRO NO GET DETALHES: ${response.statusCode} - ${response.body}');
-        emit(state.copyWith(isLoading: false, errorMessage: "Erro ao buscar detalhes."));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Erro ao buscar detalhes.',
+          ),
+        );
       }
     } catch (e) {
       print('ERRO DE CONEXÃO NO GET DETALHES: $e');
-      emit(state.copyWith(isLoading: false, errorMessage: "Falha de conexão: $e"));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Falha de conexão: $e',
+        ),
+      );
     }
   }
 
   Future<void> _onUpdate(UpdateLesson event, Emitter<LessonState> emit) async {
-    emit(state.copyWith(isLoading: true, isSuccess: false));
-    final url = Uri.parse('$_baseUrl/Licao/editar/${Uri.encodeComponent(event.tituloAntigo)}');
+    emit(state.copyWith(isLoading: true, isSuccess: false, clearError: true));
 
     try {
-      final response = await http.put(
-        url, 
-        headers: {"Content-Type": "application/json"}, 
-        body: jsonEncode({
-          "dificuldade": event.dificuldade,
-          "tituloLicao": event.tituloLicao,
-          "textoConceito": event.textoConceito,
-          "questoes": event.questoes,
-        })
+      final response = await _api.put(
+        '/Licao/editar/${Uri.encodeComponent(event.tituloAntigo)}',
+        {
+          'dificuldade': event.dificuldade,
+          'tituloLicao': event.tituloLicao,
+          'textoConceito': event.textoConceito,
+          'questoes': event.questoes,
+        },
       );
 
       if (response.statusCode == 200) {
-        emit(state.copyWith(isLoading: false, isSuccess: true));
-        add(LoadLessons()); 
+        emit(
+          state.copyWith(
+            isLoading: false,
+            isSuccess: true,
+            clearError: true,
+          ),
+        );
+        add(LoadLessons());
       } else {
         print('ERRO NO UPDATE: ${response.statusCode} - ${response.body}');
-        emit(state.copyWith(isLoading: false, errorMessage: "Erro ao atualizar: ${response.body}"));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: 'Erro ao atualizar: ${response.body}',
+          ),
+        );
       }
     } catch (e) {
       print('ERRO DE CONEXÃO NO UPDATE: $e');
-      emit(state.copyWith(isLoading: false, errorMessage: "Falha de conexão: $e"));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Falha de conexão: $e',
+        ),
+      );
     }
   }
 }

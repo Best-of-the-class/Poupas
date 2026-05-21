@@ -107,7 +107,7 @@ class _ForgotPasswordCodePageState extends State<ForgotPasswordCodePage> {
                       ),
                       const SizedBox(height: 12),
                       CodeInput(
-                        length: 5,
+                        length: 6,
                         onCompleted: (code) => _verificationCode = code,
                       ),
                       const SizedBox(height: 40),

@@ -30,6 +30,7 @@ class GlobalBlocProviders extends StatelessWidget {
         BlocProvider<DictionaryValidatorBloc>.value(
           value: sl<DictionaryValidatorBloc>(),
         ),
+        BlocProvider<UserProfileBloc>.value(value: sl<UserProfileBloc>()),
       ],
       child: child,
     );

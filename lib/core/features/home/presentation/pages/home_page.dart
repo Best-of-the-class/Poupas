@@ -5,6 +5,7 @@ import 'package:pomo/core/widgets/card_stats_home.dart';
 import 'package:pomo/core/widgets/card_module.dart';
 import 'package:pomo/core/widgets/trail_module.dart';
 import 'package:pomo/core/features/admin/presentation/bloc/lesson_bloc.dart';
+import 'package:pomo/core/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,14 +20,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<LessonBloc>().add(LoadLessons());
+      context.read<UserProfileBloc>().loadProfile(force: true);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return const MainLayout(
-      child: HomeContent(),
-    );
+    return const MainLayout(child: HomeContent());
   }
 }
 
@@ -38,7 +38,9 @@ class HomeContent extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('lib/core/assets/images/background-arvore-trilha.png'),
+          image: AssetImage(
+            'lib/core/assets/images/background-arvore-trilha.png',
+          ),
           fit: BoxFit.cover,
         ),
       ),
@@ -47,8 +49,13 @@ class HomeContent extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: BlocBuilder<LessonBloc, LessonState>(
             builder: (context, state) {
-              if (state.isLoading && state.lessonsByDifficulty.values.every((l) => l.isEmpty)) {
-                return const Center(child: CircularProgressIndicator(color: Colors.white));
+              final profile = context.watch<UserProfileBloc>().state.profile;
+
+              if (state.isLoading &&
+                  state.lessonsByDifficulty.values.every((l) => l.isEmpty)) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                );
               }
 
               final List<Map<String, dynamic>> dynamicLessons = [];
@@ -64,7 +71,7 @@ class HomeContent extends StatelessWidget {
                     'isProva': false,
                   });
                 }
-                
+
                 if (entry.value.isNotEmpty) {
                   dynamicLessons.add({
                     'ordem': globalOrder++,
@@ -80,9 +87,12 @@ class HomeContent extends StatelessWidget {
 
               return Column(
                 children: [
-                  const CardStatsHome(sequenciaDias: 14, xp: 2584),
+                  CardStatsHome(
+                    sequenciaDias: profile?.streakDays ?? 0,
+                    xp: profile?.xp ?? 0,
+                  ),
                   const SizedBox(height: 16),
-                  
+
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -90,9 +100,11 @@ class HomeContent extends StatelessWidget {
                         children: [
                           ...modulosAtivos.map((level) {
                             final lessonsDoModulo = dynamicLessons
-                                .where((l) => l['level'] == level).toList();
+                                .where((l) => l['level'] == level)
+                                .toList();
 
-                            if (lessonsDoModulo.isEmpty) return const SizedBox.shrink();
+                            if (lessonsDoModulo.isEmpty)
+                              return const SizedBox.shrink();
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +113,8 @@ class HomeContent extends StatelessWidget {
                                 const SizedBox(height: 10),
                                 TrailModule(
                                   lessons: lessonsDoModulo,
-                                  progressoAtual: 1, 
+                                  progressoAtual:
+                                      (profile?.completedLessons ?? 0) + 1,
                                 ),
                                 const SizedBox(height: 40),
                               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomo/core/features/user_profile/presentation/entities/user_profile_data.dart';
 import 'package:pomo/core/layouts/lesson_layout.dart';
 import 'package:pomo/core/theme/app_colors.dart';
 import 'package:pomo/core/theme/app_text_styles.dart';
@@ -6,24 +7,25 @@ import 'package:pomo/core/theme/app_text_styles.dart';
 class LessonResultPage extends StatelessWidget {
   final int acertos;
   final int erros;
-  final int? xpBase;
+  final int xpGanho;
   final bool ganhouSequencia;
+  final int vidasAtuais;
+  final int vidasTotal;
+  final List<UserAchievement> novasConquistas;
+  final VoidCallback? onContinue;
 
   const LessonResultPage({
     super.key,
     this.acertos = 3,
     this.erros = 1,
-    this.xpBase,
+    this.xpGanho = 0,
     this.ganhouSequencia = true,
+    this.vidasAtuais = 5,
+    this.vidasTotal = 5,
+    this.novasConquistas = const [],
+    this.onContinue,
   });
 
-  int get xpCalculado {
-    if (!tudoCorreto) return 0; 
-    
-    if (xpBase != null) return xpBase!;
-    return acertos * 100;
-  }
-  
   bool get teveErros => erros > 0;
   bool get tudoCorreto => erros == 0;
   bool get soErros => acertos == 0 && erros > 0;
@@ -43,7 +45,7 @@ class LessonResultPage extends StatelessWidget {
   Color get circleColor {
     if (tudoCorreto) return AppColors.resultSuccessBg;
     if (soErros) return AppColors.resultErrorBg;
-    return AppColors.resultWarningBg; 
+    return AppColors.resultWarningBg;
   }
 
   Color get iconColor {
@@ -61,122 +63,125 @@ class LessonResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LessonLayout(
-      vidasAtuais: 5,
-      vidasTotal: 5,
+      vidasAtuais: vidasAtuais,
+      vidasTotal: vidasTotal,
       buttonText: 'Continuar',
-      onButtonPressed: () {
-        Navigator.pop(context);
-      },
+      onButtonPressed: onContinue ?? () => Navigator.pop(context),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.topCenter,
-                children: [
-
-                  Container(
-                    margin: const EdgeInsets.only(top: 130), 
-                    padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: circleColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                resultIcon,
-                                size: 48,
-                                color: iconColor,
-                              ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 130),
+                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: circleColor,
+                              shape: BoxShape.circle,
                             ),
+                            child: Icon(resultIcon, size: 48, color: iconColor),
+                          ),
 
-                            const SizedBox(width: 16),
+                          const SizedBox(width: 16),
 
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tituloMensagem,
-                                    style: AppTextStyles.title.copyWith(
-                                      fontSize: 18,
-                                      color: AppColors.textDark,
-                                    ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tituloMensagem,
+                                  style: AppTextStyles.title.copyWith(
+                                    fontSize: 18,
+                                    color: AppColors.textDark,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    subtituloMensagem,
-                                    style: AppTextStyles.body.copyWith(
-                                      fontSize: 14,
-                                      color: AppColors.textDark,
-                                    ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  subtituloMensagem,
+                                  style: AppTextStyles.body.copyWith(
+                                    fontSize: 14,
+                                    color: AppColors.textDark,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
 
-                        const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                        _ResultRow(
-                          label: 'Acertos',
-                          value: '$acertos',
-                          color: const Color(0xFFA2CA8B),
-                          icon: Icons.check_circle_outline,
-                        ),
+                      _ResultRow(
+                        label: 'Acertos',
+                        value: '$acertos',
+                        color: const Color(0xFFA2CA8B),
+                        icon: Icons.check_circle_outline,
+                      ),
 
+                      const SizedBox(height: 10),
+
+                      _ResultRow(
+                        label: 'Erros',
+                        value: '$erros',
+                        color: const Color(0xFFFBA29B),
+                        icon: Icons.cancel_outlined,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      _ResultRow(
+                        label: 'Pontuação (XP)',
+                        value: '+$xpGanho',
+                        color: const Color(0xFFFBD564),
+                        icon: Icons.star_outline,
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      _ResultRow(
+                        label: 'Sequência',
+                        value: ganhouSequencia ? '+1 dia' : '—',
+                        color: const Color(0xFFFFAA5A),
+                        icon: Icons.local_fire_department_outlined,
+                      ),
+
+                      if (novasConquistas.isNotEmpty) ...[
                         const SizedBox(height: 10),
-
                         _ResultRow(
-                          label: 'Erros',
-                          value: '$erros',
-                          color: const Color(0xFFFBA29B),
-                          icon: Icons.cancel_outlined,
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        _ResultRow(
-                          label: 'Pontuação (XP)',
-                          value: '+$xpCalculado',
-                          color: const Color(0xFFFBD564),
-                          icon: Icons.star_outline,
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        _ResultRow(
-                          label: 'Sequência',
-                          value: ganhouSequencia ? '+1 dia' : '—',
-                          color: const Color(0xFFFFAA5A),
-                          icon: Icons.local_fire_department_outlined,
+                          label: 'Novas conquistas',
+                          value: '+${novasConquistas.length}',
+                          color: const Color(0xFFA4DDED),
+                          icon: Icons.workspace_premium_outlined,
                         ),
                       ],
-                    ),
+                    ],
                   ),
+                ),
 
-                  Image.asset(
-                    'lib/core/assets/images/poup-happy.png',
-                    width: 150,
-                    height: 150,
-                  ),
-                ],
-              ),
-            ],
-          ),
+                Image.asset(
+                  'lib/core/assets/images/poup-happy.png',
+                  width: 150,
+                  height: 150,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -205,11 +210,7 @@ class _ResultRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: AppColors.textDark,
-            size: 24,
-          ),
+          Icon(icon, color: AppColors.textDark, size: 24),
 
           const SizedBox(width: 10),
 
