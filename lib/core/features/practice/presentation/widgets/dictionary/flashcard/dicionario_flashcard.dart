@@ -1,13 +1,19 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pomo/core/theme/app_colors.dart';
-import '../../../mocks/dictionary_terms_mock.dart';
+//import '../../../mocks/dictionary_terms_mock.dart';
 import 'flashcard_action_button.dart';
 import 'flashcard_background.dart';
 import 'flashcard_widget.dart';
+import '../../../models/dictionary_term.dart';
 
 class DicionarioFlashcard extends StatefulWidget {
-  const DicionarioFlashcard({super.key});
+  final List<DictionaryTerm> terms;
+
+  const DicionarioFlashcard({
+    super.key, 
+    required this.terms,
+  });
 
   @override
   State<DicionarioFlashcard> createState() => _DicionarioFlashcardState();
@@ -99,7 +105,7 @@ class _DicionarioFlashcardState extends State<DicionarioFlashcard>
 
     setState(() {
       isFront = true;
-      currentIndex = (currentIndex + 1) % dictionaryTermsMock.length;
+      currentIndex = (currentIndex + 1) % widget.terms.length;
 
       final last = cardOrder.removeLast();
       cardOrder.insert(0, last);
@@ -114,7 +120,7 @@ class _DicionarioFlashcardState extends State<DicionarioFlashcard>
       isFront = true;
 
       currentIndex =
-          currentIndex == 0 ? dictionaryTermsMock.length - 1 : currentIndex - 1;
+          currentIndex = (currentIndex + 1) % widget.terms.length;
 
       final first = cardOrder.removeAt(0);
       cardOrder.add(first);
@@ -143,7 +149,7 @@ class _DicionarioFlashcardState extends State<DicionarioFlashcard>
 
   @override
   Widget build(BuildContext context) {
-    final currentCard = dictionaryTermsMock[currentIndex];
+    final currentCard = widget.terms[currentIndex];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +219,7 @@ class _DicionarioFlashcardState extends State<DicionarioFlashcard>
                                       ..rotateY(pi),
                                     child: FlashcardWidget.back(
                                       termo: currentCard.title,
-                                      significado: currentCard.content,
+                                      significado: currentCard.definition,
                                       color: cardColors[cardOrder[2]],
                                     ),
                                   ),

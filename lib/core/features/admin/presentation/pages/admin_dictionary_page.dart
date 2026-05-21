@@ -29,6 +29,12 @@ class _AdminDictionaryState extends State<AdminDictionary> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    context.read<DictionaryBloc>().add(FetchTerms());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -101,7 +107,21 @@ class _AdminDictionaryState extends State<AdminDictionary> {
             Expanded(
               child: BlocBuilder<DictionaryBloc, DictionaryState>(
                 builder: (context, state) {
+
                   final terms = state.filteredTerms;
+
+                  if (terms.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Nenhum termo encontrado no dicionário.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                    );
+                  }
+
                   return ListView.separated(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 300,
