@@ -1,13 +1,19 @@
 class DictionaryTerm {
+  final int id; 
   final String title;
   final String definition;
 
-  const DictionaryTerm({required this.title, required this.definition});
+  const DictionaryTerm({
+    this.id = 0, 
+    required this.title,
+    required this.definition,
+  });
 
-  DictionaryTerm copyWith({String? title, String? definition}) {
+  factory DictionaryTerm.fromJson(Map<String, dynamic> json) {
     return DictionaryTerm(
-      title: title ?? this.title,
-      definition: definition ?? this.definition,
+      id: json['id'] ?? 0, 
+      title: json['termo'] ?? '', 
+      definition: json['definicao'] ?? '', 
     );
   }
 }

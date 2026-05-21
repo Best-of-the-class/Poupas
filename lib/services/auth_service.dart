@@ -7,19 +7,13 @@ class AuthService {
 
   AuthService([this._go]);
 
-  String _hash(String senha) {
-    return _go != null ? _go!.hashPassword(senha) : senha;
-  }
-
   Future<bool> cadastrar(String nome, String email, String senha) async {
     try {
-      final senhaFinal = _hash(senha);
-
       final response = await _interceptor.post('/Autenticacao/cadastro', {
         "nomeUsuario": nome,
         "email": email,
-        "senha": senhaFinal,
-        "confirmarSenha": senhaFinal,
+        "senha": senha,
+        "confirmarSenha": senha, 
       });
 
       return response.statusCode == 200;
@@ -75,11 +69,9 @@ class AuthService {
     String novaSenha,
   ) async {
     try {
-      final senhaFinal = _hash(novaSenha);
-
       final response = await _interceptor.post(
         '/Autenticacao/redefinir-senha',
-        {"email": email, "codigo": codigo, "novaSenha": senhaFinal},
+        {"email": email, "codigo": codigo, "novaSenha": novaSenha},
       );
       return response.statusCode == 200;
     } catch (e) {
