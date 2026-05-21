@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+import 'package:pomo/core/theme/app_colors.dart';
+
+enum ImagePosition { top, center, bottom }
+
+class Background extends StatelessWidget {
+  final Widget child;
+  final String? imagePath;
+  final ImagePosition position;
+  final double imageSize;
+  final Color? color;
+
+  const Background({
+    super.key,
+    required this.child,
+    this.imagePath,
+    this.position = ImagePosition.top,
+    this.imageSize = 226.0,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    return Scaffold(
+      backgroundColor: color ?? AppColors.background,
+      body: Stack(
+        children: [
+          if (imagePath != null)
+            Positioned(
+              top: position == ImagePosition.bottom
+                  ? null
+                  : _calculateTop(size.height),
+              bottom: position == ImagePosition.bottom ? 0 : null,
+              left: 0,
+              right: 0,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: keyboardIsOpen ? 0.2 : 1.0,
+                child: Align(
+                  alignment: _getAlignment(),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: position == ImagePosition.bottom ? 50 : 0,
+                    ),
+                    child: Image.asset(
+                      imagePath!,
+                      width: imageSize,
+                      height: imageSize,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          SafeArea(
+            child: SizedBox(
+              width: size.width,
+              height: size.height,
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Alignment _getAlignment() {
+    switch (position) {
+      case ImagePosition.top:
+        return Alignment.topCenter;
+      case ImagePosition.center:
+        return Alignment.center;
+      case ImagePosition.bottom:
+        return Alignment.bottomCenter;
+    }
+  }
+
+  double? _calculateTop(double windowSize) {
+    switch (position) {
+      case ImagePosition.top:
+        return 0;
+      case ImagePosition.center:
+        return (windowSize / 2) - (imageSize / 2);
+      case ImagePosition.bottom:
+        return null;
+    }
+  }
+}
